@@ -10,6 +10,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
@@ -44,6 +45,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [otpSent, setOtpSent] = useState(false);
   const [demoOtp, setDemoOtp] = useState('123456');
   const [timer, setTimer] = useState(30);
+
+  // Simulated API Loading States for Animations
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isResendingOtp, setIsResendingOtp] = useState(false);
+  const [loadingUserId, setLoadingUserId] = useState<string | null>(null);
 
   // In-App Toast Notification State
   const [toastConfig, setToastConfig] = useState<{
@@ -82,15 +89,35 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       showToast('warning', 'Mobile or Email Required', 'Please enter your registered mobile number or email address.');
       return;
     }
-    setOtpSent(true);
-    setTimer(30);
-    setDemoOtp('123456');
-    setOtpOrPassword('123456'); // Auto-fill for convenience in demo testing
-    showToast(
-      'success',
-      'Passcode Dispatched (Demo: 123456)',
-      `A 6-digit SMS verification code has been dispatched to ${mobileOrEmail.trim()} and auto-filled below.`
-    );
+    setIsSendingOtp(true);
+    setTimeout(() => {
+      setIsSendingOtp(false);
+      setOtpSent(true);
+      setTimer(30);
+      setDemoOtp('123456');
+      setOtpOrPassword('123456'); // Auto-fill for convenience in demo testing
+      showToast(
+        'success',
+        'Passcode Dispatched (Demo: 123456)',
+        `A 6-digit SMS verification code has been dispatched to ${mobileOrEmail.trim()} and auto-filled below.`
+      );
+    }, 850);
+  };
+
+  const handleResendOtp = () => {
+    if (timer > 0 || isResendingOtp) return;
+    setIsResendingOtp(true);
+    setTimeout(() => {
+      setIsResendingOtp(false);
+      setTimer(30);
+      setDemoOtp('123456');
+      setOtpOrPassword('123456');
+      showToast(
+        'success',
+        'New Passcode Dispatched',
+        `A fresh 6-digit SMS verification code (123456) has been dispatched to ${mobileOrEmail.trim()}.`
+      );
+    }, 750);
   };
 
   const handleStandardLogin = () => {
@@ -104,18 +131,26 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       return;
     }
 
-    // Match entered email/phone with mock users or default to first user
-    const matchedUser = users.find(
-      u =>
-        u.contact.phone.includes(mobileOrEmail.trim()) ||
-        u.contact.email.toLowerCase() === mobileOrEmail.toLowerCase().trim()
-    ) || users[0];
+    setIsLoggingIn(true);
+    setTimeout(() => {
+      // Match entered email/phone with mock users or default to first user
+      const matchedUser = users.find(
+        u =>
+          u.contact.phone.includes(mobileOrEmail.trim()) ||
+          u.contact.email.toLowerCase() === mobileOrEmail.toLowerCase().trim()
+      ) || users[0];
 
-    login(matchedUser);
+      setIsLoggingIn(false);
+      login(matchedUser);
+    }, 950);
   };
 
   const handleQuickDemoUserLogin = (user: User) => {
-    login(user);
+    setLoadingUserId(user.id);
+    setTimeout(() => {
+      setLoadingUserId(null);
+      login(user);
+    }, 750);
   };
 
   const handleQuickFill = (phoneOrEmail: string) => {
@@ -220,12 +255,22 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               <>
                 {!otpSent ? (
                   <TouchableOpacity
-                    style={styles.sendOtpBtn}
+                    style={[styles.sendOtpBtn, isSendingOtp && styles.btnDisabled]}
                     onPress={handleSendOtp}
+                    disabled={isSendingOtp}
                     activeOpacity={0.8}
                   >
-                    <KeyRound color={colors.white} size={16} />
-                    <Text style={styles.sendOtpBtnText}>Send OTP</Text>
+                    {isSendingOtp ? (
+                      <>
+                        <ActivityIndicator size="small" color={colors.white} />
+                        <Text style={styles.sendOtpBtnText}>Sending OTP via SMS...</Text>
+                      </>
+                    ) : (
+                      <>
+                        <KeyRound color={colors.white} size={16} />
+                        <Text style={styles.sendOtpBtnText}>Send OTP</Text>
+                      </>
+                    )}
                   </TouchableOpacity>
                 ) : (
                   <>
@@ -243,13 +288,17 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                       <View style={styles.labelRow}>
                         <Text style={styles.inputLabel}>ENTER 6-DIGIT OTP</Text>
                         <TouchableOpacity
-                          onPress={handleSendOtp}
-                          disabled={timer > 0}
+                          onPress={handleResendOtp}
+                          disabled={timer > 0 || isResendingOtp}
                           style={styles.resendTouch}
                         >
-                          <RefreshCw color={timer > 0 ? colors.textMuted : colors.crimson} size={12} />
-                          <Text style={[styles.resendText, timer > 0 && styles.resendTextDisabled]}>
-                            {timer > 0 ? `Resend in ${timer}s` : 'Resend OTP'}
+                          {isResendingOtp ? (
+                            <ActivityIndicator size="small" color={colors.crimson} style={{ transform: [{ scale: 0.75 }] }} />
+                          ) : (
+                            <RefreshCw color={timer > 0 ? colors.textMuted : colors.crimson} size={12} />
+                          )}
+                          <Text style={[styles.resendText, (timer > 0 || isResendingOtp) && styles.resendTextDisabled]}>
+                            {isResendingOtp ? 'Sending...' : timer > 0 ? `Resend in ${timer}s` : 'Resend OTP'}
                           </Text>
                         </TouchableOpacity>
                       </View>
@@ -264,18 +313,29 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                           placeholderTextColor={colors.textMuted}
                           keyboardType="numeric"
                           maxLength={6}
+                          editable={!isLoggingIn}
                         />
                       </View>
                     </View>
 
                     {/* Sign In Button */}
                     <TouchableOpacity
-                      style={styles.primaryLoginBtn}
+                      style={[styles.primaryLoginBtn, isLoggingIn && styles.btnDisabled]}
                       onPress={handleStandardLogin}
+                      disabled={isLoggingIn}
                       activeOpacity={0.8}
                     >
-                      <Text style={styles.primaryBtnText}>Verify OTP & Sign In</Text>
-                      <ArrowRight color={colors.white} size={18} />
+                      {isLoggingIn ? (
+                        <>
+                          <ActivityIndicator size="small" color={colors.white} />
+                          <Text style={styles.primaryBtnText}>Verifying OTP & Signing In...</Text>
+                        </>
+                      ) : (
+                        <>
+                          <Text style={styles.primaryBtnText}>Verify OTP & Sign In</Text>
+                          <ArrowRight color={colors.white} size={18} />
+                        </>
+                      )}
                     </TouchableOpacity>
                   </>
                 )}
@@ -307,18 +367,29 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                       placeholder="Enter your password"
                       placeholderTextColor={colors.textMuted}
                       secureTextEntry
+                      editable={!isLoggingIn}
                     />
                   </View>
                 </View>
 
                 {/* Sign In Button */}
                 <TouchableOpacity
-                  style={styles.primaryLoginBtn}
+                  style={[styles.primaryLoginBtn, isLoggingIn && styles.btnDisabled]}
                   onPress={handleStandardLogin}
+                  disabled={isLoggingIn}
                   activeOpacity={0.8}
                 >
-                  <Text style={styles.primaryBtnText}>Sign In</Text>
-                  <ArrowRight color={colors.white} size={18} />
+                  {isLoggingIn ? (
+                    <>
+                      <ActivityIndicator size="small" color={colors.white} />
+                      <Text style={styles.primaryBtnText}>Authenticating Credentials...</Text>
+                    </>
+                  ) : (
+                    <>
+                      <Text style={styles.primaryBtnText}>Sign In</Text>
+                      <ArrowRight color={colors.white} size={18} />
+                    </>
+                  )}
                 </TouchableOpacity>
               </>
             )}
@@ -335,31 +406,42 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             </Text>
 
             <View style={styles.demoUsersList}>
-              {users.map(user => (
-                <TouchableOpacity
-                  key={user.id}
-                  style={styles.demoUserCard}
-                  onPress={() => handleQuickDemoUserLogin(user)}
-                  activeOpacity={0.7}
-                >
-                  <Image source={{ uri: user.avatar }} style={styles.demoAvatar} />
-                  <View style={styles.demoUserInfo}>
-                    <View style={styles.demoNameRow}>
-                      <Text style={styles.demoUserName}>{user.name}</Text>
-                      <CheckCircle color={colors.emerald} size={13} />
+              {users.map(user => {
+                const isCurrentLoading = loadingUserId === user.id;
+                return (
+                  <TouchableOpacity
+                    key={user.id}
+                    style={[styles.demoUserCard, isCurrentLoading && styles.demoUserCardLoading]}
+                    onPress={() => handleQuickDemoUserLogin(user)}
+                    disabled={loadingUserId !== null || isLoggingIn || isSendingOtp}
+                    activeOpacity={0.7}
+                  >
+                    <Image source={{ uri: user.avatar }} style={styles.demoAvatar} />
+                    <View style={styles.demoUserInfo}>
+                      <View style={styles.demoNameRow}>
+                        <Text style={styles.demoUserName}>{user.name}</Text>
+                        <CheckCircle color={colors.emerald} size={13} />
+                      </View>
+                      <Text style={styles.demoDesignation}>{user.designation}</Text>
+                      <View style={styles.demoCompanyRow}>
+                        <Building2 color={colors.primary} size={11} />
+                        <Text style={styles.demoCompany} numberOfLines={1}>{user.companyName}</Text>
+                      </View>
+                      <Text style={styles.chapterBadgeSmall}>{user.chapter}</Text>
                     </View>
-                    <Text style={styles.demoDesignation}>{user.designation}</Text>
-                    <View style={styles.demoCompanyRow}>
-                      <Building2 color={colors.primary} size={11} />
-                      <Text style={styles.demoCompany} numberOfLines={1}>{user.companyName}</Text>
+                    <View style={[styles.loginPill, isCurrentLoading && styles.loginPillLoading]}>
+                      {isCurrentLoading ? (
+                        <>
+                          <ActivityIndicator size="small" color={colors.white} style={{ transform: [{ scale: 0.75 }] }} />
+                          <Text style={styles.loginPillLoadingText}>Connecting...</Text>
+                        </>
+                      ) : (
+                        <Text style={styles.loginPillText}>Sign In ➔</Text>
+                      )}
                     </View>
-                    <Text style={styles.chapterBadgeSmall}>{user.chapter}</Text>
-                  </View>
-                  <View style={styles.loginPill}>
-                    <Text style={styles.loginPillText}>Sign In ➔</Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
+                  </TouchableOpacity>
+                );
+              })}
             </View>
           </View>
 
@@ -755,6 +837,13 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     marginTop: 1,
   },
+  btnDisabled: {
+    opacity: 0.75,
+  },
+  demoUserCardLoading: {
+    borderColor: colors.crimson,
+    backgroundColor: '#FFF5F5',
+  },
   loginPill: {
     backgroundColor: colors.crimsonLight,
     paddingHorizontal: 10,
@@ -762,6 +851,19 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: colors.crimsonBorder,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  loginPillLoading: {
+    backgroundColor: colors.crimson,
+    borderColor: colors.crimson,
+    paddingHorizontal: 8,
+  },
+  loginPillLoadingText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: colors.white,
   },
   loginPillText: {
     fontSize: 11,
