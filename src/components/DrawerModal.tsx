@@ -54,8 +54,8 @@ export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
     },
     {
       id: 'meeting-summary',
-      label: 'Meeting Notes',
-      sublabel: 'View official decisions and action items',
+      label: 'Meetings',
+      sublabel: '1-to-1s, schedules, member history & minutes',
       icon: FileSpreadsheet,
       color: colors.crimson,
       bgColor: colors.crimsonLight,

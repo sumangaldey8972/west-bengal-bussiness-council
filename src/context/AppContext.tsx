@@ -12,6 +12,7 @@ import {
   EventItem,
   MessageThread,
   Message,
+  AppNotification,
 } from '../types';
 import {
   CURRENT_USER,
@@ -27,6 +28,7 @@ import {
   MOCK_EVENTS,
   MOCK_MESSAGE_THREADS,
   MOCK_MESSAGES,
+  MOCK_NOTIFICATIONS,
 } from '../data/mockData';
 
 interface AppContextType {
@@ -43,6 +45,7 @@ interface AppContextType {
   messageThreads: MessageThread[];
   messages: Record<string, Message[]>;
   comments: Record<string, PostComment[]>;
+  notifications: AppNotification[];
   requestedAdminAccessIds: string[];
   isAuthenticated: boolean;
 
@@ -61,6 +64,7 @@ interface AppContextType {
   selectedPostForComments: Post | null;
   showRequestAdminAccessModal: boolean;
   selectedUserForAdminAccess: User | null;
+  showNotificationsModal: boolean;
   showDrawer: boolean;
   activeSearchQuery: string;
 
@@ -73,6 +77,7 @@ interface AppContextType {
   addComment: (postId: string, text: string) => void;
   createPost: (content: string, tag: Post['tag'], urgentRequirement?: boolean, budgetOrValue?: string) => void;
   logOneToOne: (withUserId: string, date: string, time: string, location: string, agenda: string) => void;
+  markMeetingCompleted: (meetingId: string, minutes?: string) => void;
   giveReferral: (memberId: string, clientName: string, clientContact: string, serviceNeeded: string, estimatedValue: string, urgency: Referral['urgency']) => void;
   recordBusinessDeal: (toUserId: string, amountFormatted: string, amountInINR: number, dealDescription: string, referralType: BusinessDeal['referralType']) => void;
   toggleFollowUser: (userId: string) => void;
@@ -80,6 +85,8 @@ interface AppContextType {
   toggleRegisterEvent: (eventId: string) => void;
   sendMessage: (threadId: string, text: string) => void;
   requestAdminContactAccess: (userId: string, reason: string) => void;
+  markNotificationRead: (notifId: string) => void;
+  clearAllNotifications: () => void;
   
   // Modal Handlers
   openStory: (story: Story) => void;
@@ -98,6 +105,8 @@ interface AppContextType {
   closeComments: () => void;
   openRequestAdminAccess: (user: User) => void;
   closeRequestAdminAccess: () => void;
+  openNotifications: () => void;
+  closeNotifications: () => void;
   openDrawer: () => void;
   closeDrawer: () => void;
   setActiveSearchQuery: (query: string) => void;
@@ -119,6 +128,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [messageThreads, setMessageThreads] = useState<MessageThread[]>(MOCK_MESSAGE_THREADS);
   const [messages, setMessages] = useState<Record<string, Message[]>>(MOCK_MESSAGES);
   const [comments, setComments] = useState<Record<string, PostComment[]>>(MOCK_COMMENTS);
+  const [notifications, setNotifications] = useState<AppNotification[]>(MOCK_NOTIFICATIONS);
   const [requestedAdminAccessIds, setRequestedAdminAccessIds] = useState<string[]>([]);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
@@ -137,6 +147,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [selectedPostForComments, setSelectedPostForComments] = useState<Post | null>(null);
   const [showRequestAdminAccessModal, setShowRequestAdminAccessModal] = useState(false);
   const [selectedUserForAdminAccess, setSelectedUserForAdminAccess] = useState<User | null>(null);
+  const [showNotificationsModal, setShowNotificationsModal] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
   const [activeSearchQuery, setActiveSearchQuery] = useState('');
 
@@ -160,30 +171,29 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const register = (newUser: Partial<User>) => {
-    const createdUser: User = {
-      id: `usr_${Date.now()}`,
-      name: newUser.name || 'New Council Member',
-      designation: newUser.designation || 'Managing Director',
-      companyName: newUser.companyName || 'Bengal Enterprises Ltd.',
-      industry: newUser.industry || 'Manufacturing & Trade',
+    const userToCreate: User = {
+      id: `user_${Date.now()}`,
+      name: newUser.name || 'Member',
+      designation: newUser.designation || 'Director',
+      companyName: newUser.companyName || 'Business Enterprises',
+      industry: newUser.industry || 'Manufacturing',
       chapter: newUser.chapter || 'Kolkata Central Chapter',
       location: newUser.location || 'Kolkata, WB',
-      gstNumber: newUser.gstNumber || '19AAACB1234F1Z5',
+      gstNumber: newUser.gstNumber || '19AAAAA0000A1Z5',
       isGstVerified: true,
-      turnover: newUser.turnover || '₹ 10 Cr - ₹ 25 Cr',
+      turnover: newUser.turnover || '₹10 Cr - ₹25 Cr',
       yearJoined: 2026,
-      avatar: newUser.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face',
-      membershipTier: 'Executive Member',
-      bio: newUser.bio || `${newUser.name} is the executive leader of ${newUser.companyName}, operating in ${newUser.industry} in West Bengal.`,
-      requirementDocs: [
-        { title: 'Company_Profile_Capabilities.pdf', size: '2.8 MB', type: 'PDF' },
-        { title: 'Verified_GST_Certificate.pdf', size: '1.1 MB', type: 'PDF' },
-      ],
+      avatar:
+        newUser.avatar ||
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
+      membershipTier: newUser.membershipTier || 'Executive Member',
+      bio: newUser.bio || 'Bengal Business Council active corporate member.',
+      requirementDocs: [],
       contact: {
-        email: newUser.contact?.email || 'member@bengalbusinesscouncil.com',
+        email: newUser.contact?.email || 'contact@business.in',
         phone: newUser.contact?.phone || '+91 98300 00000',
-        website: newUser.contact?.website || 'https://bengalbusinesscouncil.com',
-        officeAddress: newUser.contact?.officeAddress || 'Salt Lake Sector V, Kolkata, WB 700091',
+        website: 'https://bengalbusinesscouncil.com',
+        officeAddress: 'Kolkata, West Bengal',
       },
       stats: {
         oneToOneCount: 0,
@@ -193,8 +203,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       },
     };
 
-    setUsers(prev => [createdUser, ...prev]);
-    setCurrentUser(createdUser);
+    setUsers(prev => [userToCreate, ...prev]);
+    setCurrentUser(userToCreate);
     setIsAuthenticated(true);
   };
 
@@ -217,6 +227,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const addComment = (postId: string, text: string) => {
     if (!text.trim()) return;
+
     const newComment: PostComment = {
       id: `c_${Date.now()}`,
       postId,
@@ -229,13 +240,19 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
     setComments(prev => ({
       ...prev,
-      [postId]: [newComment, ...(prev[postId] || [])],
+      [postId]: [...(prev[postId] || []), newComment],
     }));
 
     setPosts(prev =>
-      prev.map(post =>
-        post.id === postId ? { ...post, commentsCount: post.commentsCount + 1 } : post
-      )
+      prev.map(p => {
+        if (p.id === postId) {
+          return {
+            ...p,
+            commentsCount: p.commentsCount + 1,
+          };
+        }
+        return p;
+      })
     );
   };
 
@@ -277,6 +294,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const target = users.find(u => u.id === withUserId) || users[1];
     const newMeeting: OneToOneMeeting = {
       id: `oto_${Date.now()}`,
+      creatorId: currentUser.id,
+      creatorName: currentUser.name,
+      creatorCompany: currentUser.companyName,
+      creatorAvatar: currentUser.avatar,
       withUserId: target.id,
       withUserName: target.name,
       withUserCompany: target.companyName,
@@ -286,9 +307,33 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       status: 'Scheduled',
       locationOrLink: location || 'Council Office Boardroom, Salt Lake',
       agenda: agenda || 'Discuss business services and project collaboration.',
+      createdAt: 'Just now',
     };
 
     setOneToOneMeetings(prev => [newMeeting, ...prev]);
+
+    // Push instant notification to the recipient member
+    const newNotif: AppNotification = {
+      id: `notif_${Date.now()}`,
+      recipientId: target.id,
+      senderId: currentUser.id,
+      senderName: currentUser.name,
+      senderAvatar: currentUser.avatar,
+      senderCompany: currentUser.companyName,
+      title: 'New 1-to-1 Meeting Scheduled',
+      message: `${currentUser.name} scheduled a 1-to-1 meeting with you for ${date || 'Upcoming'} at ${time || '11:00 AM'}.`,
+      type: 'Meeting',
+      timestamp: 'Just now',
+      read: false,
+      meetingDetails: {
+        date: date || 'Upcoming',
+        time: time || '11:00 AM',
+        location: location || 'Council Office Boardroom, Salt Lake',
+        agenda: agenda || 'Discuss business services and project collaboration.',
+      },
+    };
+    setNotifications(prev => [newNotif, ...prev]);
+
     setCurrentUser(prev => ({
       ...prev,
       stats: {
@@ -296,6 +341,21 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         oneToOneCount: prev.stats.oneToOneCount + 1,
       },
     }));
+  };
+
+  const markMeetingCompleted = (meetingId: string, minutes?: string) => {
+    setOneToOneMeetings(prev =>
+      prev.map(m => {
+        if (m.id === meetingId) {
+          return {
+            ...m,
+            status: 'Completed',
+            meetingMinutes: minutes || 'Meeting completed successfully. Strategic action items agreed.',
+          };
+        }
+        return m;
+      })
+    );
   };
 
   const giveReferral = (
@@ -501,6 +561,19 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setSelectedUserForAdminAccess(null);
   };
 
+  const openNotifications = () => setShowNotificationsModal(true);
+  const closeNotifications = () => setShowNotificationsModal(false);
+
+  const markNotificationRead = (notifId: string) => {
+    setNotifications(prev =>
+      prev.map(n => (n.id === notifId ? { ...n, read: true } : n))
+    );
+  };
+
+  const clearAllNotifications = () => {
+    setNotifications([]);
+  };
+
   const openDrawer = () => setShowDrawer(true);
   const closeDrawer = () => setShowDrawer(false);
 
@@ -520,6 +593,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         messageThreads,
         messages,
         comments,
+        notifications,
         requestedAdminAccessIds,
         isAuthenticated,
 
@@ -537,6 +611,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         selectedPostForComments,
         showRequestAdminAccessModal,
         selectedUserForAdminAccess,
+        showNotificationsModal,
         showDrawer,
         activeSearchQuery,
 
@@ -548,6 +623,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         addComment,
         createPost,
         logOneToOne,
+        markMeetingCompleted,
         giveReferral,
         recordBusinessDeal,
         toggleFollowUser,
@@ -555,6 +631,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         toggleRegisterEvent,
         sendMessage,
         requestAdminContactAccess,
+        markNotificationRead,
+        clearAllNotifications,
 
         openStory,
         closeStory,
@@ -572,6 +650,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         closeComments,
         openRequestAdminAccess,
         closeRequestAdminAccess,
+        openNotifications,
+        closeNotifications,
         openDrawer,
         closeDrawer,
         setActiveSearchQuery,

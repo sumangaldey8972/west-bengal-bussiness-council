@@ -27,6 +27,7 @@ import { RecordDealModal } from '../components/RecordDealModal';
 import { PostCreationModal } from '../components/PostCreationModal';
 import { CommentsModal } from '../components/CommentsModal';
 import { RequestAdminAccessModal } from '../components/RequestAdminAccessModal';
+import { NotificationsModal } from '../components/NotificationsModal';
 import { DrawerModal } from '../components/DrawerModal';
 
 const Tab = createBottomTabNavigator();
@@ -137,6 +138,7 @@ export const AppNavigator: React.FC = () => {
             <PostCreationModal />
             <CommentsModal />
             <RequestAdminAccessModal />
+            <NotificationsModal />
             <DrawerModal onNavigate={handleDrawerNavigate} />
           </>
         )}

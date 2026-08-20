@@ -98,6 +98,10 @@ export interface Community {
 
 export interface OneToOneMeeting {
   id: string;
+  creatorId?: string;
+  creatorName?: string;
+  creatorCompany?: string;
+  creatorAvatar?: string;
   withUserId: string;
   withUserName: string;
   withUserCompany: string;
@@ -109,6 +113,27 @@ export interface OneToOneMeeting {
   agenda: string;
   meetingMinutes?: string;
   actionItems?: string[];
+  createdAt?: string;
+}
+
+export interface AppNotification {
+  id: string;
+  recipientId: string;
+  senderId: string;
+  senderName: string;
+  senderAvatar: string;
+  senderCompany?: string;
+  title: string;
+  message: string;
+  type: 'Meeting' | 'Referral' | 'Deal' | 'General';
+  timestamp: string;
+  read: boolean;
+  meetingDetails?: {
+    date: string;
+    time: string;
+    location: string;
+    agenda: string;
+  };
 }
 
 export interface Referral {

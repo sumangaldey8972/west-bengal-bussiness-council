@@ -14,7 +14,9 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onSearchPress, onSearchFocus }) => {
   const navigation = useNavigation<any>();
-  const { currentUser, openDrawer, openDigitalBusinessCard } = useApp();
+  const { currentUser, openDrawer, openDigitalBusinessCard, openNotifications, notifications } = useApp();
+
+  const unreadCount = notifications.filter(n => !n.read).length;
 
   const handleSearchPress = () => {
     if (onSearchPress) {
@@ -67,11 +69,12 @@ export const Header: React.FC<HeaderProps> = ({ onSearchPress, onSearchFocus }) 
           {/* Notifications */}
           <TouchableOpacity
             style={styles.iconButton}
+            onPress={openNotifications}
             activeOpacity={0.7}
             accessibilityLabel="Notifications"
           >
             <Bell color={colors.textSecondary} size={19} />
-            <View style={styles.badgeDot} />
+            {unreadCount > 0 && <View style={styles.badgeDot} />}
           </TouchableOpacity>
         </View>
       </View>

@@ -1,4 +1,4 @@
-import { User, Story, Post, PostComment, Community, OneToOneMeeting, Referral, BusinessDeal, MeetingSummary, EventItem, MessageThread, Message } from '../types';
+import { User, Story, Post, PostComment, Community, OneToOneMeeting, Referral, BusinessDeal, MeetingSummary, EventItem, MessageThread, Message, AppNotification } from '../types';
 
 export const CURRENT_USER: User = {
   id: 'user_me',
@@ -493,6 +493,10 @@ export const MOCK_COMMUNITIES: Community[] = [
 export const MOCK_ONE_TO_ONE_MEETINGS: OneToOneMeeting[] = [
   {
     id: 'oto_1',
+    creatorId: 'user_me',
+    creatorName: 'Subrata Mukherjee',
+    creatorCompany: 'Bengal Precision Dynamics',
+    creatorAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
     withUserId: 'user_1',
     withUserName: 'Ananya Roy',
     withUserCompany: 'Medisurg Bengal Biotech',
@@ -506,10 +510,14 @@ export const MOCK_ONE_TO_ONE_MEETINGS: OneToOneMeeting[] = [
   },
   {
     id: 'oto_2',
-    withUserId: 'user_5',
-    withUserName: 'Arnab Bhattacharya',
-    withUserCompany: 'Synapse Enterprise AI',
-    withUserAvatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=300&auto=format&fit=crop&q=80',
+    creatorId: 'user_5',
+    creatorName: 'Arnab Bhattacharya',
+    creatorCompany: 'Synapse Enterprise AI',
+    creatorAvatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=300&auto=format&fit=crop&q=80',
+    withUserId: 'user_me',
+    withUserName: 'Subrata Mukherjee',
+    withUserCompany: 'Bengal Precision Dynamics',
+    withUserAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
     date: 'Monday, Aug 24, 2026',
     time: '11:00 AM - 11:45 AM',
     status: 'Scheduled',
@@ -518,6 +526,10 @@ export const MOCK_ONE_TO_ONE_MEETINGS: OneToOneMeeting[] = [
   },
   {
     id: 'oto_3',
+    creatorId: 'user_me',
+    creatorName: 'Subrata Mukherjee',
+    creatorCompany: 'Bengal Precision Dynamics',
+    creatorAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
     withUserId: 'user_3',
     withUserName: 'Souvik Sen',
     withUserCompany: 'Howrah Heavy Forgings',
@@ -532,10 +544,14 @@ export const MOCK_ONE_TO_ONE_MEETINGS: OneToOneMeeting[] = [
   },
   {
     id: 'oto_4',
-    withUserId: 'user_2',
-    withUserName: 'Debashis Ganguly',
-    withUserCompany: 'Ganguly Heritage Tea',
-    withUserAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&auto=format&fit=crop&q=80',
+    creatorId: 'user_2',
+    creatorName: 'Debashis Ganguly',
+    creatorCompany: 'Ganguly Heritage Tea',
+    creatorAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&auto=format&fit=crop&q=80',
+    withUserId: 'user_me',
+    withUserName: 'Subrata Mukherjee',
+    withUserCompany: 'Bengal Precision Dynamics',
+    withUserAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
     date: 'Aug 05, 2026',
     time: '05:30 PM - 06:15 PM',
     status: 'Completed',
@@ -543,6 +559,90 @@ export const MOCK_ONE_TO_ONE_MEETINGS: OneToOneMeeting[] = [
     agenda: 'Automated tea leaf grading & robotic packing equipment consultation.',
     meetingMinutes: 'Delivered initial conceptual engineering drawings. RFP under active evaluation.',
     actionItems: ['Submit formal financial quote by Aug 28']
+  },
+  {
+    id: 'oto_5',
+    creatorId: 'user_me',
+    creatorName: 'Subrata Mukherjee',
+    creatorCompany: 'Bengal Precision Dynamics',
+    creatorAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
+    withUserId: 'user_1',
+    withUserName: 'Ananya Roy',
+    withUserCompany: 'Medisurg Bengal Biotech',
+    withUserAvatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&auto=format&fit=crop&q=80',
+    date: 'Jul 22, 2026',
+    time: '02:00 PM - 02:45 PM',
+    status: 'Completed',
+    locationOrLink: 'Medisurg HQ, New Town',
+    agenda: 'Orthopedic implant precision CNC calibration requirements review.',
+    meetingMinutes: 'Completed technical specs walkthrough. Sample batch testing approved.',
+    actionItems: ['Send calibrated valve prototypes']
+  },
+  {
+    id: 'oto_6',
+    creatorId: 'user_3',
+    creatorName: 'Souvik Sen',
+    creatorCompany: 'Howrah Heavy Forgings',
+    creatorAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&auto=format&fit=crop&q=80',
+    withUserId: 'user_me',
+    withUserName: 'Subrata Mukherjee',
+    withUserCompany: 'Bengal Precision Dynamics',
+    withUserAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
+    date: 'Jul 10, 2026',
+    time: '04:30 PM - 05:15 PM',
+    status: 'Completed',
+    locationOrLink: 'Council Office, Salt Lake',
+    agenda: 'Exploring joint bid for Metro Railway wheel-hub forging contract.',
+    meetingMinutes: 'Agreed on joint consortium model. Souvik handling forging; Subrata handling precision machining.',
+    actionItems: ['Joint RFP submitted on Jul 18']
+  }
+];
+
+export const MOCK_NOTIFICATIONS: AppNotification[] = [
+  {
+    id: 'notif_1',
+    recipientId: 'user_me',
+    senderId: 'user_5',
+    senderName: 'Arnab Bhattacharya',
+    senderAvatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=300&auto=format&fit=crop&q=80',
+    senderCompany: 'Synapse Enterprise AI',
+    title: 'New 1-to-1 Meeting Scheduled',
+    message: 'Arnab Bhattacharya scheduled a 1-to-1 meeting with you on Monday, Aug 24 at 11:00 AM.',
+    type: 'Meeting',
+    timestamp: '15 mins ago',
+    read: false,
+    meetingDetails: {
+      date: 'Monday, Aug 24, 2026',
+      time: '11:00 AM - 11:45 AM',
+      location: 'Council Office Boardroom, Salt Lake',
+      agenda: 'Exploring automated vision inspection integration on our CNC milling machines.',
+    }
+  },
+  {
+    id: 'notif_2',
+    recipientId: 'user_me',
+    senderId: 'user_3',
+    senderName: 'Souvik Sen',
+    senderAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&auto=format&fit=crop&q=80',
+    senderCompany: 'Howrah Heavy Forgings',
+    title: 'Meeting Notes Updated',
+    message: 'Souvik Sen added contract execution minutes to your completed 1-to-1 session.',
+    type: 'Meeting',
+    timestamp: '2 hours ago',
+    read: false
+  },
+  {
+    id: 'notif_3',
+    recipientId: 'user_me',
+    senderId: 'user_1',
+    senderName: 'Ananya Roy',
+    senderAvatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&auto=format&fit=crop&q=80',
+    senderCompany: 'Medisurg Bengal Biotech',
+    title: 'Meeting Confirmed: Aug 21',
+    message: 'Ananya Roy confirmed the 1-to-1 meeting for tomorrow at Starbucks, South City Mall.',
+    type: 'Meeting',
+    timestamp: 'Yesterday',
+    read: true
   }
 ];
 
