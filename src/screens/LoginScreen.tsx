@@ -215,7 +215,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                     activeOpacity={0.8}
                   >
                     <KeyRound color={colors.white} size={16} />
-                    <Text style={styles.sendOtpBtnText}>Send Demo OTP</Text>
+                    <Text style={styles.sendOtpBtnText}>Send OTP</Text>
                   </TouchableOpacity>
                 ) : (
                   <>
