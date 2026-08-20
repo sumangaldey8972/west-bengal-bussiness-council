@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -17,6 +17,7 @@ import { MeetingSummaryScreen } from '../screens/MeetingSummaryScreen';
 import { EventsScreen } from '../screens/EventsScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { SignUpScreen } from '../screens/SignUpScreen';
+import { CustomSplashScreen } from '../screens/CustomSplashScreen';
 
 import { StoryViewerModal } from '../components/StoryViewerModal';
 import { DigitalBusinessCardModal } from '../components/DigitalBusinessCardModal';
@@ -48,11 +49,7 @@ const MainTabs = () => {
         component={HomeScreen}
         options={{
           tabBarLabel: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <View style={[styles.iconWrapper, focused && styles.activeIconWrapper]}>
-              <Home color={color} size={20} strokeWidth={focused ? 2.5 : 2} />
-            </View>
-          ),
+          tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
         }}
       />
       <Tab.Screen
@@ -60,11 +57,7 @@ const MainTabs = () => {
         component={CommunityScreen}
         options={{
           tabBarLabel: 'Chapters',
-          tabBarIcon: ({ color, focused }) => (
-            <View style={[styles.iconWrapper, focused && styles.activeIconWrapper]}>
-              <Users color={color} size={20} strokeWidth={focused ? 2.5 : 2} />
-            </View>
-          ),
+          tabBarIcon: ({ color, size }) => <Users color={color} size={size} />,
         }}
       />
       <Tab.Screen
@@ -72,23 +65,15 @@ const MainTabs = () => {
         component={SearchScreen}
         options={{
           tabBarLabel: 'Directory',
-          tabBarIcon: ({ color, focused }) => (
-            <View style={[styles.iconWrapper, focused && styles.activeIconWrapper]}>
-              <Search color={color} size={20} strokeWidth={focused ? 2.5 : 2} />
-            </View>
-          ),
+          tabBarIcon: ({ color, size }) => <Search color={color} size={size} />,
         }}
       />
       <Tab.Screen
         name="BusinessDesk"
         component={BusinessDeskScreen}
         options={{
-          tabBarLabel: 'Business Desk',
-          tabBarIcon: ({ color, focused }) => (
-            <View style={[styles.iconWrapper, focused && styles.activeIconWrapper]}>
-              <Briefcase color={color} size={20} strokeWidth={focused ? 2.5 : 2} />
-            </View>
-          ),
+          tabBarLabel: 'Deals & Referrals',
+          tabBarIcon: ({ color, size }) => <Briefcase color={color} size={size} />,
         }}
       />
       <Tab.Screen
@@ -96,11 +81,7 @@ const MainTabs = () => {
         component={MessagesScreen}
         options={{
           tabBarLabel: 'Messages',
-          tabBarIcon: ({ color, focused }) => (
-            <View style={[styles.iconWrapper, focused && styles.activeIconWrapper]}>
-              <MessageSquare color={color} size={20} strokeWidth={focused ? 2.5 : 2} />
-            </View>
-          ),
+          tabBarIcon: ({ color, size }) => <MessageSquare color={color} size={size} />,
         }}
       />
     </Tab.Navigator>
@@ -109,12 +90,17 @@ const MainTabs = () => {
 
 export const AppNavigator: React.FC = () => {
   const { isAuthenticated } = useApp();
+  const [isSplashVisible, setIsSplashVisible] = useState(true);
 
   const handleDrawerNavigate = (screenName: string) => {
     if (navigationRef.isReady()) {
       navigationRef.navigate(screenName as never);
     }
   };
+
+  if (isSplashVisible) {
+    return <CustomSplashScreen onFinish={() => setIsSplashVisible(false)} />;
+  }
 
   return (
     <NavigationContainer ref={navigationRef}>

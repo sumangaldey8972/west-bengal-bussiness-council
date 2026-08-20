@@ -112,7 +112,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
           {/* Header & Brand Logo */}
           <View style={styles.headerSection}>
-            <BrandLogo size="xlarge" centered={true} taglineText="by Bengal Business Council" style={styles.brandLogoBox} />
+            <View style={styles.loginEmblemWrapper}>
+              <Image
+                source={require('../../assets/splash-emblem.jpg')}
+                style={styles.loginEmblemImage}
+                resizeMode="cover"
+              />
+            </View>
+
+            <BrandLogo size="large" centered={true} taglineText="by Bengal Business Council" style={styles.brandLogoBox} />
 
             <View style={styles.badgePill}>
               <ShieldCheck color={colors.crimson} size={13} />
@@ -388,10 +396,31 @@ const styles = StyleSheet.create({
   headerSection: {
     alignItems: 'center',
     marginBottom: 16,
-    marginTop: 12,
+    marginTop: 8,
+  },
+  loginEmblemWrapper: {
+    width: 68,
+    height: 68,
+    borderRadius: 18,
+    backgroundColor: '#07101E',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.08)',
+  },
+  loginEmblemImage: {
+    width: 68,
+    height: 68,
+    borderRadius: 18,
   },
   brandLogoBox: {
-    marginBottom: 16,
+    marginBottom: 14,
   },
   crestBadge: {
     backgroundColor: colors.crimson,
