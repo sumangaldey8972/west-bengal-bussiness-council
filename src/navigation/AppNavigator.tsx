@@ -120,30 +120,23 @@ export const AppNavigator: React.FC = () => {
     <NavigationContainer ref={navigationRef}>
       <View style={styles.rootContainer}>
         <Stack.Navigator
-          initialRouteName={isAuthenticated ? "MainTabs" : "Login"}
           screenOptions={{
             headerShown: false,
             animation: 'fade_from_bottom',
           }}
         >
           {isAuthenticated ? (
-            <>
+            <Stack.Group>
               <Stack.Screen name="MainTabs" component={MainTabs} />
               <Stack.Screen name="Profile" component={ProfileScreen} />
               <Stack.Screen name="MeetingSummary" component={MeetingSummaryScreen} />
               <Stack.Screen name="Events" component={EventsScreen} />
-              <Stack.Screen name="Login" component={LoginScreen} />
-              <Stack.Screen name="SignUp" component={SignUpScreen} />
-            </>
+            </Stack.Group>
           ) : (
-            <>
+            <Stack.Group>
               <Stack.Screen name="Login" component={LoginScreen} />
               <Stack.Screen name="SignUp" component={SignUpScreen} />
-              <Stack.Screen name="MainTabs" component={MainTabs} />
-              <Stack.Screen name="Profile" component={ProfileScreen} />
-              <Stack.Screen name="MeetingSummary" component={MeetingSummaryScreen} />
-              <Stack.Screen name="Events" component={EventsScreen} />
-            </>
+            </Stack.Group>
           )}
         </Stack.Navigator>
 

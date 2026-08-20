@@ -234,7 +234,6 @@ export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
               onPress={() => {
                 closeDrawer();
                 logout();
-                onNavigate('Login');
               }}
             >
               <LogOut color={colors.crimson} size={16} />
