@@ -23,7 +23,7 @@ export const RequestAdminAccessModal: React.FC = () => {
     requestedAdminAccessIds,
   } = useApp();
 
-  const [reason, setReason] = useState('High-value commercial RFP & B2B procurement partnership inquiry');
+  const [reason, setReason] = useState('Business partnership inquiry and meeting request');
 
   if (!showRequestAdminAccessModal || !selectedUserForAdminAccess) return null;
 
@@ -33,7 +33,7 @@ export const RequestAdminAccessModal: React.FC = () => {
     requestAdminContactAccess(selectedUserForAdminAccess.id, reason);
     Alert.alert(
       'Request Sent',
-      `Your request to connect with ${selectedUserForAdminAccess.name} (${selectedUserForAdminAccess.companyName}) has been sent to the Council team. We will introduce you via email or phone.`
+      `Your request to connect with ${selectedUserForAdminAccess.name} (${selectedUserForAdminAccess.companyName}) has been sent to the Council team. We will introduce you soon.`
     );
     closeRequestAdminAccess();
   };
@@ -50,7 +50,7 @@ export const RequestAdminAccessModal: React.FC = () => {
           {/* Header */}
           <View style={styles.header}>
             <View>
-              <Text style={styles.headerBadge}>COUNCIL PROTOCOL</Text>
+              <Text style={styles.headerBadge}>COUNCIL INTRODUCTIONS</Text>
               <Text style={styles.headerTitle}>Request an Introduction</Text>
             </View>
             <TouchableOpacity style={styles.closeBtn} onPress={closeRequestAdminAccess}>

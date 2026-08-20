@@ -133,7 +133,7 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
       }, 400);
     } else if (currentStep === 3) {
       if (!agreeCharter) {
-        showToast('warning', 'Council Agreement Required', 'Please agree to the Member Code of Conduct.');
+        showToast('warning', 'Council Agreement Required', 'Please agree to the Council rules.');
         return;
       }
 
@@ -143,7 +143,7 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
           name: fullName.trim(),
           companyName: companyName.trim(),
           designation: designation.trim() || 'Managing Director',
-          industry: industry.trim() || 'Enterprise Services',
+          industry: industry.trim() || 'Business Services',
           chapter: chapter,
           gstNumber: gstNumber.trim().toUpperCase(),
           turnover: turnover,
@@ -475,7 +475,7 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
                   {agreeCharter && <CheckCircle color={colors.white} size={14} />}
                 </View>
                 <Text style={styles.charterText}>
-                  I confirm that my business is legally registered in West Bengal, and I agree to treat fellow Council members with honesty and professional trust.
+                  I confirm that my business is registered in West Bengal, and I agree to work with fellow Council members with honesty and trust.
                 </Text>
               </TouchableOpacity>
             </View>
@@ -492,13 +492,13 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                 <ActivityIndicator size="small" color={colors.white} />
                 <Text style={styles.nextBtnText}>
-                  {currentStep === 3 ? 'Submitting Council Application...' : 'Validating Information...'}
+                  {currentStep === 3 ? 'Sending Application...' : 'Checking Details...'}
                 </Text>
               </View>
             ) : (
               <>
                 <Text style={styles.nextBtnText}>
-                  {currentStep === 3 ? 'Complete Registration & Enter App' : 'Continue to Next Step'}
+                  {currentStep === 3 ? 'Complete Registration' : 'Continue'}
                 </Text>
                 <ArrowRight color={colors.white} size={18} />
               </>

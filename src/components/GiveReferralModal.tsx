@@ -31,7 +31,7 @@ export const GiveReferralModal: React.FC = () => {
   const [selectedUserId, setSelectedUserId] = useState<string>(
     targetReferralUser?.id || otherUsers[0]?.id || ''
   );
-  const [clientName, setClientName] = useState('Debrup Sen (VP Procurement, Ambuja Neotia)');
+  const [clientName, setClientName] = useState('Debrup Sen (VP Operations, Ambuja Neotia)');
   const [clientContact] = useState('+91 98301 55432 / debrup.sen@ambujaneotia.com');
   const [serviceNeeded, setServiceNeeded] = useState('Engineering consultancy and machinery supply');
   const [estimatedValue, setEstimatedValue] = useState('₹ 35 Lakhs');
@@ -47,8 +47,8 @@ export const GiveReferralModal: React.FC = () => {
       setIsSubmitting(false);
       closeGiveReferral();
       Alert.alert(
-        'Referral Transmitted Successfully! 🤝',
-        'The high-priority lead has been recorded and dispatched to the recipient.'
+        'Referral Sent Successfully! 🤝',
+        'The referral details have been saved and sent to the member.'
       );
     }, 850);
   };
@@ -125,7 +125,7 @@ export const GiveReferralModal: React.FC = () => {
                 style={styles.textInput}
                 value={clientName}
                 onChangeText={setClientName}
-                placeholder="e.g. Debrup Sen (VP Procurement)"
+                placeholder="e.g. Debrup Sen (VP Operations)"
                 placeholderTextColor={colors.textMuted}
               />
             </View>
@@ -140,7 +140,7 @@ export const GiveReferralModal: React.FC = () => {
                 style={[styles.textInput, styles.textArea]}
                 value={serviceNeeded}
                 onChangeText={setServiceNeeded}
-                placeholder="Describe what the prospect needs..."
+                placeholder="Describe what the customer needs..."
                 placeholderTextColor={colors.textMuted}
                 multiline
                 numberOfLines={2}
@@ -166,7 +166,7 @@ export const GiveReferralModal: React.FC = () => {
             <View style={styles.fieldGroup}>
               <View style={styles.fieldLabelRow}>
                 <Clock color={colors.crimson} size={14} />
-                <Text style={styles.inputLabel}>HOW URGENT IS THIS LEAD?</Text>
+                <Text style={styles.inputLabel}>HOW URGENT IS THIS REFERRAL?</Text>
               </View>
               <View style={styles.urgencyRow}>
                 {(['Immediate', 'Within 30 Days', 'Exploring'] as Referral['urgency'][]).map(level => {
@@ -196,7 +196,7 @@ export const GiveReferralModal: React.FC = () => {
               {isSubmitting ? (
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                   <ActivityIndicator size="small" color={colors.white} />
-                  <Text style={styles.submitBtnText}>Transmitting Referral...</Text>
+                  <Text style={styles.submitBtnText}>Sending Referral...</Text>
                 </View>
               ) : (
                 <Text style={styles.submitBtnText}>Send Referral to Member</Text>

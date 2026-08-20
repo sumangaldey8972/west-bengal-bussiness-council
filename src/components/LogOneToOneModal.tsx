@@ -45,8 +45,8 @@ export const LogOneToOneModal: React.FC = () => {
       setIsSubmitting(false);
       closeLogOneToOne();
       Alert.alert(
-        '1-to-1 Meeting Scheduled!',
-        'Your strategy meeting has been recorded and synced to your schedule.'
+        '1-to-1 Meeting Saved!',
+        'Your meeting has been saved and added to your calendar.'
       );
     }, 800);
   };
@@ -75,7 +75,7 @@ export const LogOneToOneModal: React.FC = () => {
 
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.body}>
             {/* Member Selection */}
-            <Text style={styles.inputLabel}>SELECT COUNCIL MEMBER</Text>
+            <Text style={styles.inputLabel}>MEETING WITH MEMBER</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.memberScroll}>
               {otherUsers.map(member => {
                 const isSelected = member.id === selectedUserId;
@@ -94,9 +94,6 @@ export const LogOneToOneModal: React.FC = () => {
                     <Text style={[styles.memberName, isSelected && styles.textCrimson]} numberOfLines={1}>
                       {member.name.split(' ')[0]}
                     </Text>
-                    <Text style={styles.memberCompany} numberOfLines={1}>
-                      {member.companyName}
-                    </Text>
                   </TouchableOpacity>
                 );
               })}
@@ -113,34 +110,35 @@ export const LogOneToOneModal: React.FC = () => {
               </View>
             )}
 
-            {/* Date Input */}
-            <View style={styles.fieldGroup}>
-              <View style={styles.fieldLabelRow}>
-                <Calendar color={colors.crimson} size={14} />
-                <Text style={styles.inputLabel}>MEETING DATE</Text>
+            {/* Date & Time Row */}
+            <View style={styles.rowFields}>
+              <View style={[styles.fieldGroup, { flex: 1 }]}>
+                <View style={styles.fieldLabelRow}>
+                  <Calendar color={colors.crimson} size={14} />
+                  <Text style={styles.inputLabel}>MEETING DATE</Text>
+                </View>
+                <TextInput
+                  style={styles.textInput}
+                  value={date}
+                  onChangeText={setDate}
+                  placeholder="e.g. Aug 27, 2026"
+                  placeholderTextColor={colors.textMuted}
+                />
               </View>
-              <TextInput
-                style={styles.textInput}
-                value={date}
-                onChangeText={setDate}
-                placeholder="e.g. Thursday, Aug 27, 2026"
-                placeholderTextColor={colors.textMuted}
-              />
-            </View>
 
-            {/* Time Input */}
-            <View style={styles.fieldGroup}>
-              <View style={styles.fieldLabelRow}>
-                <Clock color={colors.crimson} size={14} />
-                <Text style={styles.inputLabel}>TIME & DURATION</Text>
+              <View style={[styles.fieldGroup, { flex: 1 }]}>
+                <View style={styles.fieldLabelRow}>
+                  <Clock color={colors.crimson} size={14} />
+                  <Text style={styles.inputLabel}>TIME</Text>
+                </View>
+                <TextInput
+                  style={styles.textInput}
+                  value={time}
+                  onChangeText={setTime}
+                  placeholder="e.g. 11:00 AM"
+                  placeholderTextColor={colors.textMuted}
+                />
               </View>
-              <TextInput
-                style={styles.textInput}
-                value={time}
-                onChangeText={setTime}
-                placeholder="e.g. 11:00 AM - 11:45 AM"
-                placeholderTextColor={colors.textMuted}
-              />
             </View>
 
             {/* Location Input */}
@@ -185,7 +183,7 @@ export const LogOneToOneModal: React.FC = () => {
               {isSubmitting ? (
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                   <ActivityIndicator size="small" color={colors.white} />
-                  <Text style={styles.submitBtnText}>Scheduling Strategy Session...</Text>
+                  <Text style={styles.submitBtnText}>Saving 1-to-1 Meeting...</Text>
                 </View>
               ) : (
                 <Text style={styles.submitBtnText}>Save 1-to-1 Meeting</Text>
@@ -325,6 +323,10 @@ const styles = StyleSheet.create({
   },
   fieldGroup: {
     marginBottom: 14,
+  },
+  rowFields: {
+    flexDirection: 'row',
+    gap: 12,
   },
   fieldLabelRow: {
     flexDirection: 'row',

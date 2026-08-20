@@ -29,7 +29,7 @@ export const PostCreationModal: React.FC = () => {
 
   const handleSubmit = () => {
     if (!content.trim()) {
-      Alert.alert('Please Enter Details', 'Please write the details of your post or business requirement.');
+      Alert.alert('Please Enter Details', 'Please write what you are looking for.');
       return;
     }
 
@@ -39,7 +39,7 @@ export const PostCreationModal: React.FC = () => {
       setIsSubmitting(false);
       setContent('');
       closeCreatePost();
-      Alert.alert('Post Published! 🚀', 'Your business post is now live on the Council feed.');
+      Alert.alert('Post Published! 🚀', 'Your post is now live on the feed.');
     }, 900);
   };
 
@@ -57,8 +57,8 @@ export const PostCreationModal: React.FC = () => {
           {/* Header */}
           <View style={styles.header}>
             <View>
-              <Text style={styles.headerBadge}>BENGAL BUSINESS COUNCIL FEED</Text>
-              <Text style={styles.headerTitle}>Create a Post or Requirement</Text>
+              <Text style={styles.headerBadge}>BENGAL BUSINESS COUNCIL</Text>
+              <Text style={styles.headerTitle}>Create a Post or Request</Text>
             </View>
             <TouchableOpacity style={styles.closeBtn} onPress={closeCreatePost}>
               <X color={colors.textPrimary} size={20} />
@@ -94,7 +94,7 @@ export const PostCreationModal: React.FC = () => {
                   <AlertCircle color={isUrgent ? colors.crimson : colors.textMuted} size={18} />
                   <View>
                     <Text style={[styles.urgentTitle, isUrgent && styles.urgentTitleActive]}>
-                      Urgent Requirement
+                      Urgent Request
                     </Text>
                     <Text style={styles.urgentSub}>
                       Highlights this post to members in your industry
@@ -141,7 +141,7 @@ export const PostCreationModal: React.FC = () => {
               <FileText color={hasAttachment ? colors.crimson : colors.textMuted} size={20} />
               <View style={styles.attachInfo}>
                 <Text style={[styles.attachTitle, hasAttachment && styles.attachTitleActive]}>
-                  {hasAttachment ? 'Specification_Document.pdf attached' : '+ Attach PDF / Document (Optional)'}
+                  {hasAttachment ? 'Document_Details.pdf attached' : '+ Attach PDF / File (Optional)'}
                 </Text>
                 <Text style={styles.attachMeta}>
                   {hasAttachment ? '2.4 MB • Ready to upload' : 'Max 10 MB (PDF format)'}
@@ -162,12 +162,12 @@ export const PostCreationModal: React.FC = () => {
               {isSubmitting ? (
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                   <ActivityIndicator size="small" color={colors.white} />
-                  <Text style={styles.submitBtnText}>Publishing Post to Feed...</Text>
+                  <Text style={styles.submitBtnText}>Publishing Post...</Text>
                 </View>
               ) : (
                 <>
                   <Send color={colors.white} size={16} />
-                  <Text style={styles.submitBtnText}>Publish Post to Council</Text>
+                  <Text style={styles.submitBtnText}>Publish Post</Text>
                 </>
               )}
             </TouchableOpacity>

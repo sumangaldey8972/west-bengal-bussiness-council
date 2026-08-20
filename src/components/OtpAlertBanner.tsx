@@ -52,7 +52,7 @@ export const OtpAlertBanner: React.FC<OtpAlertBannerProps> = ({
       <View style={styles.headerRow}>
         <View style={styles.badgeGroup}>
           <View style={styles.pulseDot} />
-          <Text style={styles.badgeText}>INSTANT SMS DISPATCH</Text>
+          <Text style={styles.badgeText}>SMS SENT</Text>
         </View>
 
         <View style={styles.timerBadge}>
@@ -70,9 +70,9 @@ export const OtpAlertBanner: React.FC<OtpAlertBannerProps> = ({
         </View>
 
         <View style={styles.textColumn}>
-          <Text style={styles.titleText}>Authentication Passcode Sent</Text>
+          <Text style={styles.titleText}>SMS Code Sent (OTP)</Text>
           <Text style={styles.subtitleText} numberOfLines={1}>
-            Sent via high-priority gateway to <Text style={styles.recipientText}>{recipient || 'registered mobile'}</Text>
+            Sent to <Text style={styles.recipientText}>{recipient || 'registered mobile'}</Text>
           </Text>
         </View>
       </View>
@@ -90,7 +90,7 @@ export const OtpAlertBanner: React.FC<OtpAlertBannerProps> = ({
       <View style={styles.footerRow}>
         <View style={styles.autoFilledPill}>
           <CheckCircle2 color={colors.emerald} size={13} />
-          <Text style={styles.autoFilledText}>Auto-filled for instant testing</Text>
+          <Text style={styles.autoFilledText}>Auto-filled for quick test</Text>
         </View>
 
         <TouchableOpacity

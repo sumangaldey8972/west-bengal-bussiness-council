@@ -185,12 +185,12 @@ export const RecordDealModal: React.FC = () => {
               {isSubmitting ? (
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                   <ActivityIndicator size="small" color={colors.white} />
-                  <Text style={styles.submitBtnText}>Recording Deal & Crediting Volume...</Text>
+                  <Text style={styles.submitBtnText}>Saving Business Deal...</Text>
                 </View>
               ) : (
                 <>
                   <TrendingUp color={colors.white} size={18} />
-                  <Text style={styles.submitBtnText}>Save & Record Business Deal</Text>
+                  <Text style={styles.submitBtnText}>Save Business Deal</Text>
                 </>
               )}
             </TouchableOpacity>

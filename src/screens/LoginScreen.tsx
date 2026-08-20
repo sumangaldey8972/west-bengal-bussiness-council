@@ -98,8 +98,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       setOtpOrPassword('123456'); // Auto-fill for convenience in demo testing
       showToast(
         'success',
-        'Passcode Dispatched (Demo: 123456)',
-        `A 6-digit SMS verification code has been dispatched to ${mobileOrEmail.trim()} and auto-filled below.`
+        'OTP Sent (Demo: 123456)',
+        `A 6-digit OTP code was sent to ${mobileOrEmail.trim()} and filled below.`
       );
     }, 850);
   };
@@ -114,8 +114,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       setOtpOrPassword('123456');
       showToast(
         'success',
-        'New Passcode Dispatched',
-        `A fresh 6-digit SMS verification code (123456) has been dispatched to ${mobileOrEmail.trim()}.`
+        'New OTP Sent',
+        `A new 6-digit OTP code (123456) was sent to ${mobileOrEmail.trim()}.`
       );
     }, 750);
   };
@@ -127,7 +127,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     }
 
     if (isOtpMode && !otpOrPassword.trim()) {
-      showToast('warning', 'Passcode Required', 'Please enter the 6-digit OTP code (123456).');
+      showToast('warning', 'OTP Required', 'Please enter the 6-digit OTP code (123456).');
       return;
     }
 
@@ -161,7 +161,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       showToast('info', 'Demo Profile Selected', `Auto-filled details for ${phoneOrEmail}.`);
     } else {
       setOtpOrPassword('password123');
-      showToast('info', 'Demo Profile Selected', `Auto-filled password credentials.`);
+      showToast('info', 'Demo Profile Selected', `Auto-filled password.`);
     }
   };
 
@@ -263,7 +263,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                     {isSendingOtp ? (
                       <>
                         <ActivityIndicator size="small" color={colors.white} />
-                        <Text style={styles.sendOtpBtnText}>Sending OTP via SMS...</Text>
+                        <Text style={styles.sendOtpBtnText}>Sending OTP...</Text>
                       </>
                     ) : (
                       <>
@@ -280,7 +280,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                       recipient={mobileOrEmail}
                       timerSeconds={timer}
                       onCopy={() =>
-                        showToast('success', 'Passcode Copied', 'OTP 123456 has been copied to your clipboard.')
+                        showToast('success', 'OTP Copied', 'OTP 123456 has been copied.')
                       }
                     />
 
@@ -328,7 +328,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                       {isLoggingIn ? (
                         <>
                           <ActivityIndicator size="small" color={colors.white} />
-                          <Text style={styles.primaryBtnText}>Verifying OTP & Signing In...</Text>
+                          <Text style={styles.primaryBtnText}>Checking OTP & Signing In...</Text>
                         </>
                       ) : (
                         <>
@@ -351,7 +351,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                         showToast(
                           'info',
                           'Password Reset Sent',
-                          'A secure password reset link has been dispatched to your email address.'
+                          'A password reset link was sent to your email.'
                         )
                       }
                     >
@@ -382,7 +382,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                   {isLoggingIn ? (
                     <>
                       <ActivityIndicator size="small" color={colors.white} />
-                      <Text style={styles.primaryBtnText}>Authenticating Credentials...</Text>
+                      <Text style={styles.primaryBtnText}>Signing In...</Text>
                     </>
                   ) : (
                     <>
@@ -433,7 +433,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                       {isCurrentLoading ? (
                         <>
                           <ActivityIndicator size="small" color={colors.white} style={{ transform: [{ scale: 0.75 }] }} />
-                          <Text style={styles.loginPillLoadingText}>Connecting...</Text>
+                          <Text style={styles.loginPillLoadingText}>Logging In...</Text>
                         </>
                       ) : (
                         <Text style={styles.loginPillText}>Sign In ➔</Text>
