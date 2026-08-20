@@ -28,6 +28,7 @@ import {
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { User } from '../types';
+import { BrandLogo } from '../components/BrandLogo';
 
 interface LoginScreenProps {
   navigation: any;
@@ -109,26 +110,18 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          {/* Header & Logo */}
+          {/* Header & Brand Logo */}
           <View style={styles.headerSection}>
-            <View style={styles.crestRow}>
-              <View style={styles.crestBadge}>
-                <Text style={styles.crestBadgeText}>BBC</Text>
-              </View>
-              <View>
-                <Text style={styles.councilTitle}>BENGAL BUSINESS COUNCIL</Text>
-                <Text style={styles.councilMotto}>Voice of Bengali Businesses Worldwide</Text>
-              </View>
-            </View>
+            <BrandLogo size="xlarge" centered={true} taglineText="by Bengal Business Council" style={styles.brandLogoBox} />
 
             <View style={styles.badgePill}>
-              <ShieldCheck color={colors.crimson} size={14} />
-              <Text style={styles.badgePillText}>MEMBER PORTAL</Text>
+              <ShieldCheck color={colors.crimson} size={13} />
+              <Text style={styles.badgePillText}>BUSINESS OWNERS COMMUNITY</Text>
             </View>
 
             <Text style={styles.welcomeHeading}>Sign In to Your Account</Text>
             <Text style={styles.welcomeSubtitle}>
-              Connect with other business owners, find new business opportunities, set up 1-to-1 meetings, and share referrals across West Bengal.
+              Connect with verified business owners, discover new deals, attend meetings, and exchange trusted referrals across West Bengal.
             </Text>
           </View>
 
@@ -394,13 +387,11 @@ const styles = StyleSheet.create({
   },
   headerSection: {
     alignItems: 'center',
-    marginBottom: 18,
-    marginTop: 10,
+    marginBottom: 16,
+    marginTop: 12,
   },
-  crestRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
+  brandLogoBox: {
+    marginBottom: 16,
   },
   crestBadge: {
     backgroundColor: colors.crimson,

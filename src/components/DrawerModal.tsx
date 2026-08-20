@@ -26,6 +26,7 @@ import {
 } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
+import { BrandLogo } from './BrandLogo';
 
 const { width } = Dimensions.get('window');
 
@@ -34,7 +35,7 @@ interface DrawerModalProps {
 }
 
 export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
-  const { showDrawer, closeDrawer, currentUser, openDigitalBusinessCard, logout } = useApp();
+  const { showDrawer, closeDrawer, currentUser, logout, openDigitalBusinessCard } = useApp();
 
   if (!showDrawer) return null;
 
@@ -42,7 +43,7 @@ export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
     {
       id: 'profile',
       label: 'My Business Profile',
-      sublabel: 'View company details & documents',
+      sublabel: 'View details, GST, and company documents',
       icon: User,
       color: colors.primary,
       bgColor: colors.cardBgElevated,
@@ -52,51 +53,39 @@ export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
       },
     },
     {
-      id: 'card',
-      label: 'Digital Visiting Card',
-      sublabel: 'Share card or order printed copies',
-      icon: CreditCard,
+      id: 'meeting-summary',
+      label: 'Meeting Notes',
+      sublabel: 'View official decisions and action items',
+      icon: FileSpreadsheet,
       color: colors.crimson,
       bgColor: colors.crimsonLight,
-      action: () => {
-        closeDrawer();
-        openDigitalBusinessCard();
-      },
-    },
-    {
-      id: 'meetings',
-      label: 'Meeting Notes & Summaries',
-      sublabel: 'Council meeting notes & archives',
-      icon: FileSpreadsheet,
-      color: colors.accentBlue,
-      bgColor: colors.accentBlueLight,
       action: () => {
         closeDrawer();
         onNavigate('MeetingSummary');
       },
     },
     {
-      id: 'referrals',
-      label: 'Referrals & Deals',
-      sublabel: 'Track shared and received business',
-      icon: Share2,
-      color: colors.purpleAccent,
-      bgColor: colors.purpleLight,
-      action: () => {
-        closeDrawer();
-        onNavigate('BusinessDesk');
-      },
-    },
-    {
       id: 'events',
-      label: 'Events & Business Meets',
-      sublabel: 'Upcoming trade meets & programs',
+      label: 'Events & Summits',
+      sublabel: 'State summits, trade meets, and delegations',
       icon: Calendar,
-      color: colors.crimson,
-      bgColor: colors.crimsonLight,
+      color: colors.accentBlue,
+      bgColor: colors.accentBlueLight,
       action: () => {
         closeDrawer();
         onNavigate('Events');
+      },
+    },
+    {
+      id: 'card',
+      label: 'Digital Visiting Card',
+      sublabel: 'Share QR code and company profile card',
+      icon: CreditCard,
+      color: colors.emerald,
+      bgColor: colors.emeraldLight,
+      action: () => {
+        closeDrawer();
+        openDigitalBusinessCard();
       },
     },
     {
@@ -137,10 +126,7 @@ export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
           {/* Header User Profile Banner */}
           <View style={styles.profileHeader}>
             <View style={styles.crestRow}>
-              <View style={styles.crestBadge}>
-                <Text style={styles.crestBadgeText}>BBC</Text>
-              </View>
-              <Text style={styles.councilTitle}>BENGAL BUSINESS COUNCIL</Text>
+              <BrandLogo size="small" showTagline={true} />
               <TouchableOpacity style={styles.closeBtn} onPress={closeDrawer}>
                 <X color={colors.textPrimary} size={18} />
               </TouchableOpacity>

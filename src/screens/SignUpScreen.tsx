@@ -22,6 +22,7 @@ import {
 } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
+import { BrandLogo } from '../components/BrandLogo';
 
 interface SignUpScreenProps {
   navigation: any;
@@ -148,12 +149,7 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
               <ArrowLeft color={colors.primary} size={20} />
             </TouchableOpacity>
 
-            <View style={styles.crestRow}>
-              <View style={styles.crestBadge}>
-                <Text style={styles.crestBadgeText}>BBC</Text>
-              </View>
-              <Text style={styles.topBarTitle}>NEW MEMBER REGISTRATION</Text>
-            </View>
+            <BrandLogo size="small" showTagline={true} />
           </View>
 
           {/* Progress Indicator */}

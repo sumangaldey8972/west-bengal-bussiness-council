@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Bengal Business Council",
-    "slug": "bengal-business-council",
+    "name": "Bengal Founders",
+    "slug": "bengal-founders",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -9,10 +9,10 @@
     "backgroundColor": "#FFFFFF",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bengalbusinesscouncil.app"
+      "bundleIdentifier": "com.bengalfounders.app"
     },
     "android": {
-      "package": "com.bengalbusinesscouncil.app",
+      "package": "com.bengalfounders.app",
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF",
         "foregroundImage": "./assets/android-icon-foreground.png",

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-nativ
 import { Menu, Bell, Search, ShieldCheck, QrCode } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
+import { BrandLogo } from './BrandLogo';
 
 interface HeaderProps {
   onSearchFocus?: () => void;
@@ -26,17 +27,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearchFocus, showSearchBar = t
             <Menu color={colors.primary} size={22} />
           </TouchableOpacity>
 
-          <View style={styles.brandTitleContainer}>
-            <View style={styles.logoRow}>
-              <View style={styles.crestBadge}>
-                <Text style={styles.crestText}>BBC</Text>
-              </View>
-              <View>
-                <Text style={styles.brandTitle}>BENGAL BUSINESS COUNCIL</Text>
-                <Text style={styles.brandSubtitle}>Voice of Bengali Businesses Worldwide</Text>
-              </View>
-            </View>
-          </View>
+          <BrandLogo size="small" showTagline={true} />
         </View>
 
         <View style={styles.rightActionIcons}>
