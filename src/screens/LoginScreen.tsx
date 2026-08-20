@@ -196,31 +196,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               </TouchableOpacity>
             </View>
 
-            {/* Quick Fill Preset Chips */}
-            <View style={styles.presetsContainer}>
-              <Text style={styles.presetsLabel}>QUICK DEMO LOGINS:</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.presetsScroll}>
-                <TouchableOpacity
-                  style={styles.presetChip}
-                  onPress={() => handleQuickFill('+91 98301 23456')}
-                >
-                  <Text style={styles.presetChipText}>Rajiv (+91 98301 23456)</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.presetChip}
-                  onPress={() => handleQuickFill('priyanka@bengalsilks.com')}
-                >
-                  <Text style={styles.presetChipText}>Priyanka (Bengal Silks)</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.presetChip}
-                  onPress={() => handleQuickFill('amitava@durgapuralloys.com')}
-                >
-                  <Text style={styles.presetChipText}>Amitava (Durgapur Alloys)</Text>
-                </TouchableOpacity>
-              </ScrollView>
-            </View>
-
             {/* Mobile / Email Input */}
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>
