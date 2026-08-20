@@ -7,8 +7,8 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
-  SafeAreaView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Search,
   Building2,
@@ -68,7 +68,7 @@ export const SearchScreen: React.FC = () => {
   });
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <View style={styles.container}>
         {/* Top Search Bar */}
         <View style={styles.searchHeader}>

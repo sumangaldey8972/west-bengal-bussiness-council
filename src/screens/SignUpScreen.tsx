@@ -6,11 +6,11 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
   Alert,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   ArrowLeft,
   ArrowRight,
@@ -68,34 +68,52 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
     '₹ 100 Cr+',
   ];
 
+  const handleFillDemoData = () => {
+    setFullName('Siddhartha Ghosh');
+    setCompanyName('Bengal Green Energy & Solar Infra Ltd');
+    setDesignation('Chairman & Managing Director');
+    setIndustry('Renewable Energy & Solar EPC');
+    setChapter('Kolkata Central Chapter');
+    setGstNumber('19AAECS9012F1Z8');
+    setTurnover('₹ 50 Cr - ₹ 100 Cr');
+    setLocation('Eco Centre, Ambuja Neotia, Salt Lake, Kolkata');
+    setEmail('siddhartha@bengalgreenenergy.in');
+    setPhone('+91 98303 55421');
+    setWebsite('https://bengalgreenenergy.in');
+    setAgreeCharter(true);
+    Alert.alert('Demo Details Filled', 'Form has been filled with demo business owner details.');
+  };
+
   const handleNext = () => {
     if (currentStep === 1) {
-      if (!fullName.trim() || !phone.trim() || !email.trim()) {
-        Alert.alert('Please Fill In Details', 'Please enter your name, phone number, and email.');
+      if (!fullName.trim() || !companyName.trim() || !email.trim()) {
+        Alert.alert('Please Enter Required Details', 'Full Name, Company Name, and Official Email are required.');
         return;
       }
       setCurrentStep(2);
     } else if (currentStep === 2) {
-      if (!companyName.trim() || !gstNumber.trim()) {
-        Alert.alert('Business Details Required', 'Please enter your company name and GST number.');
+      if (!gstNumber.trim()) {
+        Alert.alert('GST Number Required', 'Please enter your GSTIN or type PENDING.');
         return;
       }
       setCurrentStep(3);
     } else if (currentStep === 3) {
       if (!agreeCharter) {
-        Alert.alert('Agreement Required', 'Please check the box to agree to the Council terms.');
+        Alert.alert('Council Agreement Required', 'Please agree to the Member Code of Conduct.');
         return;
       }
 
       register({
         name: fullName.trim(),
-        designation: designation.trim(),
         companyName: companyName.trim(),
-        industry: industry.trim(),
-        chapter,
-        location,
+        designation: designation.trim() || 'Managing Director',
+        industry: industry.trim() || 'Enterprise Services',
+        chapter: chapter,
         gstNumber: gstNumber.trim().toUpperCase(),
-        turnover,
+        turnover: turnover,
+        location: location.trim() || 'Kolkata, West Bengal',
+        bio: `Business leader in ${industry || 'Commerce'} representing Bengal enterprise.`,
+        membershipTier: 'Executive Member',
         contact: {
           email: email.trim(),
           phone: phone.trim(),
@@ -106,13 +124,13 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
 
       Alert.alert(
         'Welcome to Bengal Business Council! 🎉',
-        `Your membership account for ${fullName} has been created successfully.`
+        `Your membership application for ${fullName} has been submitted.`
       );
     }
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <KeyboardAvoidingView
         style={styles.keyboardContainer}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}

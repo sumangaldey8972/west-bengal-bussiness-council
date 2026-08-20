@@ -6,9 +6,9 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  SafeAreaView,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Users2,
   Calendar,
@@ -41,7 +41,7 @@ export const CommunityScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <Header />
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>

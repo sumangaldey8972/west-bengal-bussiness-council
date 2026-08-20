@@ -5,8 +5,9 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
+  Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Filter } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
@@ -37,7 +38,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   });
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <Header onSearchFocus={() => navigation.navigate('Search')} />
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>

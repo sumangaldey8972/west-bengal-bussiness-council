@@ -6,9 +6,9 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  SafeAreaView,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   ShieldCheck,
   Building2,
@@ -29,7 +29,7 @@ export const ProfileScreen: React.FC = () => {
   const { currentUser, openDigitalBusinessCard, logout } = useApp();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <Header showSearchBar={false} />
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>

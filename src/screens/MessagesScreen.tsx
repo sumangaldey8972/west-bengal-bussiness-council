@@ -7,10 +7,10 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Send,
   ArrowLeft,
@@ -19,6 +19,7 @@ import {
   QrCode,
   ShieldCheck,
   Building2,
+  Lock,
 } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
@@ -41,13 +42,13 @@ export const MessagesScreen: React.FC = () => {
   const currentMessages = activeThread ? (messages[activeThread.id] || []) : [];
 
   const handleSend = () => {
-    if (!inputText.trim() || !activeThread) return;
-    sendMessage(activeThread.id, inputText);
+    if (!activeThread || !inputText.trim()) return;
+    sendMessage(activeThread.id, inputText.trim());
     setInputText('');
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       {!activeThread ? (
         <>
           <Header showSearchBar={false} />

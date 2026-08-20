@@ -5,9 +5,9 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   Image,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   TrendingUp,
   Users2,
@@ -50,7 +50,7 @@ export const BusinessDeskScreen: React.FC = () => {
   });
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <Header />
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
