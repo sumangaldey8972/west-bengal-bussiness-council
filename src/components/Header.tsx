@@ -1,17 +1,30 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Menu, Bell, Search, ShieldCheck, QrCode } from 'lucide-react-native';
+import { useNavigation } from '@react-navigation/native';
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { BrandLogo } from './BrandLogo';
 
 interface HeaderProps {
+  onSearchPress?: () => void;
   onSearchFocus?: () => void;
-  showSearchBar?: boolean;
+  showSearchBar?: boolean; // Kept for interface compatibility
 }
 
-export const Header: React.FC<HeaderProps> = ({ onSearchFocus, showSearchBar = true }) => {
-  const { currentUser, openDrawer, openDigitalBusinessCard, activeSearchQuery, setActiveSearchQuery } = useApp();
+export const Header: React.FC<HeaderProps> = ({ onSearchPress, onSearchFocus }) => {
+  const navigation = useNavigation<any>();
+  const { currentUser, openDrawer, openDigitalBusinessCard } = useApp();
+
+  const handleSearchPress = () => {
+    if (onSearchPress) {
+      onSearchPress();
+    } else if (onSearchFocus) {
+      onSearchFocus();
+    } else {
+      navigation.navigate('Search');
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -31,21 +44,33 @@ export const Header: React.FC<HeaderProps> = ({ onSearchFocus, showSearchBar = t
         </View>
 
         <View style={styles.rightActionIcons}>
+          {/* Clickable Search Icon */}
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={handleSearchPress}
+            activeOpacity={0.7}
+            accessibilityLabel="Search Member Directory"
+          >
+            <Search color={colors.textPrimary} size={19} />
+          </TouchableOpacity>
+
+          {/* Digital Visiting Card QR */}
           <TouchableOpacity
             style={styles.iconButton}
             onPress={() => openDigitalBusinessCard()}
             activeOpacity={0.7}
             accessibilityLabel="View Digital Business Card"
           >
-            <QrCode color={colors.primary} size={20} />
+            <QrCode color={colors.primary} size={19} />
           </TouchableOpacity>
 
+          {/* Notifications */}
           <TouchableOpacity
             style={styles.iconButton}
             activeOpacity={0.7}
             accessibilityLabel="Notifications"
           >
-            <Bell color={colors.textSecondary} size={20} />
+            <Bell color={colors.textSecondary} size={19} />
             <View style={styles.badgeDot} />
           </TouchableOpacity>
         </View>
@@ -66,26 +91,6 @@ export const Header: React.FC<HeaderProps> = ({ onSearchFocus, showSearchBar = t
           <Text style={styles.gstVerifiedText}>GST Verified</Text>
         </View>
       </View>
-
-      {/* Global Search Bar */}
-      {showSearchBar && (
-        <View style={styles.searchContainer}>
-          <Search color={colors.textSecondary} size={18} style={styles.searchIcon} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search business owners, GSTIN, chapters, meetings..."
-            placeholderTextColor={colors.textMuted}
-            value={activeSearchQuery}
-            onChangeText={setActiveSearchQuery}
-            onFocus={onSearchFocus}
-          />
-          {activeSearchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setActiveSearchQuery('')} style={styles.clearBtn}>
-              <Text style={styles.clearBtnText}>✕</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      )}
     </View>
   );
 };
@@ -94,7 +99,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.cardBg,
     paddingTop: 8,
-    paddingBottom: 14,
+    paddingBottom: 10,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: colors.cardBorder,
@@ -103,7 +108,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   leftBrandSection: {
     flexDirection: 'row',
@@ -120,38 +125,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderWidth: 1,
     borderColor: colors.cardBorder,
-  },
-  brandTitleContainer: {
-    flex: 1,
-  },
-  logoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  crestBadge: {
-    backgroundColor: colors.crimson,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    borderRadius: 6,
-    marginRight: 8,
-  },
-  crestText: {
-    color: colors.white,
-    fontWeight: '900',
-    fontSize: 11,
-    letterSpacing: 1,
-  },
-  brandTitle: {
-    color: colors.primary,
-    fontWeight: '800',
-    fontSize: 13,
-    letterSpacing: 0.8,
-  },
-  brandSubtitle: {
-    color: colors.crimson,
-    fontSize: 9.5,
-    fontWeight: '600',
-    letterSpacing: 0.2,
   },
   rightActionIcons: {
     flexDirection: 'row',
@@ -184,7 +157,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
     paddingHorizontal: 2,
   },
   greetingText: {
@@ -223,31 +195,5 @@ const styles = StyleSheet.create({
     fontSize: 10.5,
     fontWeight: '700',
     letterSpacing: 0.2,
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.cardBgElevated,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.inputBorder,
-    paddingHorizontal: 12,
-    height: 42,
-  },
-  searchIcon: {
-    marginRight: 8,
-  },
-  searchInput: {
-    flex: 1,
-    color: colors.textPrimary,
-    fontSize: 13,
-    height: '100%',
-  },
-  clearBtn: {
-    padding: 4,
-  },
-  clearBtnText: {
-    color: colors.textMuted,
-    fontSize: 12,
   },
 });

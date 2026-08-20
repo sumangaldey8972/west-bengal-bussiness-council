@@ -58,7 +58,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
-      <Header onSearchFocus={() => navigation.navigate('Search')} />
+      <Header onSearchPress={() => navigation.navigate('Search')} />
 
       {isLoading ? (
         <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
