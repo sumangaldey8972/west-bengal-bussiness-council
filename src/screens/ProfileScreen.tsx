@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
@@ -24,15 +25,49 @@ import {
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { Header } from '../components/Header';
+import { ProfileScreenSkeleton } from '../components/SkeletonLoader';
 
 export const ProfileScreen: React.FC = () => {
   const { currentUser, openDigitalBusinessCard, logout } = useApp();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  useEffect(() => {
+    // Simulate fetching executive profile & verified KYC credentials
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 850);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 800);
+  };
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <Header showSearchBar={false} />
 
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+      {isLoading ? (
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+          <ProfileScreenSkeleton />
+        </ScrollView>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles.container}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+              tintColor={colors.crimson}
+              colors={[colors.crimson, colors.accentBlue]}
+            />
+          }
+        >
         {/* Cover & Profile Banner */}
         <View style={styles.coverContainer}>
           <Image source={{ uri: currentUser.coverImage }} style={styles.coverImage} />
@@ -207,6 +242,7 @@ export const ProfileScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      )}
     </SafeAreaView>
   );
 };

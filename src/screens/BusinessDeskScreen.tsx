@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -27,6 +27,7 @@ import {
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { Header } from '../components/Header';
+import { BusinessDeskSkeleton } from '../components/SkeletonLoader';
 
 export const BusinessDeskScreen: React.FC = () => {
   const {
@@ -39,9 +40,18 @@ export const BusinessDeskScreen: React.FC = () => {
     openRecordDeal,
   } = useApp();
 
+  const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'TYFB' | 'Referrals' | '1-to-1s'>('TYFB');
   const [referralFilter, setReferralFilter] = useState<'All' | 'Given' | 'Received'>('All');
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  useEffect(() => {
+    // Simulate backend deal ledger & referral tracking load
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 900);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleRefresh = () => {
     setIsRefreshing(true);
@@ -65,20 +75,25 @@ export const BusinessDeskScreen: React.FC = () => {
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <Header />
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.container}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={handleRefresh}
-            tintColor={colors.crimson}
-            colors={[colors.crimson, colors.accentBlue]}
-          />
-        }
-      >
-        {/* Top Summary Banner */}
-        <View style={styles.heroDeskCard}>
+      {isLoading ? (
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+          <BusinessDeskSkeleton />
+        </ScrollView>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles.container}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+              tintColor={colors.crimson}
+              colors={[colors.crimson, colors.accentBlue]}
+            />
+          }
+        >
+          {/* Top Summary Banner */}
+          <View style={styles.heroDeskCard}>
           <View style={styles.heroHeader}>
             <View>
               <Text style={styles.heroBadge}>COUNCIL BUSINESS DESK</Text>
@@ -344,6 +359,7 @@ export const BusinessDeskScreen: React.FC = () => {
           </View>
         )}
       </ScrollView>
+      )}
     </SafeAreaView>
   );
 };

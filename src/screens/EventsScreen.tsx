@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,8 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
@@ -19,10 +21,37 @@ import {
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { Header } from '../components/Header';
+import { EventsScreenSkeleton } from '../components/SkeletonLoader';
 
 export const EventsScreen: React.FC = () => {
   const { events, toggleRegisterEvent } = useApp();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [registeringId, setRegisteringId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'All' | 'Registered' | 'Annual Conclave' | 'Trade Delegation' | 'Masterclass'>('All');
+
+  useEffect(() => {
+    // Simulate backend events schedule fetch
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 850);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 800);
+  };
+
+  const handleToggleRegister = (id: string) => {
+    setRegisteringId(id);
+    setTimeout(() => {
+      toggleRegisterEvent(id);
+      setRegisteringId(null);
+    }, 600);
+  };
 
   const filteredEvents = events.filter(e => {
     if (activeTab === 'Registered') return e.isRegistered;
@@ -36,111 +65,135 @@ export const EventsScreen: React.FC = () => {
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <Header showSearchBar={false} />
 
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-        {/* Banner Section */}
-        <View style={styles.heroCard}>
-          <View style={styles.badgeRow}>
-            <Sparkles color={colors.crimson} size={16} />
-            <Text style={styles.badgeText}>BENGAL BUSINESS EVENTS</Text>
-          </View>
-          <Text style={styles.heroTitle}>Events & Business Meets</Text>
-          <Text style={styles.heroSubtitle}>
-            Industry summits, business exhibitions, international buyer meets, and networking events across Bengal.
-          </Text>
-        </View>
-
-        {/* Tab Filters */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.tabScroll}
-        >
-          {(['All', 'Registered', 'Annual Conclave', 'Trade Delegation', 'Masterclass'] as const).map(tab => {
-            const isSelected = activeTab === tab;
-            return (
-              <TouchableOpacity
-                key={tab}
-                style={[styles.tabBtn, isSelected && styles.tabBtnActive]}
-                onPress={() => setActiveTab(tab)}
-              >
-                <Text style={[styles.tabText, isSelected && styles.tabTextActive]}>
-                  {tab === 'All' ? 'All Events' : tab === 'Annual Conclave' ? 'Annual Meet' : tab}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
+      {isLoading ? (
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+          <EventsScreenSkeleton />
         </ScrollView>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles.container}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+              tintColor={colors.crimson}
+              colors={[colors.crimson, colors.accentBlue]}
+            />
+          }
+        >
+          {/* Banner Section */}
+          <View style={styles.heroCard}>
+            <View style={styles.badgeRow}>
+              <Sparkles color={colors.crimson} size={16} />
+              <Text style={styles.badgeText}>BENGAL BUSINESS EVENTS</Text>
+            </View>
+            <Text style={styles.heroTitle}>Events & Business Meets</Text>
+            <Text style={styles.heroSubtitle}>
+              Industry summits, business exhibitions, international buyer meets, and networking events across Bengal.
+            </Text>
+          </View>
 
-        {/* Events List */}
-        <View style={styles.eventsList}>
-          {filteredEvents.map(event => (
-            <View key={event.id} style={styles.eventCard}>
-              {/* Event Banner */}
-              <View style={styles.bannerContainer}>
-                <Image source={{ uri: event.bannerUrl }} style={styles.bannerImage} />
-                <View style={styles.categoryBadge}>
-                  <Text style={styles.categoryBadgeText}>{event.category.toUpperCase()}</Text>
-                </View>
-              </View>
+          {/* Tab Filters */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.tabScroll}
+          >
+            {(['All', 'Registered', 'Annual Conclave', 'Trade Delegation', 'Masterclass'] as const).map(tab => {
+              const isSelected = activeTab === tab;
+              return (
+                <TouchableOpacity
+                  key={tab}
+                  style={[styles.tabBtn, isSelected && styles.tabBtnActive]}
+                  onPress={() => setActiveTab(tab)}
+                >
+                  <Text style={[styles.tabText, isSelected && styles.tabTextActive]}>
+                    {tab === 'All' ? 'All Events' : tab === 'Annual Conclave' ? 'Annual Meet' : tab}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
 
-              {/* Event Content */}
-              <View style={styles.eventContent}>
-                <Text style={styles.eventTitle}>{event.title}</Text>
-                <Text style={styles.eventDescription}>{event.description}</Text>
+          {/* Events List */}
+          <View style={styles.eventsList}>
+            {filteredEvents.map(event => {
+              const isRegisteringThis = registeringId === event.id;
 
-                {/* Event Metadata Box */}
-                <View style={styles.metaBox}>
-                  <View style={styles.metaRow}>
-                    <Calendar color={colors.crimson} size={14} />
-                    <Text style={styles.metaText}>{event.date} • {event.time}</Text>
-                  </View>
-
-                  <View style={styles.metaRow}>
-                    <MapPin color={colors.textSecondary} size={14} />
-                    <Text style={styles.metaText} numberOfLines={1}>{event.venue}</Text>
-                  </View>
-                </View>
-
-                {/* Chief Guest / Keynote Speaker */}
-                {event.chiefGuest && (
-                  <View style={styles.speakerBox}>
-                    <Building color={colors.crimson} size={18} />
-                    <View style={styles.speakerInfo}>
-                      <Text style={styles.speakerRole}>CHIEF GUEST / SPEAKER</Text>
-                      <Text style={styles.speakerName}>{event.chiefGuest}</Text>
+              return (
+                <View key={event.id} style={styles.eventCard}>
+                  {/* Event Banner */}
+                  <View style={styles.bannerContainer}>
+                    <Image source={{ uri: event.bannerUrl }} style={styles.bannerImage} />
+                    <View style={styles.categoryBadge}>
+                      <Text style={styles.categoryBadgeText}>{event.category.toUpperCase()}</Text>
                     </View>
                   </View>
-                )}
 
-                {/* Footer & Registration */}
-                <View style={styles.eventFooter}>
-                  <View style={styles.attendeesCount}>
-                    <Users color={colors.textSecondary} size={14} />
-                    <Text style={styles.attendeesText}>{event.attendeesCount} Registered</Text>
-                  </View>
+                  {/* Event Content */}
+                  <View style={styles.eventContent}>
+                    <Text style={styles.eventTitle}>{event.title}</Text>
+                    <Text style={styles.eventDescription}>{event.description}</Text>
 
-                  <TouchableOpacity
-                    style={[styles.regBtn, event.isRegistered && styles.regBtnActive]}
-                    onPress={() => toggleRegisterEvent(event.id)}
-                    activeOpacity={0.8}
-                  >
-                    {event.isRegistered ? (
-                      <>
-                        <CheckCircle2 color={colors.emerald} size={15} />
-                        <Text style={styles.regTextActive}>Registered</Text>
-                      </>
-                    ) : (
-                      <>
-                        <Text style={styles.regText}>Register for Event</Text>
-                      </>
+                    {/* Event Metadata Box */}
+                    <View style={styles.metaBox}>
+                      <View style={styles.metaRow}>
+                        <Calendar color={colors.crimson} size={14} />
+                        <Text style={styles.metaText}>{event.date} • {event.time}</Text>
+                      </View>
+
+                      <View style={styles.metaRow}>
+                        <MapPin color={colors.textSecondary} size={14} />
+                        <Text style={styles.metaText} numberOfLines={1}>{event.venue}</Text>
+                      </View>
+                    </View>
+
+                    {/* Chief Guest / Keynote Speaker */}
+                    {event.chiefGuest && (
+                      <View style={styles.speakerBox}>
+                        <Building color={colors.crimson} size={18} />
+                        <View style={styles.speakerInfo}>
+                          <Text style={styles.speakerRole}>CHIEF GUEST / SPEAKER</Text>
+                          <Text style={styles.speakerName}>{event.chiefGuest}</Text>
+                        </View>
+                      </View>
                     )}
-                  </TouchableOpacity>
+
+                    {/* Footer & Registration */}
+                    <View style={styles.eventFooter}>
+                      <View style={styles.attendeesCount}>
+                        <Users color={colors.textSecondary} size={14} />
+                        <Text style={styles.attendeesText}>{event.attendeesCount} Registered</Text>
+                      </View>
+
+                      <TouchableOpacity
+                        style={[styles.regBtn, event.isRegistered && styles.regBtnActive, isRegisteringThis && { opacity: 0.75 }]}
+                        onPress={() => handleToggleRegister(event.id)}
+                        disabled={isRegisteringThis}
+                        activeOpacity={0.8}
+                      >
+                        {isRegisteringThis ? (
+                          <ActivityIndicator size="small" color={event.isRegistered ? colors.textPrimary : colors.white} style={{ transform: [{ scale: 0.8 }] }} />
+                        ) : event.isRegistered ? (
+                          <>
+                            <CheckCircle2 color={colors.emerald} size={15} />
+                            <Text style={styles.regTextActive}>Registered</Text>
+                          </>
+                        ) : (
+                          <>
+                            <Text style={styles.regText}>Register for Event</Text>
+                          </>
+                        )}
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                 </View>
-              </View>
-            </View>
-          ))}
-        </View>
-      </ScrollView>
+              );
+            })}
+          </View>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };

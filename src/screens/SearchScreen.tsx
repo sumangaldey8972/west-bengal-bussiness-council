@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,8 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
+  RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
@@ -20,6 +22,7 @@ import {
 } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
+import { SearchScreenSkeleton } from '../components/SkeletonLoader';
 
 export const SearchScreen: React.FC = () => {
   const {
@@ -32,7 +35,24 @@ export const SearchScreen: React.FC = () => {
     requestedAdminAccessIds,
   } = useApp();
 
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('All');
+
+  useEffect(() => {
+    // Simulate backend network search indexing
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 900);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 800);
+  };
 
   const industries = [
     'All',
@@ -90,36 +110,53 @@ export const SearchScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* Industry Filter Pills */}
-        <View style={styles.filterSection}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterScroll}>
-            {industries.map(ind => {
-              const isSelected = selectedIndustry === ind;
-              return (
-                <TouchableOpacity
-                  key={ind}
-                  style={[styles.filterPill, isSelected && styles.filterPillActive]}
-                  onPress={() => setSelectedIndustry(ind)}
-                >
-                  <Text style={[styles.filterText, isSelected && styles.filterTextActive]}>
-                    {ind}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
+        {isLoading ? (
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.listContent}>
+            <SearchScreenSkeleton />
           </ScrollView>
-        </View>
+        ) : (
+          <>
+            {/* Industry Filter Pills */}
+            <View style={styles.filterSection}>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterScroll}>
+                {industries.map(ind => {
+                  const isSelected = selectedIndustry === ind;
+                  return (
+                    <TouchableOpacity
+                      key={ind}
+                      style={[styles.filterPill, isSelected && styles.filterPillActive]}
+                      onPress={() => setSelectedIndustry(ind)}
+                    >
+                      <Text style={[styles.filterText, isSelected && styles.filterTextActive]}>
+                        {ind}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+            </View>
 
-        {/* Search Results Summary */}
-        <View style={styles.resultsMetaRow}>
-          <Text style={styles.resultsCountText}>
-            Showing <Text style={styles.textCrimson}>{filteredUsers.length}</Text> Business Owners
-          </Text>
-          <Text style={styles.verifiedCouncilTag}>● Verified Directory</Text>
-        </View>
+            {/* Search Results Summary */}
+            <View style={styles.resultsMetaRow}>
+              <Text style={styles.resultsCountText}>
+                Showing <Text style={styles.textCrimson}>{filteredUsers.length}</Text> Business Owners
+              </Text>
+              <Text style={styles.verifiedCouncilTag}>● Verified Directory</Text>
+            </View>
 
-        {/* Members List */}
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.listContent}>
+            {/* Members List */}
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.listContent}
+              refreshControl={
+                <RefreshControl
+                  refreshing={isRefreshing}
+                  onRefresh={handleRefresh}
+                  tintColor={colors.crimson}
+                  colors={[colors.crimson, colors.accentBlue]}
+                />
+              }
+            >
           {filteredUsers.length === 0 ? (
             <View style={styles.emptyState}>
               <Search color={colors.textMuted} size={40} />
@@ -224,6 +261,8 @@ export const SearchScreen: React.FC = () => {
             })
           )}
         </ScrollView>
+        </>
+        )}
       </View>
     </SafeAreaView>
   );

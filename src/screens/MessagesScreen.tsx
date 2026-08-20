@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -27,6 +27,7 @@ import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { Header } from '../components/Header';
 import { MessageThread } from '../types';
+import { MessagesScreenSkeleton } from '../components/SkeletonLoader';
 
 export const MessagesScreen: React.FC = () => {
   const {
@@ -38,10 +39,19 @@ export const MessagesScreen: React.FC = () => {
     openDigitalBusinessCard,
   } = useApp();
 
+  const [isLoading, setIsLoading] = useState(true);
   const [activeThread, setActiveThread] = useState<MessageThread | null>(null);
   const [inputText, setInputText] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  useEffect(() => {
+    // Simulate backend encrypted chat channel load
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 850);
+    return () => clearTimeout(timer);
+  }, []);
 
   const currentMessages = activeThread ? (messages[activeThread.id] || []) : [];
 
@@ -82,19 +92,24 @@ export const MessagesScreen: React.FC = () => {
               </View>
             </View>
 
-            {/* Threads List */}
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.threadsList}
-              refreshControl={
-                <RefreshControl
-                  refreshing={isRefreshing}
-                  onRefresh={handleRefresh}
-                  tintColor={colors.crimson}
-                  colors={[colors.crimson, colors.accentBlue]}
-                />
-              }
-            >
+            {isLoading ? (
+              <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.threadsList}>
+                <MessagesScreenSkeleton />
+              </ScrollView>
+            ) : (
+              /* Threads List */
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.threadsList}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={isRefreshing}
+                    onRefresh={handleRefresh}
+                    tintColor={colors.crimson}
+                    colors={[colors.crimson, colors.accentBlue]}
+                  />
+                }
+              >
               {messageThreads.map(thread => (
                 <TouchableOpacity
                   key={thread.id}
@@ -128,6 +143,7 @@ export const MessagesScreen: React.FC = () => {
                 </TouchableOpacity>
               ))}
             </ScrollView>
+            )}
           </View>
         </>
       ) : (

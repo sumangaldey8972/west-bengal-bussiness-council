@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
@@ -20,140 +22,188 @@ import {
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { Header } from '../components/Header';
+import { MeetingSummarySkeleton } from '../components/SkeletonLoader';
 
 export const MeetingSummaryScreen: React.FC = () => {
   const { meetingSummaries } = useApp();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [expandedMeetingId, setExpandedMeetingId] = useState<string>(meetingSummaries[0]?.id || '');
+
+  useEffect(() => {
+    // Simulate backend fetch of chapter minutes & meeting records
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 850);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 800);
+  };
 
   const toggleExpand = (id: string) => {
     setExpandedMeetingId(prev => (prev === id ? '' : id));
   };
 
-  const handleDownloadMinutes = (title: string) => {
-    Alert.alert(
-      'Meeting Notes Downloaded',
-      `Meeting notes PDF for "${title}" has been saved.`
-    );
+  const handleDownloadMinutes = (id: string, title: string) => {
+    setDownloadingId(id);
+    setTimeout(() => {
+      setDownloadingId(null);
+      Alert.alert(
+        'Meeting Notes Downloaded',
+        `Meeting notes PDF for "${title}" has been saved.`
+      );
+    }, 700);
   };
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <Header showSearchBar={false} />
 
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-        {/* Banner Section */}
-        <View style={styles.heroCard}>
-          <View style={styles.badgeRow}>
-            <FileSpreadsheet color={colors.crimson} size={16} />
-            <Text style={styles.badgeText}>COUNCIL MEETING NOTES</Text>
+      {isLoading ? (
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+          <MeetingSummarySkeleton />
+        </ScrollView>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles.container}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+              tintColor={colors.crimson}
+              colors={[colors.crimson, colors.accentBlue]}
+            />
+          }
+        >
+          {/* Banner Section */}
+          <View style={styles.heroCard}>
+            <View style={styles.badgeRow}>
+              <FileSpreadsheet color={colors.crimson} size={16} />
+              <Text style={styles.badgeText}>COUNCIL MEETING NOTES</Text>
+            </View>
+            <Text style={styles.heroTitle}>Meeting Notes & Summaries</Text>
+            <Text style={styles.heroSubtitle}>
+              Official records of bi-weekly chapter meetings, member attendance, deals announced, and action items.
+            </Text>
           </View>
-          <Text style={styles.heroTitle}>Meeting Notes & Summaries</Text>
-          <Text style={styles.heroSubtitle}>
-            Official records of bi-weekly chapter meetings, member attendance, deals announced, and action items.
-          </Text>
-        </View>
 
-        {/* Meeting Summaries List */}
-        <View style={styles.meetingsList}>
-          {meetingSummaries.map(item => {
-            const isExpanded = expandedMeetingId === item.id;
+          {/* Meeting Summaries List */}
+          <View style={styles.meetingsList}>
+            {meetingSummaries.map(item => {
+              const isExpanded = expandedMeetingId === item.id;
+              const isDownloadingThis = downloadingId === item.id;
 
-            return (
-              <View key={item.id} style={styles.meetingCard}>
-                {/* Meeting Header */}
-                <TouchableOpacity
-                  style={styles.meetingHeader}
-                  onPress={() => toggleExpand(item.id)}
-                  activeOpacity={0.7}
-                >
-                  <View style={styles.headerLeft}>
-                    <View style={styles.chapterBadge}>
-                      <Text style={styles.chapterBadgeText}>{item.chapter}</Text>
+              return (
+                <View key={item.id} style={styles.meetingCard}>
+                  {/* Meeting Header */}
+                  <TouchableOpacity
+                    style={styles.meetingHeader}
+                    onPress={() => toggleExpand(item.id)}
+                    activeOpacity={0.7}
+                  >
+                    <View style={styles.headerLeft}>
+                      <View style={styles.chapterBadge}>
+                        <Text style={styles.chapterBadgeText}>{item.chapter}</Text>
+                      </View>
+                      <Text style={styles.meetingTitle}>{item.title}</Text>
+                      <View style={styles.dateTimeRow}>
+                        <Calendar color={colors.crimson} size={12} />
+                        <Text style={styles.dateTimeText}>{item.date}</Text>
+                      </View>
                     </View>
-                    <Text style={styles.meetingTitle}>{item.title}</Text>
-                    <View style={styles.dateTimeRow}>
-                      <Calendar color={colors.crimson} size={12} />
-                      <Text style={styles.dateTimeText}>{item.date}</Text>
-                    </View>
-                  </View>
 
-                  <View style={styles.expandIconBox}>
-                    {isExpanded ? (
-                      <ChevronUp color={colors.primary} size={18} />
-                    ) : (
-                      <ChevronDown color={colors.textSecondary} size={18} />
-                    )}
-                  </View>
-                </TouchableOpacity>
-
-                {/* KPI Metrics Box for this Meeting */}
-                <View style={styles.kpiRow}>
-                  <View style={styles.kpiCol}>
-                    <View style={styles.kpiIconBadge}>
-                      <Users2 color={colors.accentBlue} size={14} />
+                    <View style={styles.expandIconBox}>
+                      {isExpanded ? (
+                        <ChevronUp color={colors.primary} size={18} />
+                      ) : (
+                        <ChevronDown color={colors.textSecondary} size={18} />
+                      )}
                     </View>
-                    <View>
-                      <Text style={styles.kpiVal}>{item.attendeesCount}</Text>
-                      <Text style={styles.kpiLbl}>Members Present</Text>
-                    </View>
-                  </View>
+                  </TouchableOpacity>
 
-                  <View style={styles.divider} />
-
-                  <View style={styles.kpiCol}>
-                    <View style={styles.kpiIconBadge}>
-                      <TrendingUp color={colors.emerald} size={14} />
+                  {/* KPI Metrics Box for this Meeting */}
+                  <View style={styles.kpiRow}>
+                    <View style={styles.kpiCol}>
+                      <View style={styles.kpiIconBadge}>
+                        <Users2 color={colors.accentBlue} size={14} />
+                      </View>
+                      <View>
+                        <Text style={styles.kpiVal}>{item.attendeesCount}</Text>
+                        <Text style={styles.kpiLbl}>Members Present</Text>
+                      </View>
                     </View>
-                    <View>
-                      <Text style={styles.kpiValEmerald}>{item.totalBusinessAnnounced}</Text>
-                      <Text style={styles.kpiLbl}>Deals Announced</Text>
+
+                    <View style={styles.divider} />
+
+                    <View style={styles.kpiCol}>
+                      <View style={styles.kpiIconBadge}>
+                        <TrendingUp color={colors.emerald} size={14} />
+                      </View>
+                      <View>
+                        <Text style={styles.kpiValEmerald}>{item.totalBusinessAnnounced}</Text>
+                        <Text style={styles.kpiLbl}>Deals Announced</Text>
+                      </View>
                     </View>
                   </View>
-                </View>
 
-                {/* Expanded Details */}
-                {isExpanded && (
-                  <View style={styles.expandedBody}>
-                    {/* Key Highlights */}
-                    <View style={styles.pointsSection}>
-                      <Text style={styles.pointsTitle}>KEY DISCUSSION POINTS & DECISIONS</Text>
-                      {item.keyHighlights.map((pt, idx) => (
-                        <View key={idx} style={styles.bulletItem}>
-                          <Text style={styles.bulletDot}>•</Text>
-                          <Text style={styles.bulletText}>{pt}</Text>
-                        </View>
-                      ))}
-                    </View>
-
-                    {/* Next Steps */}
-                    {item.nextSteps && item.nextSteps.length > 0 && (
+                  {/* Expanded Details */}
+                  {isExpanded && (
+                    <View style={styles.expandedBody}>
+                      {/* Key Highlights */}
                       <View style={styles.pointsSection}>
-                        <Text style={styles.pointsTitle}>ACTION ITEMS & NEXT STEPS</Text>
-                        {item.nextSteps.map((step, idx) => (
+                        <Text style={styles.pointsTitle}>KEY DISCUSSION POINTS & DECISIONS</Text>
+                        {item.keyHighlights.map((pt, idx) => (
                           <View key={idx} style={styles.bulletItem}>
-                            <Text style={styles.bulletDot}>➔</Text>
-                            <Text style={styles.bulletText}>{step}</Text>
+                            <Text style={styles.bulletDot}>•</Text>
+                            <Text style={styles.bulletText}>{pt}</Text>
                           </View>
                         ))}
                       </View>
-                    )}
 
-                    {/* Download MoM PDF Button */}
-                    <TouchableOpacity
-                      style={styles.downloadPdfBtn}
-                      onPress={() => handleDownloadMinutes(item.title)}
-                      activeOpacity={0.8}
-                    >
-                      <Download color={colors.crimson} size={16} />
-                      <Text style={styles.downloadPdfText}>Download Meeting Notes (PDF)</Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </View>
-            );
-          })}
-        </View>
-      </ScrollView>
+                      {/* Next Steps */}
+                      {item.nextSteps && item.nextSteps.length > 0 && (
+                        <View style={styles.pointsSection}>
+                          <Text style={styles.pointsTitle}>ACTION ITEMS & NEXT STEPS</Text>
+                          {item.nextSteps.map((step, idx) => (
+                            <View key={idx} style={styles.bulletItem}>
+                              <Text style={styles.bulletDot}>➔</Text>
+                              <Text style={styles.bulletText}>{step}</Text>
+                            </View>
+                          ))}
+                        </View>
+                      )}
+
+                      {/* Download MoM PDF Button */}
+                      <TouchableOpacity
+                        style={[styles.downloadPdfBtn, isDownloadingThis && { opacity: 0.75 }]}
+                        onPress={() => handleDownloadMinutes(item.id, item.title)}
+                        disabled={isDownloadingThis}
+                        activeOpacity={0.8}
+                      >
+                        {isDownloadingThis ? (
+                          <ActivityIndicator size="small" color={colors.crimson} style={{ marginRight: 6 }} />
+                        ) : (
+                          <Download color={colors.crimson} size={16} />
+                        )}
+                        <Text style={styles.downloadPdfText}>
+                          {isDownloadingThis ? 'Saving Meeting Notes...' : 'Download Meeting Notes (PDF)'}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+              );
+            })}
+          </View>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };

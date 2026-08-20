@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -23,12 +23,23 @@ import {
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { Header } from '../components/Header';
+import { CommunityScreenSkeleton } from '../components/SkeletonLoader';
 
 export const CommunityScreen: React.FC = () => {
   const { communities, toggleJoinCommunity } = useApp();
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState<'All' | 'Joined' | 'Regional' | 'Industry SIG'>('All');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [joiningId, setJoiningId] = useState<string | null>(null);
+  const [isProposing, setIsProposing] = useState(false);
+
+  useEffect(() => {
+    // Simulate backend network fetch with skeleton loader
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 950);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleRefresh = () => {
     setIsRefreshing(true);
@@ -53,48 +64,64 @@ export const CommunityScreen: React.FC = () => {
   });
 
   const handleCreateChapterProposal = () => {
-    Alert.alert(
-      'New Chapter Request',
-      'Your request has been sent to the Council team. A minimum of 15 members are required to start a new chapter.'
-    );
+    setIsProposing(true);
+    setTimeout(() => {
+      setIsProposing(false);
+      Alert.alert(
+        'New Chapter Request',
+        'Your request has been sent to the Council team. A minimum of 15 members are required to start a new chapter.'
+      );
+    }, 750);
   };
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <Header />
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.container}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={handleRefresh}
-            tintColor={colors.crimson}
-            colors={[colors.crimson, colors.accentBlue]}
-          />
-        }
-      >
-        {/* Banner Section */}
-        <View style={styles.heroBanner}>
-          <View style={styles.heroBadgeRow}>
-            <Compass color={colors.crimson} size={16} />
-            <Text style={styles.heroBadgeText}>BENGAL BUSINESS NETWORK</Text>
-          </View>
-          <Text style={styles.heroTitle}>Chapters & Industry Groups</Text>
-          <Text style={styles.heroSubtitle}>
-            Connect with local business chapters and specialized industry groups across West Bengal.
-          </Text>
+      {isLoading ? (
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+          <CommunityScreenSkeleton />
+        </ScrollView>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles.container}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+              tintColor={colors.crimson}
+              colors={[colors.crimson, colors.accentBlue]}
+            />
+          }
+        >
+          {/* Banner Section */}
+          <View style={styles.heroBanner}>
+            <View style={styles.heroBadgeRow}>
+              <Compass color={colors.crimson} size={16} />
+              <Text style={styles.heroBadgeText}>BENGAL BUSINESS NETWORK</Text>
+            </View>
+            <Text style={styles.heroTitle}>Chapters & Industry Groups</Text>
+            <Text style={styles.heroSubtitle}>
+              Connect with local business chapters and specialized industry groups across West Bengal.
+            </Text>
 
-          <TouchableOpacity
-            style={styles.proposeBtn}
-            onPress={handleCreateChapterProposal}
-            activeOpacity={0.8}
-          >
-            <Plus color={colors.white} size={16} strokeWidth={2.5} />
-            <Text style={styles.proposeBtnText}>Request New Chapter / Group</Text>
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity
+              style={[styles.proposeBtn, isProposing && { opacity: 0.75 }]}
+              onPress={handleCreateChapterProposal}
+              disabled={isProposing}
+              activeOpacity={0.8}
+            >
+              {isProposing ? (
+                <ActivityIndicator size="small" color={colors.white} style={{ marginRight: 6 }} />
+              ) : (
+                <Plus color={colors.white} size={16} strokeWidth={2.5} />
+              )}
+              <Text style={styles.proposeBtnText}>
+                {isProposing ? 'Sending Request...' : 'Request New Chapter / Group'}
+              </Text>
+            </TouchableOpacity>
+          </View>
 
         {/* Tab Filters */}
         <ScrollView
@@ -205,7 +232,8 @@ export const CommunityScreen: React.FC = () => {
           );
         })}
         </View>
-      </ScrollView>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
