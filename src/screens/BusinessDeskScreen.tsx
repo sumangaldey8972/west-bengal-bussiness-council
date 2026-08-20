@@ -44,9 +44,12 @@ export const BusinessDeskScreen: React.FC = () => {
   const formattedTotalBusiness = `₹ ${(currentUser.stats.businessValueInLakhs / 100).toFixed(2)} Cr`;
 
   const filteredReferrals = referrals.filter(r => {
-    if (referralFilter === 'Given') return r.type === 'Given By Me';
-    if (referralFilter === 'Received') return r.type === 'Received By Me';
-    return true;
+    const isGiven = r.fromUserId === currentUser.id;
+    const isReceived = r.toUserId === currentUser.id;
+
+    if (referralFilter === 'Given') return isGiven;
+    if (referralFilter === 'Received') return isReceived;
+    return isGiven || isReceived;
   });
 
   return (
@@ -91,13 +94,13 @@ export const BusinessDeskScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* Main Tab Selector */}
+        {/* Desk Tabs Switcher */}
         <View style={styles.tabsRow}>
           <TouchableOpacity
             style={[styles.tabBtn, activeTab === 'TYFB' && styles.tabBtnActive]}
             onPress={() => setActiveTab('TYFB')}
           >
-            <TrendingUp color={activeTab === 'TYFB' ? colors.crimson : colors.textMuted} size={16} />
+            <DollarSign color={activeTab === 'TYFB' ? colors.crimson : colors.textMuted} size={16} />
             <Text style={[styles.tabText, activeTab === 'TYFB' && styles.tabTextActive]}>
               Closed Deals ({businessDeals.length})
             </Text>
@@ -109,7 +112,7 @@ export const BusinessDeskScreen: React.FC = () => {
           >
             <Handshake color={activeTab === 'Referrals' ? colors.crimson : colors.textMuted} size={16} />
             <Text style={[styles.tabText, activeTab === 'Referrals' && styles.tabTextActive]}>
-              Referrals ({referrals.length})
+              Referrals ({referrals.filter(r => r.fromUserId === currentUser.id || r.toUserId === currentUser.id).length})
             </Text>
           </TouchableOpacity>
 
@@ -117,19 +120,19 @@ export const BusinessDeskScreen: React.FC = () => {
             style={[styles.tabBtn, activeTab === '1-to-1s' && styles.tabBtnActive]}
             onPress={() => setActiveTab('1-to-1s')}
           >
-            <Users2 color={activeTab === '1-to-1s' ? colors.crimson : colors.textMuted} size={16} />
+            <Calendar color={activeTab === '1-to-1s' ? colors.crimson : colors.textMuted} size={16} />
             <Text style={[styles.tabText, activeTab === '1-to-1s' && styles.tabTextActive]}>
               1-to-1s ({oneToOneMeetings.length})
             </Text>
           </TouchableOpacity>
         </View>
 
-        {/* TAB 1: TYFB Deals */}
+        {/* TAB 1: Closed Deals (TYFB) */}
         {activeTab === 'TYFB' && (
           <View style={styles.sectionContent}>
             <View style={styles.sectionHeadingRow}>
-              <Text style={styles.sectionSub}>CLOSED DEALS & CONTRACTS</Text>
-              <Text style={styles.statCrimson}>{businessDeals.length} Verified Deals</Text>
+              <Text style={styles.sectionSub}>OFFICIALLY CLOSED COUNCIL DEALS</Text>
+              <Text style={styles.statCrimson}>{businessDeals.length} Deals</Text>
             </View>
 
             {businessDeals.map(deal => (
@@ -178,55 +181,88 @@ export const BusinessDeskScreen: React.FC = () => {
               ))}
             </View>
 
-            {filteredReferrals.map(ref => {
-              const isGiven = ref.type === 'Given By Me';
+            {filteredReferrals.length === 0 ? (
+              <View style={styles.emptyRefCard}>
+                <Handshake color={colors.textMuted} size={32} />
+                <Text style={styles.emptyRefTitle}>No Referrals in this category</Text>
+                <Text style={styles.emptyRefSub}>
+                  {referralFilter === 'Given'
+                    ? 'You have not given any referrals in this category yet. Tap below to share a lead with fellow members.'
+                    : referralFilter === 'Received'
+                    ? 'You have not received any referrals in this category yet.'
+                    : 'No referral transactions recorded.'}
+                </Text>
+                <TouchableOpacity
+                  style={styles.emptyGiveBtn}
+                  onPress={() => openGiveReferral()}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.emptyGiveBtnText}>+ Give a Referral Now</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              filteredReferrals.map(ref => {
+                const isGiven = ref.fromUserId === currentUser.id;
+                const counterpartName = isGiven
+                  ? (ref.toUserName || ref.memberName)
+                  : (ref.fromUserName || ref.memberName);
+                const counterpartCompany = isGiven
+                  ? (ref.toUserCompany || ref.memberCompany)
+                  : (ref.fromUserCompany || ref.memberCompany);
+                const counterpartAvatar = isGiven
+                  ? (ref.toUserAvatar || ref.memberAvatar)
+                  : (ref.fromUserAvatar || ref.memberAvatar);
 
-              return (
-                <View key={ref.id} style={styles.refCard}>
-                  <View style={styles.refHeader}>
-                    <View style={styles.refMemberInfo}>
-                      <Image source={{ uri: ref.memberAvatar }} style={styles.refAvatar} />
-                      <View>
-                        <Text style={styles.refMemberName}>{ref.memberName}</Text>
-                        <View style={styles.companyRow}>
-                          <Building2 color={colors.primary} size={10} />
-                          <Text style={styles.refMemberCompany}>{ref.memberCompany}</Text>
+                return (
+                  <View key={ref.id} style={styles.refCard}>
+                    <View style={styles.refHeader}>
+                      <View style={styles.refMemberInfo}>
+                        <Image source={{ uri: counterpartAvatar }} style={styles.refAvatar} />
+                        <View>
+                          <Text style={styles.refDirectionTag}>
+                            {isGiven ? 'REFERRAL GIVEN TO' : 'REFERRAL FROM'}
+                          </Text>
+                          <Text style={styles.refMemberName}>{counterpartName}</Text>
+                          <View style={styles.companyRow}>
+                            <Building2 color={colors.primary} size={10} />
+                            <Text style={styles.refMemberCompany}>{counterpartCompany}</Text>
+                          </View>
                         </View>
+                      </View>
+
+                      <View style={[styles.refTypeBadge, isGiven ? styles.badgeGiven : styles.badgeReceived]}>
+                        {isGiven ? (
+                          <ArrowUpRight color={colors.emerald} size={12} />
+                        ) : (
+                          <ArrowDownLeft color={colors.accentBlue} size={12} />
+                        )}
+                        <Text style={[styles.refTypeBadgeText, isGiven ? styles.textEmerald : styles.textBlue]}>
+                          {isGiven ? 'Given by Me' : 'Received by Me'}
+                        </Text>
                       </View>
                     </View>
 
-                    <View style={[styles.refTypeBadge, isGiven ? styles.badgeGiven : styles.badgeReceived]}>
-                      {isGiven ? (
-                        <ArrowUpRight color={colors.emerald} size={12} />
-                      ) : (
-                        <ArrowDownLeft color={colors.purpleAccent} size={12} />
-                      )}
-                      <Text style={[styles.refTypeBadgeText, isGiven ? styles.textEmerald : styles.textPurple]}>
-                        {isGiven ? 'Given' : 'Received'}
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View style={styles.refDetailsBox}>
-                    <Text style={styles.refProspectLabel}>PROSPECT / CLIENT</Text>
-                    <Text style={styles.refProspectName}>{ref.clientOrProspectName}</Text>
-                    <Text style={styles.refProspectContact}>{ref.clientContact}</Text>
-                    <Text style={styles.refServiceText}>{ref.serviceNeeded}</Text>
-                  </View>
-
-                  <View style={styles.refFooter}>
-                    <View style={styles.refValueBox}>
-                      <Text style={styles.refValueLabel}>EST. VALUE:</Text>
-                      <Text style={styles.refValueText}>{ref.estimatedValue}</Text>
+                    <View style={styles.refDetailsBox}>
+                      <Text style={styles.refProspectLabel}>PROSPECT / CLIENT</Text>
+                      <Text style={styles.refProspectName}>{ref.clientOrProspectName}</Text>
+                      <Text style={styles.refProspectContact}>{ref.clientContact}</Text>
+                      <Text style={styles.refServiceText}>{ref.serviceNeeded}</Text>
                     </View>
 
-                    <View style={styles.statusPill}>
-                      <Text style={styles.statusPillText}>{ref.status}</Text>
+                    <View style={styles.refFooter}>
+                      <View style={styles.refValueBox}>
+                        <Text style={styles.refValueLabel}>EST. VALUE:</Text>
+                        <Text style={styles.refValueText}>{ref.estimatedValue}</Text>
+                      </View>
+
+                      <View style={styles.statusPill}>
+                        <Text style={styles.statusPillText}>{ref.status}</Text>
+                      </View>
                     </View>
                   </View>
-                </View>
-              );
-            })}
+                );
+              })
+            )}
           </View>
         )}
 
@@ -804,5 +840,46 @@ const styles = StyleSheet.create({
     fontSize: 11.5,
     color: colors.textSecondary,
     lineHeight: 16,
+  },
+  refDirectionTag: {
+    fontSize: 8.5,
+    fontWeight: '800',
+    color: colors.textMuted,
+    letterSpacing: 0.4,
+    marginBottom: 1,
+  },
+  emptyRefCard: {
+    backgroundColor: colors.cardBg,
+    borderRadius: 14,
+    padding: 24,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
+    marginTop: 8,
+  },
+  emptyRefTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: colors.textPrimary,
+    marginTop: 10,
+  },
+  emptyRefSub: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    lineHeight: 18,
+    marginTop: 4,
+    marginBottom: 16,
+  },
+  emptyGiveBtn: {
+    backgroundColor: colors.crimson,
+    paddingHorizontal: 16,
+    paddingVertical: 9,
+    borderRadius: 8,
+  },
+  emptyGiveBtnText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: colors.white,
   },
 });

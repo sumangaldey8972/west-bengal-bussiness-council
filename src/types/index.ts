@@ -113,11 +113,19 @@ export interface OneToOneMeeting {
 
 export interface Referral {
   id: string;
-  type: 'Given By Me' | 'Received By Me';
-  memberId: string;
-  memberName: string;
-  memberCompany: string;
-  memberAvatar: string;
+  fromUserId: string;
+  fromUserName: string;
+  fromUserCompany: string;
+  fromUserAvatar: string;
+  toUserId: string;
+  toUserName: string;
+  toUserCompany: string;
+  toUserAvatar: string;
+  type?: 'Given By Me' | 'Received By Me';
+  memberId?: string;
+  memberName?: string;
+  memberCompany?: string;
+  memberAvatar?: string;
   clientOrProspectName: string;
   clientContact: string;
   serviceNeeded: string;
