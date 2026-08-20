@@ -23,6 +23,7 @@ import {
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { BrandLogo } from '../components/BrandLogo';
+import { PremiumToast, ToastType } from '../components/PremiumToast';
 
 interface SignUpScreenProps {
   navigation: any;
@@ -31,6 +32,28 @@ interface SignUpScreenProps {
 export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
   const { register } = useApp();
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
+
+  // In-App Toast Notification State
+  const [toastConfig, setToastConfig] = useState<{
+    visible: boolean;
+    type: ToastType;
+    title: string;
+    message: string;
+  }>({
+    visible: false,
+    type: 'info',
+    title: '',
+    message: '',
+  });
+
+  const showToast = (type: ToastType, title: string, message: string) => {
+    setToastConfig({
+      visible: true,
+      type,
+      title,
+      message,
+    });
+  };
 
   // Step 1: Leadership Profile
   const [fullName, setFullName] = useState('Anirban Roychowdhury');
@@ -82,25 +105,25 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
     setPhone('+91 98303 55421');
     setWebsite('https://bengalgreenenergy.in');
     setAgreeCharter(true);
-    Alert.alert('Demo Details Filled', 'Form has been filled with demo business owner details.');
+    showToast('success', 'Demo Profile Populated', 'Form filled with demo business owner details.');
   };
 
   const handleNext = () => {
     if (currentStep === 1) {
       if (!fullName.trim() || !companyName.trim() || !email.trim()) {
-        Alert.alert('Please Enter Required Details', 'Full Name, Company Name, and Official Email are required.');
+        showToast('warning', 'Required Fields Missing', 'Full Name, Company Name, and Official Email are required.');
         return;
       }
       setCurrentStep(2);
     } else if (currentStep === 2) {
       if (!gstNumber.trim()) {
-        Alert.alert('GST Number Required', 'Please enter your GSTIN or type PENDING.');
+        showToast('warning', 'GST Number Required', 'Please enter your GSTIN or type PENDING.');
         return;
       }
       setCurrentStep(3);
     } else if (currentStep === 3) {
       if (!agreeCharter) {
-        Alert.alert('Council Agreement Required', 'Please agree to the Member Code of Conduct.');
+        showToast('warning', 'Council Agreement Required', 'Please agree to the Member Code of Conduct.');
         return;
       }
 
@@ -123,15 +146,24 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
         },
       });
 
-      Alert.alert(
-        'Welcome to Bengal Business Council! 🎉',
-        `Your membership application for ${fullName} has been submitted.`
+      showToast(
+        'success',
+        'Welcome to Bengal Founders! 🎉',
+        `Your membership application for ${fullName} has been created.`
       );
     }
   };
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
+      {/* Floating In-App Toast Notification */}
+      <PremiumToast
+        visible={toastConfig.visible}
+        type={toastConfig.type}
+        title={toastConfig.title}
+        message={toastConfig.message}
+        onDismiss={() => setToastConfig(prev => ({ ...prev, visible: false }))}
+      />
       <KeyboardAvoidingView
         style={styles.keyboardContainer}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}

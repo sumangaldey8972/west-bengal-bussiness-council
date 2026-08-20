@@ -29,6 +29,8 @@ import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { User } from '../types';
 import { BrandLogo } from '../components/BrandLogo';
+import { OtpAlertBanner } from '../components/OtpAlertBanner';
+import { PremiumToast, ToastType } from '../components/PremiumToast';
 
 interface LoginScreenProps {
   navigation: any;
@@ -43,6 +45,28 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [demoOtp, setDemoOtp] = useState('123456');
   const [timer, setTimer] = useState(30);
 
+  // In-App Toast Notification State
+  const [toastConfig, setToastConfig] = useState<{
+    visible: boolean;
+    type: ToastType;
+    title: string;
+    message: string;
+  }>({
+    visible: false,
+    type: 'info',
+    title: '',
+    message: '',
+  });
+
+  const showToast = (type: ToastType, title: string, message: string) => {
+    setToastConfig({
+      visible: true,
+      type,
+      title,
+      message,
+    });
+  };
+
   useEffect(() => {
     let interval: any;
     if (otpSent && timer > 0) {
@@ -55,27 +79,28 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
   const handleSendOtp = () => {
     if (!mobileOrEmail.trim()) {
-      Alert.alert('Please Enter Details', 'Please enter your mobile number or email.');
+      showToast('warning', 'Mobile or Email Required', 'Please enter your registered mobile number or email address.');
       return;
     }
     setOtpSent(true);
     setTimer(30);
     setDemoOtp('123456');
     setOtpOrPassword('123456'); // Auto-fill for convenience in demo testing
-    Alert.alert(
-      'Demo OTP Sent',
-      'Demo SMS: Your 6-digit OTP code is 123456 (filled automatically for testing).'
+    showToast(
+      'success',
+      'Passcode Dispatched (Demo: 123456)',
+      `A 6-digit SMS verification code has been dispatched to ${mobileOrEmail.trim()} and auto-filled below.`
     );
   };
 
   const handleStandardLogin = () => {
     if (!mobileOrEmail.trim()) {
-      Alert.alert('Please Enter Details', 'Please enter your mobile number or email address.');
+      showToast('warning', 'Details Required', 'Please enter your mobile number or email address.');
       return;
     }
 
     if (isOtpMode && !otpOrPassword.trim()) {
-      Alert.alert('OTP Required', 'Please enter the 6-digit OTP (for demo: 123456).');
+      showToast('warning', 'Passcode Required', 'Please enter the 6-digit OTP code (123456).');
       return;
     }
 
@@ -98,13 +123,23 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     if (isOtpMode) {
       setOtpSent(true);
       setOtpOrPassword('123456');
+      showToast('info', 'Demo Profile Selected', `Auto-filled details for ${phoneOrEmail}.`);
     } else {
       setOtpOrPassword('password123');
+      showToast('info', 'Demo Profile Selected', `Auto-filled password credentials.`);
     }
   };
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
+      {/* Floating In-App Toast Notification */}
+      <PremiumToast
+        visible={toastConfig.visible}
+        type={toastConfig.type}
+        title={toastConfig.title}
+        message={toastConfig.message}
+        onDismiss={() => setToastConfig(prev => ({ ...prev, visible: false }))}
+      />
       <KeyboardAvoidingView
         style={styles.keyboardContainer}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -219,16 +254,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                   </TouchableOpacity>
                 ) : (
                   <>
-                    {/* Simulated OTP Alert Banner */}
-                    <View style={styles.otpBanner}>
-                      <Info color={colors.emerald} size={16} />
-                      <View style={styles.otpBannerTextCol}>
-                        <Text style={styles.otpBannerTitle}>Demo SMS Code</Text>
-                        <Text style={styles.otpBannerCode}>
-                          Your OTP code is <Text style={styles.boldText}>{demoOtp}</Text>
-                        </Text>
-                      </View>
-                    </View>
+                    {/* Premium Simulated OTP Alert Banner */}
+                    <OtpAlertBanner
+                      otpCode={demoOtp}
+                      recipient={mobileOrEmail}
+                      timerSeconds={timer}
+                      onCopy={() =>
+                        showToast('success', 'Passcode Copied', 'OTP 123456 has been copied to your clipboard.')
+                      }
+                    />
 
                     <View style={styles.inputGroup}>
                       <View style={styles.labelRow}>
@@ -278,7 +312,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                   <View style={styles.labelRow}>
                     <Text style={styles.inputLabel}>PASSWORD</Text>
                     <TouchableOpacity
-                      onPress={() => Alert.alert('Password Reset', 'A password reset link has been sent to your email.')}
+                      onPress={() =>
+                        showToast(
+                          'info',
+                          'Password Reset Sent',
+                          'A secure password reset link has been dispatched to your email address.'
+                        )
+                      }
                     >
                       <Text style={styles.forgotText}>Forgot Password?</Text>
                     </TouchableOpacity>
