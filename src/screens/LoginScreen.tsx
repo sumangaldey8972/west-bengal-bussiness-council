@@ -30,7 +30,6 @@ import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 import { User } from '../types';
 import { BrandLogo } from '../components/BrandLogo';
-import { OtpAlertBanner } from '../components/OtpAlertBanner';
 import { PremiumToast, ToastType } from '../components/PremiumToast';
 
 interface LoginScreenProps {
@@ -274,16 +273,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                   </TouchableOpacity>
                 ) : (
                   <>
-                    {/* Premium Simulated OTP Alert Banner */}
-                    <OtpAlertBanner
-                      otpCode={demoOtp}
-                      recipient={mobileOrEmail}
-                      timerSeconds={timer}
-                      onCopy={() =>
-                        showToast('success', 'OTP Copied', 'OTP 123456 has been copied.')
-                      }
-                    />
-
                     <View style={styles.inputGroup}>
                       <View style={styles.labelRow}>
                         <Text style={styles.inputLabel}>ENTER 6-DIGIT OTP</Text>
