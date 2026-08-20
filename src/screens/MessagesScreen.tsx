@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
@@ -38,13 +40,27 @@ export const MessagesScreen: React.FC = () => {
 
   const [activeThread, setActiveThread] = useState<MessageThread | null>(null);
   const [inputText, setInputText] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const currentMessages = activeThread ? (messages[activeThread.id] || []) : [];
 
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 850);
+  };
+
   const handleSend = () => {
-    if (!activeThread || !inputText.trim()) return;
-    sendMessage(activeThread.id, inputText.trim());
+    if (!activeThread || !inputText.trim() || isSending) return;
+    const text = inputText.trim();
     setInputText('');
+    setIsSending(true);
+    setTimeout(() => {
+      sendMessage(activeThread.id, text);
+      setIsSending(false);
+    }, 450);
   };
 
   return (
@@ -67,7 +83,18 @@ export const MessagesScreen: React.FC = () => {
             </View>
 
             {/* Threads List */}
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.threadsList}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.threadsList}
+              refreshControl={
+                <RefreshControl
+                  refreshing={isRefreshing}
+                  onRefresh={handleRefresh}
+                  tintColor={colors.crimson}
+                  colors={[colors.crimson, colors.accentBlue]}
+                />
+              }
+            >
               {messageThreads.map(thread => (
                 <TouchableOpacity
                   key={thread.id}
@@ -85,15 +112,16 @@ export const MessagesScreen: React.FC = () => {
                       <Text style={styles.participantName}>{thread.participant.name}</Text>
                       <Text style={styles.messageTime}>{thread.lastMessageTime}</Text>
                     </View>
-
                     <View style={styles.companyRow}>
                       <Building2 color={colors.primary} size={11} />
                       <Text style={styles.participantCompany} numberOfLines={1}>
                         {thread.participant.companyName}
                       </Text>
                     </View>
-
-                    <Text style={[styles.lastMessage, thread.unreadCount > 0 && styles.lastMessageUnread]} numberOfLines={1}>
+                    <Text
+                      style={[styles.lastMessage, thread.unreadCount > 0 && styles.lastMessageUnread]}
+                      numberOfLines={1}
+                    >
                       {thread.lastMessage}
                     </Text>
                   </View>
@@ -103,15 +131,16 @@ export const MessagesScreen: React.FC = () => {
           </View>
         </>
       ) : (
-        /* ACTIVE CHAT VIEW */
+        /* Conversation View */
         <KeyboardAvoidingView
           style={styles.chatContainer}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
         >
-          {/* Chat Top Header */}
+          {/* Chat Top Bar */}
           <View style={styles.chatHeader}>
             <TouchableOpacity style={styles.backBtn} onPress={() => setActiveThread(null)}>
-              <ArrowLeft color={colors.primary} size={20} />
+              <ArrowLeft color={colors.textPrimary} size={20} />
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -126,7 +155,7 @@ export const MessagesScreen: React.FC = () => {
               </View>
             </TouchableOpacity>
 
-            {/* Quick Actions inside Chat */}
+            {/* Fast Desk Actions */}
             <View style={styles.chatActionIcons}>
               <TouchableOpacity
                 style={styles.chatActionBtn}
@@ -134,7 +163,10 @@ export const MessagesScreen: React.FC = () => {
               >
                 <CalendarPlus color={colors.crimson} size={18} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.chatActionBtn} onPress={openRecordDeal}>
+              <TouchableOpacity
+                style={styles.chatActionBtn}
+                onPress={openRecordDeal}
+              >
                 <DollarSign color={colors.emerald} size={18} />
               </TouchableOpacity>
               <TouchableOpacity
@@ -146,14 +178,26 @@ export const MessagesScreen: React.FC = () => {
             </View>
           </View>
 
-          {/* Chat Messages List */}
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.messagesList}>
+          {/* Messages History */}
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.messagesList}
+            ref={ref => ref?.scrollToEnd({ animated: true })}
+          >
             {currentMessages.map(msg => (
               <View
                 key={msg.id}
-                style={[styles.messageBubbleWrapper, msg.isMe ? styles.myBubbleWrapper : styles.otherBubbleWrapper]}
+                style={[
+                  styles.messageBubbleWrapper,
+                  msg.isMe ? styles.myBubbleWrapper : styles.otherBubbleWrapper,
+                ]}
               >
-                <View style={[styles.messageBubble, msg.isMe ? styles.myBubble : styles.otherBubble]}>
+                <View
+                  style={[
+                    styles.messageBubble,
+                    msg.isMe ? styles.myBubble : styles.otherBubble,
+                  ]}
+                >
                   <Text style={[styles.messageText, msg.isMe ? styles.myMessageText : styles.otherMessageText]}>
                     {msg.text}
                   </Text>
@@ -173,13 +217,18 @@ export const MessagesScreen: React.FC = () => {
               placeholderTextColor={colors.textMuted}
               value={inputText}
               onChangeText={setInputText}
+              editable={!isSending}
             />
             <TouchableOpacity
-              style={[styles.sendBtn, !inputText.trim() && styles.sendBtnDisabled]}
+              style={[styles.sendBtn, (!inputText.trim() && !isSending) && styles.sendBtnDisabled]}
               onPress={handleSend}
-              disabled={!inputText.trim()}
+              disabled={!inputText.trim() || isSending}
             >
-              <Send color={colors.white} size={16} />
+              {isSending ? (
+                <ActivityIndicator size="small" color={colors.white} style={{ transform: [{ scale: 0.8 }] }} />
+              ) : (
+                <Send color={colors.white} size={16} />
+              )}
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>

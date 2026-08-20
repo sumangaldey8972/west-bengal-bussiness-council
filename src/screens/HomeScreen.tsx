@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Platform,
+  RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Filter } from 'lucide-react-native';
@@ -16,6 +17,7 @@ import { StatusRow } from '../components/StatusRow';
 import { KpiDashboard } from '../components/KpiDashboard';
 import { QuickActions } from '../components/QuickActions';
 import { PostCard } from '../components/PostCard';
+import { HomeScreenSkeleton } from '../components/SkeletonLoader';
 
 interface HomeScreenProps {
   navigation: any;
@@ -23,7 +25,24 @@ interface HomeScreenProps {
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const { posts } = useApp();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<'All' | 'B2B Requirement' | 'Deal Won' | 'Partnership Ask'>('All');
+
+  useEffect(() => {
+    // Simulate backend network fetch with skeleton loader
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 900);
+  };
 
   const filterTabs: ('All' | 'B2B Requirement' | 'Deal Won' | 'Partnership Ask')[] = [
     'All',
@@ -41,62 +60,79 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <Header onSearchFocus={() => navigation.navigate('Search')} />
 
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-        {/* Statuses / Stories Carousel */}
-        <StatusRow />
-
-        {/* Executive KPI Performance Dashboard */}
-        <KpiDashboard onNavigateToBusinessDesk={() => navigation.navigate('BusinessDesk')} />
-
-        {/* Fast Action Buttons */}
-        <QuickActions />
-
-        {/* Feed Header with Filters */}
-        <View style={styles.feedHeaderRow}>
-          <View>
-            <Text style={styles.feedBadge}>COUNCIL POSTS</Text>
-            <Text style={styles.feedTitle}>Business Posts & Opportunities</Text>
-          </View>
-
-          <View style={styles.filterIconBox}>
-            <Filter color={colors.primary} size={15} />
-          </View>
-        </View>
-
-        {/* Filter Tabs */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filterScroll}
-        >
-          {filterTabs.map(tab => {
-            const isSelected = selectedFilter === tab;
-            return (
-              <TouchableOpacity
-                key={tab}
-                style={[styles.filterPill, isSelected && styles.filterPillActive]}
-                onPress={() => setSelectedFilter(tab)}
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.filterText, isSelected && styles.filterTextActive]}>
-                  {tab === 'All' ? 'All Posts' : tab}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
+      {isLoading ? (
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+          <HomeScreenSkeleton />
         </ScrollView>
-
-        {/* Feed Posts List */}
-        <View style={styles.postsList}>
-          {filteredPosts.map(post => (
-            <PostCard
-              key={post.id}
-              post={post}
-              onDirectMessage={() => navigation.navigate('Messages')}
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles.container}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+              tintColor={colors.crimson}
+              colors={[colors.crimson, colors.accentBlue]}
             />
-          ))}
-        </View>
-      </ScrollView>
+          }
+        >
+          {/* Statuses / Stories Carousel */}
+          <StatusRow />
+
+          {/* Executive KPI Performance Dashboard */}
+          <KpiDashboard onNavigateToBusinessDesk={() => navigation.navigate('BusinessDesk')} />
+
+          {/* Fast Action Buttons */}
+          <QuickActions />
+
+          {/* Feed Header with Filters */}
+          <View style={styles.feedHeaderRow}>
+            <View>
+              <Text style={styles.feedBadge}>COUNCIL POSTS</Text>
+              <Text style={styles.feedTitle}>Business Posts & Opportunities</Text>
+            </View>
+
+            <View style={styles.filterIconBox}>
+              <Filter color={colors.primary} size={15} />
+            </View>
+          </View>
+
+          {/* Filter Tabs */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.filterScroll}
+          >
+            {filterTabs.map(tab => {
+              const isSelected = selectedFilter === tab;
+              return (
+                <TouchableOpacity
+                  key={tab}
+                  style={[styles.filterPill, isSelected && styles.filterPillActive]}
+                  onPress={() => setSelectedFilter(tab)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.filterText, isSelected && styles.filterTextActive]}>
+                    {tab === 'All' ? 'All Posts' : tab}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+
+          {/* Feed Posts List */}
+          <View style={styles.postsList}>
+            {filteredPosts.map(post => (
+              <PostCard
+                key={post.id}
+                post={post}
+                onDirectMessage={() => navigation.navigate('Messages')}
+              />
+            ))}
+          </View>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };

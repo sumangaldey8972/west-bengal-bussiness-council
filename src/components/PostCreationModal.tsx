@@ -8,6 +8,7 @@ import {
   TextInput,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { X, Send, Sparkles, AlertCircle, FileText, Check } from 'lucide-react-native';
 import { colors } from '../theme/colors';
@@ -22,6 +23,7 @@ export const PostCreationModal: React.FC = () => {
   const [isUrgent, setIsUrgent] = useState(true);
   const [budgetOrValue, setBudgetOrValue] = useState('₹ 50 Lakhs - ₹ 1 Cr');
   const [hasAttachment, setHasAttachment] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!showCreatePostModal) return null;
 
@@ -31,10 +33,14 @@ export const PostCreationModal: React.FC = () => {
       return;
     }
 
-    createPost(content.trim(), tag, isUrgent, budgetOrValue.trim() || undefined);
-    Alert.alert('Post Published!', 'Your post is now live on the Council feed.');
-    setContent('');
-    closeCreatePost();
+    setIsSubmitting(true);
+    setTimeout(() => {
+      createPost(content.trim(), tag, isUrgent, budgetOrValue.trim() || undefined);
+      setIsSubmitting(false);
+      setContent('');
+      closeCreatePost();
+      Alert.alert('Post Published! 🚀', 'Your business post is now live on the Council feed.');
+    }, 900);
   };
 
   const tags: Post['tag'][] = ['B2B Requirement', 'Deal Won', 'Partnership Ask', 'General'];
@@ -147,9 +153,23 @@ export const PostCreationModal: React.FC = () => {
             </TouchableOpacity>
 
             {/* Submit Button */}
-            <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit} activeOpacity={0.8}>
-              <Send color={colors.white} size={16} />
-              <Text style={styles.submitBtnText}>Publish Post to Council</Text>
+            <TouchableOpacity
+              style={[styles.submitBtn, isSubmitting && { opacity: 0.75 }]}
+              onPress={handleSubmit}
+              disabled={isSubmitting}
+              activeOpacity={0.8}
+            >
+              {isSubmitting ? (
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                  <ActivityIndicator size="small" color={colors.white} />
+                  <Text style={styles.submitBtnText}>Publishing Post to Feed...</Text>
+                </View>
+              ) : (
+                <>
+                  <Send color={colors.white} size={16} />
+                  <Text style={styles.submitBtnText}>Publish Post to Council</Text>
+                </>
+              )}
             </TouchableOpacity>
           </ScrollView>
         </View>

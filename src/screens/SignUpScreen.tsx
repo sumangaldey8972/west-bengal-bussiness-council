@@ -9,6 +9,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
@@ -32,6 +33,7 @@ interface SignUpScreenProps {
 export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
   const { register } = useApp();
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // In-App Toast Notification State
   const [toastConfig, setToastConfig] = useState<{
@@ -114,43 +116,54 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
         showToast('warning', 'Required Fields Missing', 'Full Name, Company Name, and Official Email are required.');
         return;
       }
-      setCurrentStep(2);
+      setIsSubmitting(true);
+      setTimeout(() => {
+        setIsSubmitting(false);
+        setCurrentStep(2);
+      }, 400);
     } else if (currentStep === 2) {
       if (!gstNumber.trim()) {
         showToast('warning', 'GST Number Required', 'Please enter your GSTIN or type PENDING.');
         return;
       }
-      setCurrentStep(3);
+      setIsSubmitting(true);
+      setTimeout(() => {
+        setIsSubmitting(false);
+        setCurrentStep(3);
+      }, 400);
     } else if (currentStep === 3) {
       if (!agreeCharter) {
         showToast('warning', 'Council Agreement Required', 'Please agree to the Member Code of Conduct.');
         return;
       }
 
-      register({
-        name: fullName.trim(),
-        companyName: companyName.trim(),
-        designation: designation.trim() || 'Managing Director',
-        industry: industry.trim() || 'Enterprise Services',
-        chapter: chapter,
-        gstNumber: gstNumber.trim().toUpperCase(),
-        turnover: turnover,
-        location: location.trim() || 'Kolkata, West Bengal',
-        bio: `Business leader in ${industry || 'Commerce'} representing Bengal enterprise.`,
-        membershipTier: 'Executive Member',
-        contact: {
-          email: email.trim(),
-          phone: phone.trim(),
-          website: website.trim(),
-          officeAddress: location,
-        },
-      });
-
-      showToast(
-        'success',
-        'Welcome to Bengal Founders! 🎉',
-        `Your membership application for ${fullName} has been created.`
-      );
+      setIsSubmitting(true);
+      setTimeout(() => {
+        register({
+          name: fullName.trim(),
+          companyName: companyName.trim(),
+          designation: designation.trim() || 'Managing Director',
+          industry: industry.trim() || 'Enterprise Services',
+          chapter: chapter,
+          gstNumber: gstNumber.trim().toUpperCase(),
+          turnover: turnover,
+          location: location.trim() || 'Kolkata, West Bengal',
+          bio: `Business leader in ${industry || 'Commerce'} representing Bengal enterprise.`,
+          membershipTier: 'Executive Member',
+          contact: {
+            email: email.trim(),
+            phone: phone.trim(),
+            website: website.trim(),
+            officeAddress: location,
+          },
+        });
+        setIsSubmitting(false);
+        showToast(
+          'success',
+          'Welcome to Bengal Founders! 🎉',
+          `Your membership application for ${fullName} has been created.`
+        );
+      }, 1000);
     }
   };
 
@@ -469,11 +482,27 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
           )}
 
           {/* Action Button */}
-          <TouchableOpacity style={styles.nextBtn} onPress={handleNext} activeOpacity={0.8}>
-            <Text style={styles.nextBtnText}>
-              {currentStep === 3 ? 'Complete Registration & Enter App' : 'Continue to Next Step'}
-            </Text>
-            <ArrowRight color={colors.white} size={18} />
+          <TouchableOpacity
+            style={[styles.nextBtn, isSubmitting && { opacity: 0.75 }]}
+            onPress={handleNext}
+            disabled={isSubmitting}
+            activeOpacity={0.8}
+          >
+            {isSubmitting ? (
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                <ActivityIndicator size="small" color={colors.white} />
+                <Text style={styles.nextBtnText}>
+                  {currentStep === 3 ? 'Submitting Council Application...' : 'Validating Information...'}
+                </Text>
+              </View>
+            ) : (
+              <>
+                <Text style={styles.nextBtnText}>
+                  {currentStep === 3 ? 'Complete Registration & Enter App' : 'Continue to Next Step'}
+                </Text>
+                <ArrowRight color={colors.white} size={18} />
+              </>
+            )}
           </TouchableOpacity>
 
           {/* Existing Member Sign In Link */}

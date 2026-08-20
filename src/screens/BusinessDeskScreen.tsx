@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
@@ -40,6 +41,14 @@ export const BusinessDeskScreen: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<'TYFB' | 'Referrals' | '1-to-1s'>('TYFB');
   const [referralFilter, setReferralFilter] = useState<'All' | 'Given' | 'Received'>('All');
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 850);
+  };
 
   const formattedTotalBusiness = `₹ ${(currentUser.stats.businessValueInLakhs / 100).toFixed(2)} Cr`;
 
@@ -56,7 +65,18 @@ export const BusinessDeskScreen: React.FC = () => {
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <Header />
 
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.container}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            tintColor={colors.crimson}
+            colors={[colors.crimson, colors.accentBlue]}
+          />
+        }
+      >
         {/* Top Summary Banner */}
         <View style={styles.heroDeskCard}>
           <View style={styles.heroHeader}>

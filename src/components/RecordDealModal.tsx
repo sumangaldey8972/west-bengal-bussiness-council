@@ -9,6 +9,7 @@ import {
   ScrollView,
   Alert,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import { X, TrendingUp, DollarSign, FileText, Sparkles, Check } from 'lucide-react-native';
 import { colors } from '../theme/colors';
@@ -24,6 +25,7 @@ export const RecordDealModal: React.FC = () => {
   const [dealAmountText, setDealAmountText] = useState('2500000'); // 25 Lakhs
   const [dealDescription, setDealDescription] = useState('Order for precision parts and fabrication testing');
   const [referralType, setReferralType] = useState<BusinessDeal['referralType']>('Inside Council');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!showRecordDealModal) return null;
 
@@ -33,12 +35,16 @@ export const RecordDealModal: React.FC = () => {
     : `₹ ${(rawAmount / 100000).toFixed(1)} Lakhs`;
 
   const handleSave = () => {
-    recordBusinessDeal(selectedUserId, formattedInLakhs, rawAmount, dealDescription, referralType);
-    Alert.alert(
-      'Business Deal Recorded! 🏆',
-      `Great news! ${formattedInLakhs} in business has been added to your profile records.`
-    );
-    closeRecordDeal();
+    setIsSubmitting(true);
+    setTimeout(() => {
+      recordBusinessDeal(selectedUserId, formattedInLakhs, rawAmount, dealDescription, referralType);
+      setIsSubmitting(false);
+      closeRecordDeal();
+      Alert.alert(
+        'Business Deal Recorded! 🏆',
+        `Great news! ${formattedInLakhs} in business has been added to your profile records.`
+      );
+    }, 900);
   };
 
   const selectedMember = users.find(u => u.id === selectedUserId) || otherUsers[0];
@@ -170,9 +176,23 @@ export const RecordDealModal: React.FC = () => {
             </View>
 
             {/* Submit Button */}
-            <TouchableOpacity style={styles.submitBtn} onPress={handleSave} activeOpacity={0.8}>
-              <TrendingUp color={colors.white} size={18} />
-              <Text style={styles.submitBtnText}>Save & Record Business Deal</Text>
+            <TouchableOpacity
+              style={[styles.submitBtn, isSubmitting && { opacity: 0.75 }]}
+              onPress={handleSave}
+              disabled={isSubmitting}
+              activeOpacity={0.8}
+            >
+              {isSubmitting ? (
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                  <ActivityIndicator size="small" color={colors.white} />
+                  <Text style={styles.submitBtnText}>Recording Deal & Crediting Volume...</Text>
+                </View>
+              ) : (
+                <>
+                  <TrendingUp color={colors.white} size={18} />
+                  <Text style={styles.submitBtnText}>Save & Record Business Deal</Text>
+                </>
+              )}
             </TouchableOpacity>
           </ScrollView>
         </View>

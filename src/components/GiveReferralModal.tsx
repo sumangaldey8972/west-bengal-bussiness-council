@@ -9,6 +9,7 @@ import {
   ScrollView,
   Alert,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import { X, UserCheck, DollarSign, Clock, FileText, Check } from 'lucide-react-native';
 import { colors } from '../theme/colors';
@@ -35,16 +36,21 @@ export const GiveReferralModal: React.FC = () => {
   const [serviceNeeded, setServiceNeeded] = useState('Engineering consultancy and machinery supply');
   const [estimatedValue, setEstimatedValue] = useState('₹ 35 Lakhs');
   const [urgency, setUrgency] = useState<Referral['urgency']>('Immediate');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!showGiveReferralModal) return null;
 
   const handleSave = () => {
-    giveReferral(selectedUserId, clientName, clientContact, serviceNeeded, estimatedValue, urgency);
-    Alert.alert(
-      'Referral Shared Successfully! 🤝',
-      'The client details have been shared with the member.'
-    );
-    closeGiveReferral();
+    setIsSubmitting(true);
+    setTimeout(() => {
+      giveReferral(selectedUserId, clientName, clientContact, serviceNeeded, estimatedValue, urgency);
+      setIsSubmitting(false);
+      closeGiveReferral();
+      Alert.alert(
+        'Referral Transmitted Successfully! 🤝',
+        'The high-priority lead has been recorded and dispatched to the recipient.'
+      );
+    }, 850);
   };
 
   const selectedMember = users.find(u => u.id === selectedUserId) || otherUsers[0];
@@ -181,8 +187,20 @@ export const GiveReferralModal: React.FC = () => {
             </View>
 
             {/* Submit Button */}
-            <TouchableOpacity style={styles.submitBtn} onPress={handleSave} activeOpacity={0.8}>
-              <Text style={styles.submitBtnText}>Send Referral to Member</Text>
+            <TouchableOpacity
+              style={[styles.submitBtn, isSubmitting && { opacity: 0.75 }]}
+              onPress={handleSave}
+              disabled={isSubmitting}
+              activeOpacity={0.8}
+            >
+              {isSubmitting ? (
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                  <ActivityIndicator size="small" color={colors.white} />
+                  <Text style={styles.submitBtnText}>Transmitting Referral...</Text>
+                </View>
+              ) : (
+                <Text style={styles.submitBtnText}>Send Referral to Member</Text>
+              )}
             </TouchableOpacity>
           </ScrollView>
         </View>

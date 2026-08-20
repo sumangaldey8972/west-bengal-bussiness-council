@@ -9,6 +9,7 @@ import {
   ScrollView,
   Alert,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import { X, Calendar, Clock, MapPin, AlignLeft, Check } from 'lucide-react-native';
 import { colors } from '../theme/colors';
@@ -33,16 +34,21 @@ export const LogOneToOneModal: React.FC = () => {
   const [time, setTime] = useState('11:00 AM - 11:45 AM');
   const [location, setLocation] = useState('Council Office, Salt Lake');
   const [agenda, setAgenda] = useState('Discuss business services and project collaboration');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!showLogOneToOneModal) return null;
 
   const handleSave = () => {
-    logOneToOne(selectedUserId, date, time, location, agenda);
-    Alert.alert(
-      '1-to-1 Meeting Scheduled!',
-      'Your meeting has been saved and added to your calendar.'
-    );
-    closeLogOneToOne();
+    setIsSubmitting(true);
+    setTimeout(() => {
+      logOneToOne(selectedUserId, date, time, location, agenda);
+      setIsSubmitting(false);
+      closeLogOneToOne();
+      Alert.alert(
+        '1-to-1 Meeting Scheduled!',
+        'Your strategy meeting has been recorded and synced to your schedule.'
+      );
+    }, 800);
   };
 
   const selectedMember = users.find(u => u.id === selectedUserId) || otherUsers[0];
@@ -170,8 +176,20 @@ export const LogOneToOneModal: React.FC = () => {
             </View>
 
             {/* Submit Button */}
-            <TouchableOpacity style={styles.submitBtn} onPress={handleSave} activeOpacity={0.8}>
-              <Text style={styles.submitBtnText}>Save 1-to-1 Meeting</Text>
+            <TouchableOpacity
+              style={[styles.submitBtn, isSubmitting && { opacity: 0.75 }]}
+              onPress={handleSave}
+              disabled={isSubmitting}
+              activeOpacity={0.8}
+            >
+              {isSubmitting ? (
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                  <ActivityIndicator size="small" color={colors.white} />
+                  <Text style={styles.submitBtnText}>Scheduling Strategy Session...</Text>
+                </View>
+              ) : (
+                <Text style={styles.submitBtnText}>Save 1-to-1 Meeting</Text>
+              )}
             </TouchableOpacity>
           </ScrollView>
         </View>

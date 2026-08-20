@@ -7,6 +7,8 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
@@ -25,6 +27,23 @@ import { Header } from '../components/Header';
 export const CommunityScreen: React.FC = () => {
   const { communities, toggleJoinCommunity } = useApp();
   const [selectedTab, setSelectedTab] = useState<'All' | 'Joined' | 'Regional' | 'Industry SIG'>('All');
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [joiningId, setJoiningId] = useState<string | null>(null);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 850);
+  };
+
+  const handleToggleJoin = (id: string) => {
+    setJoiningId(id);
+    setTimeout(() => {
+      toggleJoinCommunity(id);
+      setJoiningId(null);
+    }, 600);
+  };
 
   const filteredCommunities = communities.filter(c => {
     if (selectedTab === 'Joined') return c.isJoined;
@@ -44,7 +63,18 @@ export const CommunityScreen: React.FC = () => {
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <Header />
 
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.container}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            tintColor={colors.crimson}
+            colors={[colors.crimson, colors.accentBlue]}
+          />
+        }
+      >
         {/* Banner Section */}
         <View style={styles.heroBanner}>
           <View style={styles.heroBadgeRow}>
@@ -90,38 +120,43 @@ export const CommunityScreen: React.FC = () => {
 
         {/* Chapters List */}
         <View style={styles.communitiesList}>
-          {filteredCommunities.map(community => (
-            <View key={community.id} style={styles.communityCard}>
-              {/* Banner Image */}
-              <View style={styles.bannerContainer}>
-                <Image source={{ uri: community.banner }} style={styles.bannerImage} />
-                <View style={styles.typeBadge}>
-                  <Text style={styles.typeBadgeText}>{community.type.toUpperCase()}</Text>
+          {filteredCommunities.map(community => {
+            const isJoiningThis = joiningId === community.id;
+            return (
+              <View key={community.id} style={styles.communityCard}>
+                {/* Banner Image */}
+                <View style={styles.bannerContainer}>
+                  <Image source={{ uri: community.banner }} style={styles.bannerImage} />
+                  <View style={styles.typeBadge}>
+                    <Text style={styles.typeBadgeText}>{community.type.toUpperCase()}</Text>
+                  </View>
                 </View>
-              </View>
 
-              {/* Card Body */}
-              <View style={styles.cardBody}>
-                <View style={styles.titleRow}>
-                  <Text style={styles.communityName}>{community.name}</Text>
-                  <TouchableOpacity
-                    style={[styles.joinBtn, community.isJoined && styles.joinedBtn]}
-                    onPress={() => toggleJoinCommunity(community.id)}
-                    activeOpacity={0.8}
-                  >
-                    {community.isJoined ? (
-                      <>
-                        <CheckCircle2 color={colors.emerald} size={14} />
-                        <Text style={styles.joinedText}>Joined</Text>
-                      </>
-                    ) : (
-                      <>
-                        <Plus color={colors.white} size={14} />
-                        <Text style={styles.joinText}>Join Chapter</Text>
-                      </>
-                    )}
-                  </TouchableOpacity>
-                </View>
+                {/* Card Body */}
+                <View style={styles.cardBody}>
+                  <View style={styles.titleRow}>
+                    <Text style={styles.communityName}>{community.name}</Text>
+                    <TouchableOpacity
+                      style={[styles.joinBtn, community.isJoined && styles.joinedBtn, isJoiningThis && { opacity: 0.7 }]}
+                      onPress={() => handleToggleJoin(community.id)}
+                      disabled={isJoiningThis}
+                      activeOpacity={0.8}
+                    >
+                      {isJoiningThis ? (
+                        <ActivityIndicator size="small" color={community.isJoined ? colors.textPrimary : colors.white} style={{ transform: [{ scale: 0.8 }] }} />
+                      ) : community.isJoined ? (
+                        <>
+                          <CheckCircle2 color={colors.emerald} size={14} />
+                          <Text style={styles.joinedText}>Joined</Text>
+                        </>
+                      ) : (
+                        <>
+                          <Plus color={colors.white} size={14} />
+                          <Text style={styles.joinText}>Join Chapter</Text>
+                        </>
+                      )}
+                    </TouchableOpacity>
+                  </View>
 
                 <Text style={styles.description}>{community.description}</Text>
 
@@ -167,7 +202,8 @@ export const CommunityScreen: React.FC = () => {
                 </View>
               </View>
             </View>
-          ))}
+          );
+        })}
         </View>
       </ScrollView>
     </SafeAreaView>
