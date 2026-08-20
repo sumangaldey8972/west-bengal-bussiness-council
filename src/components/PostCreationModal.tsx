@@ -27,12 +27,12 @@ export const PostCreationModal: React.FC = () => {
 
   const handleSubmit = () => {
     if (!content.trim()) {
-      Alert.alert('Content Required', 'Please provide details for your business requirement or update.');
+      Alert.alert('Please Enter Details', 'Please write the details of your post or business requirement.');
       return;
     }
 
     createPost(content.trim(), tag, isUrgent, budgetOrValue.trim() || undefined);
-    Alert.alert('Post Published!', 'Your post has been broadcasted across the Bengal Business Council feed.');
+    Alert.alert('Post Published!', 'Your post is now live on the Council feed.');
     setContent('');
     closeCreatePost();
   };
@@ -52,7 +52,7 @@ export const PostCreationModal: React.FC = () => {
           <View style={styles.header}>
             <View>
               <Text style={styles.headerBadge}>BENGAL BUSINESS COUNCIL FEED</Text>
-              <Text style={styles.headerTitle}>Create Post / B2B Requirement</Text>
+              <Text style={styles.headerTitle}>Create a Post or Requirement</Text>
             </View>
             <TouchableOpacity style={styles.closeBtn} onPress={closeCreatePost}>
               <X color={colors.textPrimary} size={20} />
@@ -91,7 +91,7 @@ export const PostCreationModal: React.FC = () => {
                       Urgent Requirement
                     </Text>
                     <Text style={styles.urgentSub}>
-                      Pings active council members in relevant industry SIGs
+                      Highlights this post to members in your industry
                     </Text>
                   </View>
                 </View>
@@ -103,7 +103,7 @@ export const PostCreationModal: React.FC = () => {
 
             {/* Budget / Value Input */}
             <View style={styles.fieldGroup}>
-              <Text style={styles.inputLabel}>BUDGET / CONTRACT VALUE (OPTIONAL)</Text>
+              <Text style={styles.inputLabel}>BUDGET OR VALUE (OPTIONAL)</Text>
               <TextInput
                 style={styles.textInput}
                 value={budgetOrValue}
@@ -115,12 +115,12 @@ export const PostCreationModal: React.FC = () => {
 
             {/* Post Content */}
             <View style={styles.fieldGroup}>
-              <Text style={styles.inputLabel}>REQUIREMENT DETAILS & SPECIFICATIONS</Text>
+              <Text style={styles.inputLabel}>POST DETAILS</Text>
               <TextInput
                 style={[styles.textInput, styles.textArea]}
                 value={content}
                 onChangeText={setContent}
-                placeholder="Detail what technical specifications, delivery timeline, or vendor credentials you are seeking from BBC members..."
+                placeholder="Describe what product, service, or vendor you are looking for..."
                 placeholderTextColor={colors.textMuted}
                 multiline
                 numberOfLines={5}
@@ -135,10 +135,10 @@ export const PostCreationModal: React.FC = () => {
               <FileText color={hasAttachment ? colors.crimson : colors.textMuted} size={20} />
               <View style={styles.attachInfo}>
                 <Text style={[styles.attachTitle, hasAttachment && styles.attachTitleActive]}>
-                  {hasAttachment ? 'Technical_RFP_Specification.pdf attached' : '+ Attach PDF / RFP Document'}
+                  {hasAttachment ? 'Specification_Document.pdf attached' : '+ Attach PDF / Document (Optional)'}
                 </Text>
                 <Text style={styles.attachMeta}>
-                  {hasAttachment ? '2.4 MB • Ready for council broadcast' : 'Max 10 MB (PDF/Docx)'}
+                  {hasAttachment ? '2.4 MB • Ready to upload' : 'Max 10 MB (PDF format)'}
                 </Text>
               </View>
               <View style={[styles.checkbox, hasAttachment && styles.checkboxActive]}>
@@ -149,7 +149,7 @@ export const PostCreationModal: React.FC = () => {
             {/* Submit Button */}
             <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit} activeOpacity={0.8}>
               <Send color={colors.white} size={16} />
-              <Text style={styles.submitBtnText}>Broadcast Post to BBC Council</Text>
+              <Text style={styles.submitBtnText}>Publish Post to Council</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>

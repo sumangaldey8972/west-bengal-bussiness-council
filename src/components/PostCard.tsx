@@ -43,7 +43,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenProfile, onDirec
   const tagStyle = getTagColor(post.tag);
 
   const handleShare = () => {
-    Alert.alert('BBC Council Post Shared', `Post from ${post.authorName} (${post.authorCompany}) copied to clipboard.`);
+    Alert.alert('Post Copied', `Post from ${post.authorName} (${post.authorCompany}) copied to clipboard.`);
   };
 
   return (
@@ -115,7 +115,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenProfile, onDirec
       {post.documentAttachment && (
         <TouchableOpacity
           style={styles.documentCard}
-          onPress={() => Alert.alert('Viewing Document', `Opening ${post.documentAttachment?.name}`)}
+          onPress={() => Alert.alert('Open Document', `Opening ${post.documentAttachment?.name}`)}
           activeOpacity={0.8}
         >
           <View style={styles.docIconBox}>
@@ -126,7 +126,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onOpenProfile, onDirec
               {post.documentAttachment.name}
             </Text>
             <Text style={styles.docMeta}>
-              {post.documentAttachment.type} • {post.documentAttachment.size} • Verified Council Doc
+              {post.documentAttachment.type} • {post.documentAttachment.size} • Verified Document
             </Text>
           </View>
           <Text style={styles.docDownloadBtn}>View</Text>

@@ -32,7 +32,7 @@ export const GiveReferralModal: React.FC = () => {
   );
   const [clientName, setClientName] = useState('Debrup Sen (VP Procurement, Ambuja Neotia)');
   const [clientContact] = useState('+91 98301 55432 / debrup.sen@ambujaneotia.com');
-  const [serviceNeeded, setServiceNeeded] = useState('Turnkey engineering consultancy & precision fabrication supply');
+  const [serviceNeeded, setServiceNeeded] = useState('Engineering consultancy and machinery supply');
   const [estimatedValue, setEstimatedValue] = useState('₹ 35 Lakhs');
   const [urgency, setUrgency] = useState<Referral['urgency']>('Immediate');
 
@@ -41,8 +41,8 @@ export const GiveReferralModal: React.FC = () => {
   const handleSave = () => {
     giveReferral(selectedUserId, clientName, clientContact, serviceNeeded, estimatedValue, urgency);
     Alert.alert(
-      'Referral Passed Successfully! 🤝',
-      'The lead details have been securely shared with the member and recorded in your council referral desk.'
+      'Referral Shared Successfully! 🤝',
+      'The client details have been shared with the member.'
     );
     closeGiveReferral();
   };
@@ -62,7 +62,7 @@ export const GiveReferralModal: React.FC = () => {
           <View style={styles.header}>
             <View>
               <Text style={styles.headerBadge}>BENGAL BUSINESS COUNCIL</Text>
-              <Text style={styles.headerTitle}>Pass Council Business Referral</Text>
+              <Text style={styles.headerTitle}>Share a Business Referral</Text>
             </View>
             <TouchableOpacity style={styles.closeBtn} onPress={closeGiveReferral}>
               <X color={colors.textPrimary} size={20} />
@@ -71,7 +71,7 @@ export const GiveReferralModal: React.FC = () => {
 
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.body}>
             {/* Member Selection */}
-            <Text style={styles.inputLabel}>SELECT RECIPIENT MEMBER</Text>
+            <Text style={styles.inputLabel}>SELECT MEMBER TO RECEIVE REFERRAL</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.memberScroll}>
               {otherUsers.map(member => {
                 const isSelected = member.id === selectedUserId;
@@ -113,7 +113,7 @@ export const GiveReferralModal: React.FC = () => {
             <View style={styles.fieldGroup}>
               <View style={styles.fieldLabelRow}>
                 <UserCheck color={colors.crimson} size={14} />
-                <Text style={styles.inputLabel}>PROSPECT / CLIENT NAME & TITLE</Text>
+                <Text style={styles.inputLabel}>CLIENT / PROSPECT NAME</Text>
               </View>
               <TextInput
                 style={styles.textInput}
@@ -128,7 +128,7 @@ export const GiveReferralModal: React.FC = () => {
             <View style={styles.fieldGroup}>
               <View style={styles.fieldLabelRow}>
                 <FileText color={colors.crimson} size={14} />
-                <Text style={styles.inputLabel}>REQUIREMENT / SERVICE NEEDED</Text>
+                <Text style={styles.inputLabel}>SERVICE OR PRODUCT NEEDED</Text>
               </View>
               <TextInput
                 style={[styles.textInput, styles.textArea]}
@@ -160,7 +160,7 @@ export const GiveReferralModal: React.FC = () => {
             <View style={styles.fieldGroup}>
               <View style={styles.fieldLabelRow}>
                 <Clock color={colors.crimson} size={14} />
-                <Text style={styles.inputLabel}>LEAD URGENCY</Text>
+                <Text style={styles.inputLabel}>HOW URGENT IS THIS LEAD?</Text>
               </View>
               <View style={styles.urgencyRow}>
                 {(['Immediate', 'Within 30 Days', 'Exploring'] as Referral['urgency'][]).map(level => {
@@ -182,7 +182,7 @@ export const GiveReferralModal: React.FC = () => {
 
             {/* Submit Button */}
             <TouchableOpacity style={styles.submitBtn} onPress={handleSave} activeOpacity={0.8}>
-              <Text style={styles.submitBtnText}>Pass Referral to Member</Text>
+              <Text style={styles.submitBtnText}>Send Referral to Member</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>

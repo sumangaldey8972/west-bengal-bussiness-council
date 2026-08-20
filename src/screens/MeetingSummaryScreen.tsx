@@ -31,8 +31,8 @@ export const MeetingSummaryScreen: React.FC = () => {
 
   const handleDownloadMinutes = (title: string) => {
     Alert.alert(
-      'Minutes of Meeting Downloaded',
-      `Official PDF MoM for "${title}" has been saved to your downloads.`
+      'Meeting Notes Downloaded',
+      `Meeting notes PDF for "${title}" has been saved.`
     );
   };
 
@@ -45,11 +45,11 @@ export const MeetingSummaryScreen: React.FC = () => {
         <View style={styles.heroCard}>
           <View style={styles.badgeRow}>
             <FileSpreadsheet color={colors.crimson} size={16} />
-            <Text style={styles.badgeText}>BENGAL BUSINESS COUNCIL ARCHIVES</Text>
+            <Text style={styles.badgeText}>COUNCIL MEETING NOTES</Text>
           </View>
-          <Text style={styles.heroTitle}>Meeting Summaries & Minutes</Text>
+          <Text style={styles.heroTitle}>Meeting Notes & Summaries</Text>
           <Text style={styles.heroSubtitle}>
-            Official bi-weekly conclave records, business statistics, referrals exchanged, and ratified policy resolutions.
+            Official records of bi-weekly chapter meetings, member attendance, deals announced, and action items.
           </Text>
         </View>
 
@@ -94,7 +94,7 @@ export const MeetingSummaryScreen: React.FC = () => {
                     </View>
                     <View>
                       <Text style={styles.kpiVal}>{item.attendeesCount}</Text>
-                      <Text style={styles.kpiLbl}>CEOs Present</Text>
+                      <Text style={styles.kpiLbl}>Members Present</Text>
                     </View>
                   </View>
 
@@ -106,7 +106,7 @@ export const MeetingSummaryScreen: React.FC = () => {
                     </View>
                     <View>
                       <Text style={styles.kpiValEmerald}>{item.totalBusinessAnnounced}</Text>
-                      <Text style={styles.kpiLbl}>TYFB Value</Text>
+                      <Text style={styles.kpiLbl}>Deals Announced</Text>
                     </View>
                   </View>
                 </View>
@@ -116,7 +116,7 @@ export const MeetingSummaryScreen: React.FC = () => {
                   <View style={styles.expandedBody}>
                     {/* Key Highlights */}
                     <View style={styles.pointsSection}>
-                      <Text style={styles.pointsTitle}>KEY RESOLUTIONS & HIGHLIGHTS</Text>
+                      <Text style={styles.pointsTitle}>KEY DISCUSSION POINTS & DECISIONS</Text>
                       {item.keyHighlights.map((pt, idx) => (
                         <View key={idx} style={styles.bulletItem}>
                           <Text style={styles.bulletDot}>•</Text>
@@ -145,7 +145,7 @@ export const MeetingSummaryScreen: React.FC = () => {
                       activeOpacity={0.8}
                     >
                       <Download color={colors.crimson} size={16} />
-                      <Text style={styles.downloadPdfText}>Download Signed MoM Document (PDF)</Text>
+                      <Text style={styles.downloadPdfText}>Download Meeting Notes (PDF)</Text>
                     </TouchableOpacity>
                   </View>
                 )}

@@ -41,11 +41,11 @@ export const EventsScreen: React.FC = () => {
         <View style={styles.heroCard}>
           <View style={styles.badgeRow}>
             <Sparkles color={colors.crimson} size={16} />
-            <Text style={styles.badgeText}>BENGAL BUSINESS CONCLAVES</Text>
+            <Text style={styles.badgeText}>BENGAL BUSINESS EVENTS</Text>
           </View>
-          <Text style={styles.heroTitle}>Events & Trade Summits</Text>
+          <Text style={styles.heroTitle}>Events & Business Meets</Text>
           <Text style={styles.heroSubtitle}>
-            Flagship industry meets, international buyer-seller delegations, and high-level industrial roundtables.
+            Industry summits, business exhibitions, international buyer meets, and networking events across Bengal.
           </Text>
         </View>
 
@@ -64,7 +64,7 @@ export const EventsScreen: React.FC = () => {
                 onPress={() => setActiveTab(tab)}
               >
                 <Text style={[styles.tabText, isSelected && styles.tabTextActive]}>
-                  {tab === 'All' ? 'All Summits' : tab}
+                  {tab === 'All' ? 'All Events' : tab === 'Annual Conclave' ? 'Annual Meet' : tab}
                 </Text>
               </TouchableOpacity>
             );
@@ -106,7 +106,7 @@ export const EventsScreen: React.FC = () => {
                   <View style={styles.speakerBox}>
                     <Building color={colors.crimson} size={18} />
                     <View style={styles.speakerInfo}>
-                      <Text style={styles.speakerRole}>CHIEF GUEST / KEYNOTE</Text>
+                      <Text style={styles.speakerRole}>CHIEF GUEST / SPEAKER</Text>
                       <Text style={styles.speakerName}>{event.chiefGuest}</Text>
                     </View>
                   </View>
@@ -127,11 +127,11 @@ export const EventsScreen: React.FC = () => {
                     {event.isRegistered ? (
                       <>
                         <CheckCircle2 color={colors.emerald} size={15} />
-                        <Text style={styles.regTextActive}>Pass Confirmed</Text>
+                        <Text style={styles.regTextActive}>Registered</Text>
                       </>
                     ) : (
                       <>
-                        <Text style={styles.regText}>Register for Conclave</Text>
+                        <Text style={styles.regText}>Register for Event</Text>
                       </>
                     )}
                   </TouchableOpacity>

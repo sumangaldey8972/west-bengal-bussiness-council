@@ -54,31 +54,31 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
   const handleSendOtp = () => {
     if (!mobileOrEmail.trim()) {
-      Alert.alert('Credential Required', 'Please enter your mobile number or email.');
+      Alert.alert('Please Enter Details', 'Please enter your mobile number or email.');
       return;
     }
     setOtpSent(true);
     setTimer(30);
     setDemoOtp('123456');
-    setOtpOrPassword('123456'); // Auto-fill for convenience in POC testing
+    setOtpOrPassword('123456'); // Auto-fill for convenience in demo testing
     Alert.alert(
-      'Demo OTP Dispatched',
-      'Secretariat SMS Simulation: Your 6-digit council access code is 123456 (auto-filled for quick testing).'
+      'Demo OTP Sent',
+      'Demo SMS: Your 6-digit OTP code is 123456 (filled automatically for testing).'
     );
   };
 
   const handleStandardLogin = () => {
     if (!mobileOrEmail.trim()) {
-      Alert.alert('Credential Required', 'Please enter your registered mobile number or executive email.');
+      Alert.alert('Please Enter Details', 'Please enter your mobile number or email address.');
       return;
     }
 
     if (isOtpMode && !otpOrPassword.trim()) {
-      Alert.alert('OTP Required', 'Please enter the 6-digit OTP (e.g. 123456).');
+      Alert.alert('OTP Required', 'Please enter the 6-digit OTP (for demo: 123456).');
       return;
     }
 
-    // Match entered email/phone with mock users or default to Rajiv Debnath
+    // Match entered email/phone with mock users or default to first user
     const matchedUser = users.find(
       u =>
         u.contact.phone.includes(mobileOrEmail.trim()) ||
@@ -98,7 +98,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       setOtpSent(true);
       setOtpOrPassword('123456');
     } else {
-      setOtpOrPassword('secretariat@2026');
+      setOtpOrPassword('password123');
     }
   };
 
@@ -123,12 +123,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
             <View style={styles.badgePill}>
               <ShieldCheck color={colors.crimson} size={14} />
-              <Text style={styles.badgePillText}>EXECUTIVE PORTAL • INVITE & MEMBERSHIP</Text>
+              <Text style={styles.badgePillText}>MEMBER PORTAL</Text>
             </View>
 
-            <Text style={styles.welcomeHeading}>Sign In to Council Desk</Text>
+            <Text style={styles.welcomeHeading}>Sign In to Your Account</Text>
             <Text style={styles.welcomeSubtitle}>
-              Connect with fellow business owners, access verified tenders, log 1-to-1 meetings, and pass B2B referrals across West Bengal.
+              Connect with other business owners, find new business opportunities, set up 1-to-1 meetings, and share referrals across West Bengal.
             </Text>
           </View>
 
@@ -151,18 +151,18 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                 style={[styles.toggleBtn, !isOtpMode && styles.toggleBtnActive]}
                 onPress={() => {
                   setIsOtpMode(false);
-                  setOtpOrPassword('secretariat@2026');
+                  setOtpOrPassword('password123');
                 }}
               >
                 <Text style={[styles.toggleBtnText, !isOtpMode && styles.toggleBtnTextActive]}>
-                  Council ID / Password
+                  Email & Password
                 </Text>
               </TouchableOpacity>
             </View>
 
             {/* Quick Fill Preset Chips */}
             <View style={styles.presetsContainer}>
-              <Text style={styles.presetsLabel}>QUICK FILL DEMO CREDENTIALS:</Text>
+              <Text style={styles.presetsLabel}>QUICK DEMO LOGINS:</Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.presetsScroll}>
                 <TouchableOpacity
                   style={styles.presetChip}
@@ -174,7 +174,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                   style={styles.presetChip}
                   onPress={() => handleQuickFill('priyanka@bengalsilks.com')}
                 >
-                  <Text style={styles.presetChipText}>Priyanka (CEO, Bengal Silks)</Text>
+                  <Text style={styles.presetChipText}>Priyanka (Bengal Silks)</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.presetChip}
@@ -188,7 +188,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             {/* Mobile / Email Input */}
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>
-                {isOtpMode ? 'REGISTERED EXECUTIVE MOBILE' : 'COUNCIL EMAIL OR GST NUMBER'}
+                {isOtpMode ? 'MOBILE NUMBER' : 'EMAIL ADDRESS OR GST NUMBER'}
               </Text>
               <View style={styles.inputBox}>
                 <Phone color={colors.textSecondary} size={18} />
@@ -196,7 +196,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                   style={styles.input}
                   value={mobileOrEmail}
                   onChangeText={setMobileOrEmail}
-                  placeholder={isOtpMode ? "+91 98300 00000" : "director@company.com"}
+                  placeholder={isOtpMode ? "+91 98300 00000" : "name@company.com"}
                   placeholderTextColor={colors.textMuted}
                   keyboardType={isOtpMode ? "phone-pad" : "email-address"}
                   autoCapitalize="none"
@@ -214,7 +214,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                     activeOpacity={0.8}
                   >
                     <KeyRound color={colors.white} size={16} />
-                    <Text style={styles.sendOtpBtnText}>Generate Demo OTP (SMS Simulation)</Text>
+                    <Text style={styles.sendOtpBtnText}>Send Demo OTP</Text>
                   </TouchableOpacity>
                 ) : (
                   <>
@@ -222,9 +222,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                     <View style={styles.otpBanner}>
                       <Info color={colors.emerald} size={16} />
                       <View style={styles.otpBannerTextCol}>
-                        <Text style={styles.otpBannerTitle}>Simulated SMS Received</Text>
+                        <Text style={styles.otpBannerTitle}>Demo SMS Code</Text>
                         <Text style={styles.otpBannerCode}>
-                          Your Bengal Business Council OTP is <Text style={styles.boldText}>{demoOtp}</Text>
+                          Your OTP code is <Text style={styles.boldText}>{demoOtp}</Text>
                         </Text>
                       </View>
                     </View>
@@ -264,7 +264,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                       onPress={handleStandardLogin}
                       activeOpacity={0.8}
                     >
-                      <Text style={styles.primaryBtnText}>Verify OTP & Enter Council Desk</Text>
+                      <Text style={styles.primaryBtnText}>Verify OTP & Sign In</Text>
                       <ArrowRight color={colors.white} size={18} />
                     </TouchableOpacity>
                   </>
@@ -275,9 +275,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               <>
                 <View style={styles.inputGroup}>
                   <View style={styles.labelRow}>
-                    <Text style={styles.inputLabel}>EXECUTIVE PASSWORD</Text>
+                    <Text style={styles.inputLabel}>PASSWORD</Text>
                     <TouchableOpacity
-                      onPress={() => Alert.alert('Secretariat Reset', 'A password reset link has been dispatched to your corporate email.')}
+                      onPress={() => Alert.alert('Password Reset', 'A password reset link has been sent to your email.')}
                     >
                       <Text style={styles.forgotText}>Forgot Password?</Text>
                     </TouchableOpacity>
@@ -288,7 +288,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                       style={styles.input}
                       value={otpOrPassword}
                       onChangeText={setOtpOrPassword}
-                      placeholder="Enter Password"
+                      placeholder="Enter your password"
                       placeholderTextColor={colors.textMuted}
                       secureTextEntry
                     />
@@ -301,7 +301,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                   onPress={handleStandardLogin}
                   activeOpacity={0.8}
                 >
-                  <Text style={styles.primaryBtnText}>Sign In to Executive Desk</Text>
+                  <Text style={styles.primaryBtnText}>Sign In</Text>
                   <ArrowRight color={colors.white} size={18} />
                 </TouchableOpacity>
               </>
@@ -312,10 +312,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           <View style={styles.demoSection}>
             <View style={styles.demoHeaderRow}>
               <Sparkles color={colors.crimson} size={16} />
-              <Text style={styles.demoSectionTitle}>1-CLICK POC EXECUTIVE PERSONA SIGN-IN</Text>
+              <Text style={styles.demoSectionTitle}>1-CLICK DEMO SIGN IN</Text>
             </View>
             <Text style={styles.demoSectionSub}>
-              Tap any business leader below to instantly enter the app with their verified council profile, ₹ deals, and meetings:
+              Tap any member below to log in directly as them:
             </Text>
 
             <View style={styles.demoUsersList}>
@@ -352,9 +352,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             <View style={styles.signupTextCol}>
               <Users2 color={colors.crimson} size={20} />
               <View style={styles.signupDetails}>
-                <Text style={styles.signupTitle}>New Business Owner in West Bengal?</Text>
+                <Text style={styles.signupTitle}>New to Bengal Business Council?</Text>
                 <Text style={styles.signupSubtitle}>
-                  Apply for verified council membership, digital visiting card, and chapter access.
+                  Register for membership, get your digital visiting card, and join local chapters.
                 </Text>
               </View>
             </View>
@@ -364,14 +364,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               onPress={() => navigation.navigate('SignUp')}
               activeOpacity={0.8}
             >
-              <Text style={styles.signUpBtnText}>Apply for Membership / Register</Text>
+              <Text style={styles.signUpBtnText}>Register / Apply for Membership</Text>
             </TouchableOpacity>
           </View>
 
           {/* Footer Assistance */}
           <View style={styles.footerHelp}>
             <Text style={styles.helpText}>
-              Need Secretariat assistance? Call <Text style={styles.helpHighlight}>+91 (033) 4000-8800</Text> or email <Text style={styles.helpHighlight}>secretariat@bengalbusinesscouncil.com</Text>
+              Need help? Call <Text style={styles.helpHighlight}>+91 (033) 4000-8800</Text> or email <Text style={styles.helpHighlight}>help@bengalbusinesscouncil.com</Text>
             </Text>
           </View>
         </ScrollView>

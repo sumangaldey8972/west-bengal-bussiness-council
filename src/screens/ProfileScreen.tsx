@@ -86,18 +86,18 @@ export const ProfileScreen: React.FC = () => {
             <View style={styles.metricDivider} />
             <View style={styles.metricItem}>
               <Text style={styles.metricCrimson}>₹ {(currentUser.stats.businessValueInLakhs / 100).toFixed(2)} Cr</Text>
-              <Text style={styles.metricLabel}>Business Won</Text>
+              <Text style={styles.metricLabel}>Total Deals</Text>
             </View>
           </View>
         </View>
 
         {/* Business Specifications Grid */}
         <View style={styles.sectionCard}>
-          <Text style={styles.sectionHeader}>VERIFIED ENTERPRISE PROFILE</Text>
+          <Text style={styles.sectionHeader}>VERIFIED BUSINESS PROFILE</Text>
 
           <View style={styles.specsGrid}>
             <View style={styles.specItem}>
-              <Text style={styles.specLabel}>GSTIN (AUDITED)</Text>
+              <Text style={styles.specLabel}>GST NUMBER (VERIFIED)</Text>
               <Text style={styles.specGst}>{currentUser.gstNumber}</Text>
             </View>
 
@@ -107,12 +107,12 @@ export const ProfileScreen: React.FC = () => {
             </View>
 
             <View style={styles.specItem}>
-              <Text style={styles.specLabel}>PRIMARY INDUSTRY</Text>
+              <Text style={styles.specLabel}>INDUSTRY</Text>
               <Text style={styles.specValue}>{currentUser.industry}</Text>
             </View>
 
             <View style={styles.specItem}>
-              <Text style={styles.specLabel}>LOCATION HUB</Text>
+              <Text style={styles.specLabel}>OFFICE LOCATION</Text>
               <Text style={styles.specValue}>{currentUser.location}</Text>
             </View>
           </View>
@@ -120,25 +120,25 @@ export const ProfileScreen: React.FC = () => {
 
         {/* Company Bio */}
         <View style={styles.sectionCard}>
-          <Text style={styles.sectionHeader}>ENTERPRISE BIO & CORE COMPETENCIES</Text>
+          <Text style={styles.sectionHeader}>ABOUT THE COMPANY</Text>
           <Text style={styles.bioText}>{currentUser.bio}</Text>
         </View>
 
         {/* Verified Capability Documents / Brochures */}
         {currentUser.requirementDocs && (
           <View style={styles.sectionCard}>
-            <Text style={styles.sectionHeader}>CAPABILITY & VENDOR CERTIFICATES</Text>
+            <Text style={styles.sectionHeader}>COMPANY BROCHURES & DOCUMENTS</Text>
             {currentUser.requirementDocs.map((doc, idx) => (
               <TouchableOpacity
                 key={idx}
                 style={styles.docItem}
-                onPress={() => Alert.alert('Viewing Document', `Opening ${doc.title}`)}
+                onPress={() => Alert.alert('View Document', `Opening ${doc.title}`)}
                 activeOpacity={0.8}
               >
                 <FileText color={colors.crimson} size={18} />
                 <View style={styles.docInfo}>
                   <Text style={styles.docTitle} numberOfLines={1}>{doc.title}</Text>
-                  <Text style={styles.docMeta}>{doc.type} • {doc.size} • Verified Council Doc</Text>
+                  <Text style={styles.docMeta}>{doc.type} • {doc.size} • Verified Document</Text>
                 </View>
                 <Text style={styles.docAction}>View</Text>
               </TouchableOpacity>
@@ -148,7 +148,7 @@ export const ProfileScreen: React.FC = () => {
 
         {/* Official Contact Info */}
         <View style={styles.sectionCard}>
-          <Text style={styles.sectionHeader}>SECRETARIAT VERIFIED CONTACT</Text>
+          <Text style={styles.sectionHeader}>OFFICIAL CONTACT DETAILS</Text>
 
           <View style={styles.contactItem}>
             <Mail color={colors.primary} size={15} />
@@ -179,21 +179,21 @@ export const ProfileScreen: React.FC = () => {
             activeOpacity={0.8}
           >
             <CreditCard color={colors.white} size={16} />
-            <Text style={styles.primaryBtnText}>View Full Digital Visiting Card & QR</Text>
+            <Text style={styles.primaryBtnText}>View Digital Visiting Card</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.secondaryActionBtn}
             onPress={() => {
               Alert.alert(
-                'Council Referral Link',
-                `Your personal Bengal Business Council intro link: https://bengalbusinesscouncil.com/members/${currentUser.id}`
+                'Member Profile Link',
+                `Council profile link: https://bengalbusinesscouncil.com/members/${currentUser.id}`
               );
             }}
             activeOpacity={0.8}
           >
             <Share2 color={colors.primary} size={16} />
-            <Text style={styles.secondaryBtnText}>Share My Council Profile</Text>
+            <Text style={styles.secondaryBtnText}>Share My Profile</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -203,7 +203,7 @@ export const ProfileScreen: React.FC = () => {
             }}
             activeOpacity={0.8}
           >
-            <Text style={styles.logoutBtnText}>Sign Out / Switch Persona</Text>
+            <Text style={styles.logoutBtnText}>Sign Out / Switch Account</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

@@ -284,8 +284,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       date: date || 'Upcoming',
       time: time || '11:00 AM',
       status: 'Scheduled',
-      locationOrLink: location || 'BBC Secretariat Boardroom',
-      agenda: agenda || 'B2B Strategic discussion & capabilities sharing.',
+      locationOrLink: location || 'Council Office Boardroom, Salt Lake',
+      agenda: agenda || 'Discuss business services and project collaboration.',
     };
 
     setOneToOneMeetings(prev => [newMeeting, ...prev]);
@@ -351,7 +351,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       toUserCompany: target.companyName,
       amountInINR: amountInINR || 1000000,
       amountFormatted: amountFormatted || '₹ 10.0 Lakhs',
-      dealDescription: dealDescription || 'B2B Purchase order executed',
+      dealDescription: dealDescription || 'Closed business deal',
       date: 'Today',
       referralType: referralType || 'Inside Council',
     };

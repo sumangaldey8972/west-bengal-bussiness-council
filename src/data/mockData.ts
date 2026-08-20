@@ -313,7 +313,7 @@ export const MOCK_POSTS: Post[] = [
     authorAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&auto=format&fit=crop&q=80',
     chapter: 'Asansol-Howrah Heavy Hub',
     createdAt: '3 hours ago',
-    content: '🤝 DEAL ANNOUNCEMENT & TYFB: Delighted to announce the successful signing of an annual supply contract with Eastern Railway for bogie bolster castings worth ₹8.20 Crores. Huge gratitude to Subrata Mukherjee (Bengal Precision) for facilitating the tier-1 introduction through our BBC 1-to-1 session last quarter! #BengalBusinessesGrowingTogether',
+    content: '🤝 DEAL ANNOUNCEMENT: Happy to announce the successful signing of an annual supply contract with Eastern Railway for bogie bolster castings worth ₹8.20 Crores. Special thanks to Subrata Mukherjee (Bengal Precision) for introducing us through our 1-to-1 meeting last quarter! #BengalBusinessesGrowingTogether',
     tag: 'Deal Won',
     budgetOrValue: '₹ 8.20 Cr Deal Closed',
     likesCount: 88,
@@ -400,11 +400,11 @@ export const MOCK_COMMUNITIES: Community[] = [
     description: 'The flagship chapter bringing together leaders in manufacturing, trade, infrastructure, and enterprise services across the Kolkata metropolitan region.',
     presidentName: 'Subhasis Dutt',
     presidentAvatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=300&auto=format&fit=crop&q=80',
-    presidentCompany: 'BBC Secretariat & Founder President',
+    presidentCompany: 'Council Office & Founder President',
     membersCount: 148,
     activeDiscussionsCount: 38,
     nextMeeting: {
-      title: 'Bi-Weekly Executive Breakfast Conclave',
+      title: 'Bi-Weekly Breakfast Meeting',
       date: 'Thursday, Aug 27, 2026',
       time: '07:30 AM - 09:30 AM',
       venue: 'The Oberoi Grand, Kolkata (Ballroom)'
@@ -416,14 +416,14 @@ export const MOCK_COMMUNITIES: Community[] = [
     id: 'comm_2',
     name: 'Tech, AI & Startups SIG',
     type: 'Industry Special Interest Group (SIG)',
-    description: 'Dedicated council for deep-tech, SaaS, AI/ML, and digital enterprise founders looking to collaborate with traditional heavy industry leaders.',
+    description: 'Dedicated group for tech, SaaS, AI, and digital founders to collaborate with business leaders across Bengal.',
     presidentName: 'Arnab Bhattacharya',
     presidentAvatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=300&auto=format&fit=crop&q=80',
     presidentCompany: 'Synapse Enterprise AI',
     membersCount: 84,
     activeDiscussionsCount: 22,
     nextMeeting: {
-      title: 'AI in Heavy Manufacturing & Supply Chain Roundtable',
+      title: 'AI in Heavy Manufacturing & Supply Chain Meet',
       date: 'Tuesday, Sep 1, 2026',
       time: '05:00 PM - 07:00 PM',
       venue: 'NASSCOM Warehouse, Salt Lake Sector V'
@@ -473,17 +473,17 @@ export const MOCK_COMMUNITIES: Community[] = [
     id: 'comm_5',
     name: 'BBC Global Diaspora Council (UK, US, UAE & SG)',
     type: 'Global Chapter',
-    description: 'Connecting NRI entrepreneurs, global venture funds, and trade commissioners with West Bengal based businesses for cross-border investments.',
+    description: 'Connecting NRI entrepreneurs, global funds, and trade partners with West Bengal based businesses for investment and growth.',
     presidentName: 'Dr. Rahul Roychowdhury',
     presidentAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
     presidentCompany: 'Bengal Global Capital Partners (London)',
     membersCount: 110,
     activeDiscussionsCount: 41,
     nextMeeting: {
-      title: 'Global Bengal Investors Virtual Conclave Q3',
+      title: 'Global Bengal Investors Virtual Meet Q3',
       date: 'Sunday, Sep 13, 2026',
       time: '06:30 PM - 08:30 PM IST',
-      venue: 'BBC Global Zoom Executive Portal'
+      venue: 'BBC Global Zoom Meeting'
     },
     banner: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&auto=format&fit=crop&q=80',
     isJoined: false
@@ -513,7 +513,7 @@ export const MOCK_ONE_TO_ONE_MEETINGS: OneToOneMeeting[] = [
     date: 'Monday, Aug 24, 2026',
     time: '11:00 AM - 11:45 AM',
     status: 'Scheduled',
-    locationOrLink: 'BBC Secretariat Boardroom, Salt Lake',
+    locationOrLink: 'Council Office Boardroom, Salt Lake',
     agenda: 'Exploring automated vision inspection integration on our CNC milling machines.'
   },
   {
@@ -657,14 +657,14 @@ export const MOCK_BUSINESS_DEALS: BusinessDeal[] = [
 export const MOCK_MEETING_SUMMARIES: MeetingSummary[] = [
   {
     id: 'sum_1',
-    title: 'Kolkata Central Chapter 84th Bi-Weekly Conclave',
+    title: 'Kolkata Central Chapter 84th Bi-Weekly Meeting',
     chapter: 'Kolkata Central Chapter',
     date: 'Aug 13, 2026',
     attendeesCount: 52,
     keyHighlights: [
-      '38 One-to-One meetings logged during the fortnight.',
-      '4 new members inducted in Healthcare and Solar EPC sectors.',
-      'Special presentation on "Export Incentive Scheme 2026" by Exim Bank Regional Head.'
+      '38 One-to-One meetings logged during the past two weeks.',
+      '4 new members joined in Healthcare and Solar Energy sectors.',
+      'Special presentation on "Export Schemes for 2026" by Exim Bank Regional Head.'
     ],
     totalBusinessAnnounced: '₹ 11.45 Crores',
     nextSteps: [
@@ -674,18 +674,18 @@ export const MOCK_MEETING_SUMMARIES: MeetingSummary[] = [
   },
   {
     id: 'sum_2',
-    title: 'Tech & Heavy Industry Synergy Roundtable',
+    title: 'Tech & Heavy Industry Collaboration Roundtable',
     chapter: 'Tech & Startups SIG',
     date: 'Jul 30, 2026',
     attendeesCount: 44,
     keyHighlights: [
-      'Presentation of 3 AI vision pilots for foundry defect reduction.',
-      'MoU signed between 2 MSME members and IoT startup Synapse AI.',
-      'Discussion on Bengal IT Policy subsidies for cloud infrastructure.'
+      'Presentation of 3 AI vision pilot projects for defect reduction.',
+      'Partnership signed between 2 MSME members and AI startup Synapse AI.',
+      'Discussion on Bengal IT Policy support for cloud infrastructure.'
     ],
     totalBusinessAnnounced: '₹ 2.80 Crores',
     nextSteps: [
-      'Roll out pilot data capture across 2 member factories by Sep 1.'
+      'Roll out pilot test across 2 member factories by Sep 1.'
     ]
   }
 ];
@@ -693,7 +693,7 @@ export const MOCK_MEETING_SUMMARIES: MeetingSummary[] = [
 export const MOCK_EVENTS: EventItem[] = [
   {
     id: 'evt_1',
-    title: 'Bengal Business Council Annual Vision Conclave 2026',
+    title: 'Bengal Business Council Annual Summit 2026',
     category: 'Annual Conclave',
     date: 'Saturday, Sep 26, 2026',
     time: '09:30 AM - 06:00 PM IST',
@@ -702,7 +702,7 @@ export const MOCK_EVENTS: EventItem[] = [
     bannerUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&auto=format&fit=crop&q=80',
     isRegistered: true,
     attendeesCount: 450,
-    description: 'The flagship annual gathering of over 500+ industrial leaders, diaspora investors, and policymakers discussing the industrial roadmap and global competitiveness of Bengal.'
+    description: 'The main annual gathering of over 500+ business owners, investors, and leaders to discuss growth and opportunities in Bengal.'
   },
   {
     id: 'evt_2',
@@ -714,7 +714,7 @@ export const MOCK_EVENTS: EventItem[] = [
     bannerUrl: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&auto=format&fit=crop&q=80',
     isRegistered: true,
     attendeesCount: 65,
-    description: 'Bi-weekly structured networking, 30-second elevator pitches, featured member presentation by Medisurg Biotech, and direct referral passing.'
+    description: 'Bi-weekly meeting, member introductions, featured presentation by Medisurg Biotech, and passing business referrals.'
   },
   {
     id: 'evt_3',
@@ -727,7 +727,7 @@ export const MOCK_EVENTS: EventItem[] = [
     bannerUrl: 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=800&auto=format&fit=crop&q=80',
     isRegistered: false,
     attendeesCount: 28,
-    description: 'High-powered B2B matchmaking delegation covering maritime logistics, food processing exports, and cross-border tech partnerships in ASEAN.'
+    description: 'B2B business delegation covering logistics, food processing exports, and cross-border tech partnerships in Singapore and ASEAN.'
   }
 ];
 

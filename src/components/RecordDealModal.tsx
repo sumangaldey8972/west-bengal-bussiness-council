@@ -22,7 +22,7 @@ export const RecordDealModal: React.FC = () => {
 
   const [selectedUserId, setSelectedUserId] = useState<string>(otherUsers[0]?.id || '');
   const [dealAmountText, setDealAmountText] = useState('2500000'); // 25 Lakhs
-  const [dealDescription, setDealDescription] = useState('Subcontract PO for heavy precision machined components & testing');
+  const [dealDescription, setDealDescription] = useState('Order for precision parts and fabrication testing');
   const [referralType, setReferralType] = useState<BusinessDeal['referralType']>('Inside Council');
 
   if (!showRecordDealModal) return null;
@@ -35,8 +35,8 @@ export const RecordDealModal: React.FC = () => {
   const handleSave = () => {
     recordBusinessDeal(selectedUserId, formattedInLakhs, rawAmount, dealDescription, referralType);
     Alert.alert(
-      'Thank You For Business (TYFB) Recorded! 🏆',
-      `Congratulations! ${formattedInLakhs} in verified council business has been added to your total closed deals.`
+      'Business Deal Recorded! 🏆',
+      `Great news! ${formattedInLakhs} in business has been added to your profile records.`
     );
     closeRecordDeal();
   };
@@ -55,8 +55,8 @@ export const RecordDealModal: React.FC = () => {
           {/* Header */}
           <View style={styles.header}>
             <View>
-              <Text style={styles.headerBadge}>BENGAL BUSINESS COUNCIL • TYFB</Text>
-              <Text style={styles.headerTitle}>Record Business Deal / TYFB Slip</Text>
+              <Text style={styles.headerBadge}>BENGAL BUSINESS COUNCIL</Text>
+              <Text style={styles.headerTitle}>Record a Closed Business Deal</Text>
             </View>
             <TouchableOpacity style={styles.closeBtn} onPress={closeRecordDeal}>
               <X color={colors.textPrimary} size={20} />
@@ -68,16 +68,16 @@ export const RecordDealModal: React.FC = () => {
             <View style={styles.dealHighlightBox}>
               <View style={styles.sparkleRow}>
                 <Sparkles color={colors.emerald} size={16} />
-                <Text style={styles.dealHighlightLabel}>VERIFIED BUSINESS AMOUNT</Text>
+                <Text style={styles.dealHighlightLabel}>BUSINESS DEAL VALUE</Text>
               </View>
               <Text style={styles.dealHighlightValue}>{formattedInLakhs}</Text>
               <Text style={styles.dealHighlightSub}>
-                Thank You For Business (TYFB) between Council Members
+                Thank You For Business between Council Members
               </Text>
             </View>
 
             {/* Member Selection */}
-            <Text style={styles.inputLabel}>SELECT MEMBER ASSOCIATED WITH DEAL</Text>
+            <Text style={styles.inputLabel}>SELECT MEMBER YOU DID BUSINESS WITH</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.memberScroll}>
               {otherUsers.map(member => {
                 const isSelected = member.id === selectedUserId;
@@ -118,7 +118,7 @@ export const RecordDealModal: React.FC = () => {
             <View style={styles.fieldGroup}>
               <View style={styles.fieldLabelRow}>
                 <DollarSign color={colors.crimson} size={14} />
-                <Text style={styles.inputLabel}>TRANSACTION AMOUNT (IN RUPEES ₹)</Text>
+                <Text style={styles.inputLabel}>DEAL AMOUNT (IN RUPEES ₹)</Text>
               </View>
               <TextInput
                 style={styles.textInput}
@@ -128,20 +128,20 @@ export const RecordDealModal: React.FC = () => {
                 placeholder="e.g. 2500000"
                 placeholderTextColor={colors.textMuted}
               />
-              <Text style={styles.helperText}>Enter amount in INR (e.g. 5000000 for 50 Lakhs, 10000000 for 1 Cr)</Text>
+              <Text style={styles.helperText}>Enter amount in Rupees (e.g. 5000000 for 50 Lakhs, 10000000 for 1 Crore)</Text>
             </View>
 
             {/* Deal Description */}
             <View style={styles.fieldGroup}>
               <View style={styles.fieldLabelRow}>
                 <FileText color={colors.crimson} size={14} />
-                <Text style={styles.inputLabel}>CONTRACT / PO NATURE</Text>
+                <Text style={styles.inputLabel}>WHAT WAS THE DEAL ABOUT?</Text>
               </View>
               <TextInput
                 style={[styles.textInput, styles.textArea]}
                 value={dealDescription}
                 onChangeText={setDealDescription}
-                placeholder="Briefly describe products/services transacted..."
+                placeholder="Briefly describe what was bought or sold..."
                 placeholderTextColor={colors.textMuted}
                 multiline
                 numberOfLines={2}
@@ -150,7 +150,7 @@ export const RecordDealModal: React.FC = () => {
 
             {/* Referral Source Type */}
             <View style={styles.fieldGroup}>
-              <Text style={styles.inputLabel}>REFERRAL TYPE</Text>
+              <Text style={styles.inputLabel}>TYPE OF DEAL</Text>
               <View style={styles.refTypeRow}>
                 {(['Inside Council', 'Cross-Chapter Referral', 'Tier-3 Referral'] as BusinessDeal['referralType'][]).map(type => {
                   const isSelected = referralType === type;
@@ -172,7 +172,7 @@ export const RecordDealModal: React.FC = () => {
             {/* Submit Button */}
             <TouchableOpacity style={styles.submitBtn} onPress={handleSave} activeOpacity={0.8}>
               <TrendingUp color={colors.white} size={18} />
-              <Text style={styles.submitBtnText}>Submit & Record TYFB Deal</Text>
+              <Text style={styles.submitBtnText}>Save & Record Business Deal</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>

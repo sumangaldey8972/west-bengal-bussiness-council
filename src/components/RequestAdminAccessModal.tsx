@@ -32,8 +32,8 @@ export const RequestAdminAccessModal: React.FC = () => {
   const handleSubmit = () => {
     requestAdminContactAccess(selectedUserForAdminAccess.id, reason);
     Alert.alert(
-      'Admin Introduction Request Raised',
-      `Your request to access verified direct contact & audited GST records for ${selectedUserForAdminAccess.name} (${selectedUserForAdminAccess.companyName}) has been sent to the BBC Secretariat. An introduction will be facilitated via email/call.`
+      'Request Sent',
+      `Your request to connect with ${selectedUserForAdminAccess.name} (${selectedUserForAdminAccess.companyName}) has been sent to the Council team. We will introduce you via email or phone.`
     );
     closeRequestAdminAccess();
   };
@@ -50,8 +50,8 @@ export const RequestAdminAccessModal: React.FC = () => {
           {/* Header */}
           <View style={styles.header}>
             <View>
-              <Text style={styles.headerBadge}>BBC EXECUTIVE PROTOCOL</Text>
-              <Text style={styles.headerTitle}>Request Admin Introduction / Details</Text>
+              <Text style={styles.headerBadge}>COUNCIL PROTOCOL</Text>
+              <Text style={styles.headerTitle}>Request an Introduction</Text>
             </View>
             <TouchableOpacity style={styles.closeBtn} onPress={closeRequestAdminAccess}>
               <X color={colors.textPrimary} size={20} />
@@ -76,38 +76,38 @@ export const RequestAdminAccessModal: React.FC = () => {
             <View style={styles.securityNotice}>
               <Lock color={colors.accentBlue} size={18} />
               <View style={styles.noticeTextCol}>
-                <Text style={styles.noticeTitle}>High-Tier Business Confidentiality</Text>
+                <Text style={styles.noticeTitle}>Member Privacy Protection</Text>
                 <Text style={styles.noticeBody}>
-                  Direct mobile numbers, audited GST certificates, and defense capability portfolios of council members are facilitated through verified Secretariat introductions.
+                  To protect member privacy, direct phone numbers and company documents are shared through Council introductions.
                 </Text>
               </View>
             </View>
 
             {/* Requested Information Checklist */}
             <View style={styles.checklistCard}>
-              <Text style={styles.checkCardTitle}>INFORMATION TO BE FACILITATED</Text>
+              <Text style={styles.checkCardTitle}>DETAILS YOU WILL RECEIVE</Text>
               <View style={styles.checkItem}>
                 <FileCheck color={colors.emerald} size={16} />
-                <Text style={styles.checkItemText}>Direct Executive Phone & Managing Director Email</Text>
+                <Text style={styles.checkItemText}>Direct phone number & email address</Text>
               </View>
               <View style={styles.checkItem}>
                 <FileCheck color={colors.emerald} size={16} />
-                <Text style={styles.checkItemText}>Full Verified GST Returns & Vendor Registration Records</Text>
+                <Text style={styles.checkItemText}>Verified GST details & company documents</Text>
               </View>
               <View style={styles.checkItem}>
                 <FileCheck color={colors.emerald} size={16} />
-                <Text style={styles.checkItemText}>Secretariat-facilitated 1-to-1 Boardroom Meeting</Text>
+                <Text style={styles.checkItemText}>Arranged 1-to-1 business meeting</Text>
               </View>
             </View>
 
             {/* Reason Field */}
             <View style={styles.fieldGroup}>
-              <Text style={styles.inputLabel}>PURPOSE OF INTRODUCTION / REQUIREMENT</Text>
+              <Text style={styles.inputLabel}>WHY DO YOU WANT TO CONNECT?</Text>
               <TextInput
                 style={[styles.textInput, styles.textArea]}
                 value={reason}
                 onChangeText={setReason}
-                placeholder="State your commercial requirement or partnership intent..."
+                placeholder="Explain your business inquiry or project requirement..."
                 placeholderTextColor={colors.textMuted}
                 multiline
                 numberOfLines={3}
@@ -124,12 +124,12 @@ export const RequestAdminAccessModal: React.FC = () => {
               {isAlreadyRequested ? (
                 <>
                   <CheckCircle2 color={colors.white} size={18} />
-                  <Text style={styles.submitBtnText}>Request Already Under Secretariat Review</Text>
+                  <Text style={styles.submitBtnText}>Request is Being Reviewed</Text>
                 </>
               ) : (
                 <>
                   <ShieldAlert color={colors.white} size={18} />
-                  <Text style={styles.submitBtnText}>Submit Introduction Request to Admin</Text>
+                  <Text style={styles.submitBtnText}>Send Introduction Request</Text>
                 </>
               )}
             </TouchableOpacity>

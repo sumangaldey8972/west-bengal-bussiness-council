@@ -15,12 +15,10 @@ import {
   ArrowLeft,
   ArrowRight,
   ShieldCheck,
-  Building2,
   Phone,
   Mail,
   FileText,
   CheckCircle,
-  FileCheck,
 } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
@@ -73,19 +71,19 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
   const handleNext = () => {
     if (currentStep === 1) {
       if (!fullName.trim() || !phone.trim() || !email.trim()) {
-        Alert.alert('Required Fields', 'Please complete your personal and executive contact details.');
+        Alert.alert('Please Fill In Details', 'Please enter your name, phone number, and email.');
         return;
       }
       setCurrentStep(2);
     } else if (currentStep === 2) {
       if (!companyName.trim() || !gstNumber.trim()) {
-        Alert.alert('Business Details Required', 'Please enter your registered Enterprise Name and GSTIN.');
+        Alert.alert('Business Details Required', 'Please enter your company name and GST number.');
         return;
       }
       setCurrentStep(3);
     } else if (currentStep === 3) {
       if (!agreeCharter) {
-        Alert.alert('Charter Agreement', 'Please agree to the Bengal Business Council Executive Ethics Charter.');
+        Alert.alert('Agreement Required', 'Please check the box to agree to the Council terms.');
         return;
       }
 
@@ -107,8 +105,8 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
       });
 
       Alert.alert(
-        'Council Membership Ratified! 🏛️',
-        `Welcome to Bengal Business Council, ${fullName}! Your executive membership has been provisioned.`
+        'Welcome to Bengal Business Council! 🎉',
+        `Your membership account for ${fullName} has been created successfully.`
       );
     }
   };
@@ -136,7 +134,7 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
               <View style={styles.crestBadge}>
                 <Text style={styles.crestBadgeText}>BBC</Text>
               </View>
-              <Text style={styles.topBarTitle}>MEMBERSHIP ONBOARDING</Text>
+              <Text style={styles.topBarTitle}>NEW MEMBER REGISTRATION</Text>
             </View>
           </View>
 
@@ -157,9 +155,9 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
             </View>
 
             <View style={styles.stepLabelsRow}>
-              <Text style={[styles.stepLabel, currentStep === 1 && styles.stepLabelActive]}>1. Leadership</Text>
-              <Text style={[styles.stepLabel, currentStep === 2 && styles.stepLabelActive]}>2. Enterprise & GST</Text>
-              <Text style={[styles.stepLabel, currentStep === 3 && styles.stepLabelActive]}>3. Council Charter</Text>
+              <Text style={[styles.stepLabel, currentStep === 1 && styles.stepLabelActive]}>1. Profile</Text>
+              <Text style={[styles.stepLabel, currentStep === 2 && styles.stepLabelActive]}>2. Business & GST</Text>
+              <Text style={[styles.stepLabel, currentStep === 3 && styles.stepLabelActive]}>3. Agreement</Text>
             </View>
           </View>
 
@@ -179,23 +177,23 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
               setLocation('Alipore Park Road, Kolkata, WB');
               setInviteCode('BBC-FOUNDER-2026');
               setSponsorName('Rajiv Debnath (Haldia Petro-Chem)');
-              Alert.alert('Demo Application Populated', 'All 3 registration steps have been pre-filled with verified enterprise mock data. Tap Proceed to submit!');
+              Alert.alert('Demo Details Filled', 'Form has been filled with sample business details. Tap Continue to submit!');
             }}
           >
-            <Text style={styles.quickFillText}>⚡ Auto-Fill Demo Application (Sourav Ganguly & Partners)</Text>
+            <Text style={styles.quickFillText}>⚡ Fill Demo Details (Sourav Ganguly & Partners)</Text>
           </TouchableOpacity>
 
           {/* STEP 1: Leadership Profile */}
           {currentStep === 1 && (
             <View style={styles.card}>
-              <Text style={styles.cardTitle}>Executive Leadership Profile</Text>
+              <Text style={styles.cardTitle}>Your Profile Details</Text>
               <Text style={styles.cardSubtitle}>
-                Enter your official executive credentials for the Bengal Business Council directory.
+                Enter your name, job title, and contact details for the member directory.
               </Text>
 
               {/* Full Name */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>FULL NAME (EXECUTIVE LEADER)</Text>
+                <Text style={styles.inputLabel}>YOUR FULL NAME</Text>
                 <TextInput
                   style={styles.input}
                   value={fullName}
@@ -207,19 +205,19 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
 
               {/* Designation */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>DESIGNATION / ROLE</Text>
+                <Text style={styles.inputLabel}>JOB TITLE / ROLE</Text>
                 <TextInput
                   style={styles.input}
                   value={designation}
                   onChangeText={setDesignation}
-                  placeholder="e.g. Managing Director / Founder CEO"
+                  placeholder="e.g. Managing Director / Founder / CEO"
                   placeholderTextColor={colors.textMuted}
                 />
               </View>
 
               {/* Contact Number */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>EXECUTIVE MOBILE NUMBER</Text>
+                <Text style={styles.inputLabel}>MOBILE NUMBER</Text>
                 <View style={styles.inputBox}>
                   <Phone color={colors.textSecondary} size={16} />
                   <TextInput
@@ -235,14 +233,14 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
 
               {/* Email */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>CORPORATE EMAIL</Text>
+                <Text style={styles.inputLabel}>EMAIL ADDRESS</Text>
                 <View style={styles.inputBox}>
                   <Mail color={colors.textSecondary} size={16} />
                   <TextInput
                     style={styles.innerInput}
                     value={email}
                     onChangeText={setEmail}
-                    placeholder="director@company.com"
+                    placeholder="name@company.com"
                     placeholderTextColor={colors.textMuted}
                     keyboardType="email-address"
                     autoCapitalize="none"
@@ -252,7 +250,7 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
 
               {/* Chapter Selection */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>PREFERRED REGIONAL CHAPTER</Text>
+                <Text style={styles.inputLabel}>SELECT YOUR LOCAL CHAPTER</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pillScroll}>
                   {chapters.map(ch => {
                     const isSelected = chapter === ch;
@@ -276,14 +274,14 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
           {/* STEP 2: Enterprise & GST Verification */}
           {currentStep === 2 && (
             <View style={styles.card}>
-              <Text style={styles.cardTitle}>Enterprise & GST Verification</Text>
+              <Text style={styles.cardTitle}>Business & GST Details</Text>
               <Text style={styles.cardSubtitle}>
-                Verified GSTIN ensures all B2B tenders and deals inside BBC Council remain authentic.
+                A verified GST number helps members trust and do business with your company.
               </Text>
 
               {/* Company Name */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>REGISTERED COMPANY / ENTERPRISE NAME</Text>
+                <Text style={styles.inputLabel}>COMPANY / BUSINESS NAME</Text>
                 <TextInput
                   style={styles.input}
                   value={companyName}
@@ -295,12 +293,12 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
 
               {/* Primary Industry */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>PRIMARY INDUSTRY / SECTOR</Text>
+                <Text style={styles.inputLabel}>BUSINESS INDUSTRY / SECTOR</Text>
                 <TextInput
                   style={styles.input}
                   value={industry}
                   onChangeText={setIndustry}
-                  placeholder="e.g. Heavy Machinery, Tea, Healthcare, Textiles..."
+                  placeholder="e.g. Heavy Machinery, Tea, Healthcare, Textiles, IT..."
                   placeholderTextColor={colors.textMuted}
                 />
               </View>
@@ -308,10 +306,10 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
               {/* GST Number */}
               <View style={styles.inputGroup}>
                 <View style={styles.labelRow}>
-                  <Text style={styles.inputLabel}>GSTIN (WEST BENGAL FORMAT: 19...)</Text>
+                  <Text style={styles.inputLabel}>GST NUMBER (STARTS WITH 19)</Text>
                   <View style={styles.gstTag}>
                     <ShieldCheck color={colors.emerald} size={12} />
-                    <Text style={styles.gstTagText}>Auto-Verified</Text>
+                    <Text style={styles.gstTagText}>Verified</Text>
                   </View>
                 </View>
                 <TextInput
@@ -326,7 +324,7 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
 
               {/* Turnover Brackets */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>ANNUAL ENTERPRISE TURNOVER</Text>
+                <Text style={styles.inputLabel}>ANNUAL BUSINESS TURNOVER</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pillScroll}>
                   {turnoverBrackets.map(br => {
                     const isSelected = turnover === br;
@@ -347,12 +345,12 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
 
               {/* Office Location */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>REGISTERED FACTORY / OFFICE ADDRESS</Text>
+                <Text style={styles.inputLabel}>OFFICE / FACTORY ADDRESS</Text>
                 <TextInput
                   style={styles.input}
                   value={location}
                   onChangeText={setLocation}
-                  placeholder="e.g. Howrah Industrial Estate, WB"
+                  placeholder="e.g. Howrah Industrial Estate, Kolkata"
                   placeholderTextColor={colors.textMuted}
                 />
               </View>
@@ -362,19 +360,19 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
           {/* STEP 3: Council Sponsorship & Charter */}
           {currentStep === 3 && (
             <View style={styles.card}>
-              <Text style={styles.cardTitle}>Council Sponsorship & Charter</Text>
+              <Text style={styles.cardTitle}>Invite & Council Agreement</Text>
               <Text style={styles.cardSubtitle}>
-                Bengal Business Council is an invite-driven business association of high-trust leaders.
+                Bengal Business Council connects trusted business owners across Bengal.
               </Text>
 
               {/* Invite Code */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>SPONSOR CODE / INVITE TOKEN</Text>
+                <Text style={styles.inputLabel}>INVITE CODE (OPTIONAL)</Text>
                 <TextInput
                   style={styles.input}
                   value={inviteCode}
                   onChangeText={setInviteCode}
-                  placeholder="e.g. BBC-KOL-EXEC-2026"
+                  placeholder="e.g. BBC-KOL-2026"
                   placeholderTextColor={colors.textMuted}
                   autoCapitalize="characters"
                 />
@@ -382,7 +380,7 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
 
               {/* Sponsoring Member */}
               <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>SPONSORING BBC MEMBER</Text>
+                <Text style={styles.inputLabel}>REFERRED BY (MEMBER NAME)</Text>
                 <TextInput
                   style={styles.input}
                   value={sponsorName}
@@ -400,10 +398,10 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
                 <FileText color={hasCapabilitiesDoc ? colors.crimson : colors.textMuted} size={22} />
                 <View style={styles.docUploadInfo}>
                   <Text style={styles.docUploadTitle}>
-                    {hasCapabilitiesDoc ? 'Enterprise_Capabilities_Profile.pdf' : '+ Attach Company Deck (Optional)'}
+                    {hasCapabilitiesDoc ? 'Company_Brochure.pdf' : '+ Attach Company Brochure or PDF (Optional)'}
                   </Text>
                   <Text style={styles.docUploadMeta}>
-                    {hasCapabilitiesDoc ? '3.4 MB • Ready for council broadcast' : 'Max 15 MB (PDF/PPT)'}
+                    {hasCapabilitiesDoc ? '3.4 MB • Ready to share with members' : 'Max 15 MB (PDF format)'}
                   </Text>
                 </View>
                 {hasCapabilitiesDoc && <CheckCircle color={colors.emerald} size={18} />}
@@ -418,7 +416,7 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
                   {agreeCharter && <CheckCircle color={colors.white} size={14} />}
                 </View>
                 <Text style={styles.charterText}>
-                  I confirm that our business is compliant with West Bengal commercial regulations and I pledge to uphold the ethical B2B referral code of the Bengal Business Council.
+                  I confirm that my business is legally registered in West Bengal, and I agree to treat fellow Council members with honesty and professional trust.
                 </Text>
               </TouchableOpacity>
             </View>
@@ -427,14 +425,14 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
           {/* Action Button */}
           <TouchableOpacity style={styles.nextBtn} onPress={handleNext} activeOpacity={0.8}>
             <Text style={styles.nextBtnText}>
-              {currentStep === 3 ? 'Complete Registration & Access Council Desk' : 'Proceed to Next Step'}
+              {currentStep === 3 ? 'Complete Registration & Enter App' : 'Continue to Next Step'}
             </Text>
             <ArrowRight color={colors.white} size={18} />
           </TouchableOpacity>
 
           {/* Existing Member Sign In Link */}
           <View style={styles.footerSignIn}>
-            <Text style={styles.footerSignInText}>Already an active BBC Council member?</Text>
+            <Text style={styles.footerSignInText}>Already a member?</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
               <Text style={styles.footerSignInHighlight}> Sign In Here</Text>
             </TouchableOpacity>
@@ -552,6 +550,21 @@ const styles = StyleSheet.create({
   stepLabelActive: {
     color: colors.crimson,
     fontWeight: '800',
+  },
+  quickFillBtn: {
+    backgroundColor: colors.crimsonLight,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.crimsonBorder,
+    alignItems: 'center',
+    marginBottom: 14,
+  },
+  quickFillText: {
+    fontSize: 11.5,
+    fontWeight: '700',
+    color: colors.crimson,
   },
   card: {
     backgroundColor: colors.cardBg,
@@ -747,21 +760,6 @@ const styles = StyleSheet.create({
   },
   footerSignInHighlight: {
     fontSize: 12,
-    fontWeight: '700',
-    color: colors.crimson,
-  },
-  quickFillBtn: {
-    backgroundColor: colors.crimsonLight,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: colors.crimsonBorder,
-    alignItems: 'center',
-    marginBottom: 14,
-  },
-  quickFillText: {
-    fontSize: 11.5,
     fontWeight: '700',
     color: colors.crimson,
   },

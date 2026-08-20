@@ -10,8 +10,8 @@ export const QuickActions: React.FC = () => {
   const actions = [
     {
       id: 'post',
-      label: 'Post Ask / RFQ',
-      sublabel: 'B2B Requirement',
+      label: 'Post Requirement',
+      sublabel: 'B2B Request',
       icon: PlusCircle,
       color: colors.crimson,
       bgColor: colors.crimsonLight,
@@ -19,8 +19,8 @@ export const QuickActions: React.FC = () => {
     },
     {
       id: 'oto',
-      label: 'Log 1-to-1',
-      sublabel: 'Schedule Connect',
+      label: '1-to-1 Meeting',
+      sublabel: 'Schedule Meet',
       icon: CalendarPlus,
       color: colors.accentBlue,
       bgColor: colors.accentBlueLight,
@@ -29,7 +29,7 @@ export const QuickActions: React.FC = () => {
     {
       id: 'ref',
       label: 'Give Referral',
-      sublabel: 'Pass Hot Lead',
+      sublabel: 'Share a Lead',
       icon: UserCheck,
       color: colors.purpleAccent,
       bgColor: colors.purpleLight,
@@ -37,8 +37,8 @@ export const QuickActions: React.FC = () => {
     },
     {
       id: 'tyfb',
-      label: 'Record ₹ Deal',
-      sublabel: 'TYFB Slip',
+      label: 'Record Deal',
+      sublabel: 'Closed Business',
       icon: Banknote,
       color: colors.emerald,
       bgColor: colors.emeraldLight,
@@ -46,7 +46,7 @@ export const QuickActions: React.FC = () => {
     },
     {
       id: 'card',
-      label: 'My Card & QR',
+      label: 'My Visiting Card',
       sublabel: 'Digital Profile',
       icon: QrCode,
       color: colors.primary,
@@ -57,7 +57,7 @@ export const QuickActions: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerTitle}>QUICK EXECUTIVE ACTIONS</Text>
+      <Text style={styles.headerTitle}>QUICK ACTIONS</Text>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}

@@ -53,8 +53,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         {/* Feed Header with Filters */}
         <View style={styles.feedHeaderRow}>
           <View>
-            <Text style={styles.feedBadge}>COUNCIL ACTIVITY FEED</Text>
-            <Text style={styles.feedTitle}>Business Opportunities & Updates</Text>
+            <Text style={styles.feedBadge}>COUNCIL POSTS</Text>
+            <Text style={styles.feedTitle}>Business Posts & Opportunities</Text>
           </View>
 
           <View style={styles.filterIconBox}>
@@ -78,7 +78,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 activeOpacity={0.7}
               >
                 <Text style={[styles.filterText, isSelected && styles.filterTextActive]}>
-                  {tab === 'All' ? 'All Council Posts' : tab}
+                  {tab === 'All' ? 'All Posts' : tab}
                 </Text>
               </TouchableOpacity>
             );

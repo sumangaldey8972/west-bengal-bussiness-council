@@ -41,8 +41,8 @@ export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
   const menuItems = [
     {
       id: 'profile',
-      label: 'Executive Profile & GST Docs',
-      sublabel: 'View company capabilities & GSTIN',
+      label: 'My Business Profile',
+      sublabel: 'View company details & documents',
       icon: User,
       color: colors.primary,
       bgColor: colors.cardBgElevated,
@@ -53,8 +53,8 @@ export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
     },
     {
       id: 'card',
-      label: 'Digital Business Card & QR',
-      sublabel: 'Share visiting card or order print kit',
+      label: 'Digital Visiting Card',
+      sublabel: 'Share card or order printed copies',
       icon: CreditCard,
       color: colors.crimson,
       bgColor: colors.crimsonLight,
@@ -65,8 +65,8 @@ export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
     },
     {
       id: 'meetings',
-      label: 'Meeting Summaries & Minutes',
-      sublabel: 'Bi-weekly conclave notes & archives',
+      label: 'Meeting Notes & Summaries',
+      sublabel: 'Council meeting notes & archives',
       icon: FileSpreadsheet,
       color: colors.accentBlue,
       bgColor: colors.accentBlueLight,
@@ -77,8 +77,8 @@ export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
     },
     {
       id: 'referrals',
-      label: 'Council Referral Desk',
-      sublabel: 'Track passed & received business leads',
+      label: 'Referrals & Deals',
+      sublabel: 'Track shared and received business',
       icon: Share2,
       color: colors.purpleAccent,
       bgColor: colors.purpleLight,
@@ -89,8 +89,8 @@ export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
     },
     {
       id: 'events',
-      label: 'Events & Vision Conclaves',
-      sublabel: 'Upcoming trade meets & delegations',
+      label: 'Events & Business Meets',
+      sublabel: 'Upcoming trade meets & programs',
       icon: Calendar,
       color: colors.crimson,
       bgColor: colors.crimsonLight,
@@ -101,29 +101,29 @@ export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
     },
     {
       id: 'invite',
-      label: 'Invite Business Owner',
-      sublabel: 'Generate invite-only membership link',
+      label: 'Invite Business Owners',
+      sublabel: 'Share invite link with fellow entrepreneurs',
       icon: Sparkles,
       color: colors.accentBlue,
       bgColor: colors.accentBlueLight,
       action: () => {
         closeDrawer();
         Alert.alert(
-          'Invite Link Generated',
-          `Exclusive Bengal Business Council onboarding link copied: https://bengalbusinesscouncil.com/join?ref=${currentUser.id}`
+          'Invite Link Copied',
+          `Council invitation link copied to clipboard: https://bengalbusinesscouncil.com/join?ref=${currentUser.id}`
         );
       },
     },
     {
       id: 'settings',
-      label: 'App Settings & Privacy',
-      sublabel: 'Notifications & security preferences',
+      label: 'Settings & Privacy',
+      sublabel: 'App notifications & settings',
       icon: Settings,
       color: colors.textSecondary,
       bgColor: colors.cardBgElevated,
       action: () => {
         closeDrawer();
-        Alert.alert('Settings', 'Bengal Business Council Executive App v1.0.0 (POC Edition). All systems operational.');
+        Alert.alert('App Info', 'Bengal Business Council App v1.0.0. All systems running normally.');
       },
     },
   ];
@@ -192,7 +192,7 @@ export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
 
           {/* Menu Items List */}
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.menuScroll}>
-            <Text style={styles.menuSectionHeader}>EXECUTIVE NAVIGATION</Text>
+            <Text style={styles.menuSectionHeader}>COUNCIL MENU</Text>
             {menuItems.map(item => {
               const Icon = item.icon;
               return (
@@ -218,13 +218,13 @@ export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
             <View style={styles.secretariatBox}>
               <View style={styles.secHeader}>
                 <Building color={colors.crimson} size={14} />
-                <Text style={styles.secTitle}>BBC SECRETARIAT</Text>
+                <Text style={styles.secTitle}>COUNCIL OFFICE</Text>
               </View>
               <Text style={styles.secText}>
-                Kolkata Headquarters • Salt Lake Sector V
+                Kolkata Office • Salt Lake Sector V
               </Text>
               <Text style={styles.secContact}>
-                secretariat@bengalbusinesscouncil.com
+                help@bengalbusinesscouncil.com
               </Text>
             </View>
 

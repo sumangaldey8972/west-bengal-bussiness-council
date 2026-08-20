@@ -31,8 +31,8 @@ export const LogOneToOneModal: React.FC = () => {
   );
   const [date, setDate] = useState('Thursday, Aug 27, 2026');
   const [time, setTime] = useState('11:00 AM - 11:45 AM');
-  const [location, setLocation] = useState('BBC Secretariat Boardroom, Salt Lake');
-  const [agenda, setAgenda] = useState('Cross-industry collaboration & B2B capabilities briefing');
+  const [location, setLocation] = useState('Council Office, Salt Lake');
+  const [agenda, setAgenda] = useState('Discuss business services and project collaboration');
 
   if (!showLogOneToOneModal) return null;
 
@@ -40,7 +40,7 @@ export const LogOneToOneModal: React.FC = () => {
     logOneToOne(selectedUserId, date, time, location, agenda);
     Alert.alert(
       '1-to-1 Meeting Scheduled!',
-      'Calendar invite and notification sent to the member. Logged in your council performance dashboard.'
+      'Your meeting has been saved and added to your calendar.'
     );
     closeLogOneToOne();
   };
@@ -60,7 +60,7 @@ export const LogOneToOneModal: React.FC = () => {
           <View style={styles.header}>
             <View>
               <Text style={styles.headerBadge}>BENGAL BUSINESS COUNCIL</Text>
-              <Text style={styles.headerTitle}>Schedule / Log 1-to-1 Meeting</Text>
+              <Text style={styles.headerTitle}>Schedule a 1-to-1 Meeting</Text>
             </View>
             <TouchableOpacity style={styles.closeBtn} onPress={closeLogOneToOne}>
               <X color={colors.textPrimary} size={20} />
@@ -141,13 +141,13 @@ export const LogOneToOneModal: React.FC = () => {
             <View style={styles.fieldGroup}>
               <View style={styles.fieldLabelRow}>
                 <MapPin color={colors.crimson} size={14} />
-                <Text style={styles.inputLabel}>LOCATION / PLATFORM</Text>
+                <Text style={styles.inputLabel}>LOCATION OR ONLINE LINK</Text>
               </View>
               <TextInput
                 style={styles.textInput}
                 value={location}
                 onChangeText={setLocation}
-                placeholder="e.g. BBC Secretariat Boardroom / Zoom"
+                placeholder="e.g. Council Office, Salt Lake / Zoom"
                 placeholderTextColor={colors.textMuted}
               />
             </View>
@@ -156,13 +156,13 @@ export const LogOneToOneModal: React.FC = () => {
             <View style={styles.fieldGroup}>
               <View style={styles.fieldLabelRow}>
                 <AlignLeft color={colors.crimson} size={14} />
-                <Text style={styles.inputLabel}>MEETING AGENDA & GOALS</Text>
+                <Text style={styles.inputLabel}>MEETING TOPIC</Text>
               </View>
               <TextInput
                 style={[styles.textInput, styles.textArea]}
                 value={agenda}
                 onChangeText={setAgenda}
-                placeholder="Describe key topics and potential synergies..."
+                placeholder="Write what you would like to discuss..."
                 placeholderTextColor={colors.textMuted}
                 multiline
                 numberOfLines={3}
@@ -171,7 +171,7 @@ export const LogOneToOneModal: React.FC = () => {
 
             {/* Submit Button */}
             <TouchableOpacity style={styles.submitBtn} onPress={handleSave} activeOpacity={0.8}>
-              <Text style={styles.submitBtnText}>Confirm 1-to-1 Meeting</Text>
+              <Text style={styles.submitBtnText}>Save 1-to-1 Meeting</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>

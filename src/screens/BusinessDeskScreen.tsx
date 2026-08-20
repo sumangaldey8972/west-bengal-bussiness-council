@@ -59,7 +59,7 @@ export const BusinessDeskScreen: React.FC = () => {
           <View style={styles.heroHeader}>
             <View>
               <Text style={styles.heroBadge}>COUNCIL BUSINESS DESK</Text>
-              <Text style={styles.heroHeading}>Economic Value Generated</Text>
+              <Text style={styles.heroHeading}>Total Business Done</Text>
             </View>
             <View style={styles.verifiedCrest}>
               <Text style={styles.crestText}>BBC</Text>
@@ -69,14 +69,14 @@ export const BusinessDeskScreen: React.FC = () => {
           <View style={styles.heroValueContainer}>
             <Text style={styles.heroValueCrimson}>{formattedTotalBusiness}</Text>
             <Text style={styles.heroValueSub}>
-              Total B2B Closed Business (TYFB) • {currentUser.stats.oneToOneCount} One-to-Ones Logged
+              Closed Business Deals • {currentUser.stats.oneToOneCount} 1-to-1 Meetings Done
             </Text>
           </View>
 
           <View style={styles.heroActionButtons}>
             <TouchableOpacity style={styles.dealRecordBtn} onPress={openRecordDeal} activeOpacity={0.8}>
               <DollarSign color={colors.white} size={15} />
-              <Text style={styles.dealBtnText}>Record TYFB Deal</Text>
+              <Text style={styles.dealBtnText}>Record Deal</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.refActionBtn} onPress={() => openGiveReferral()} activeOpacity={0.8}>
@@ -86,7 +86,7 @@ export const BusinessDeskScreen: React.FC = () => {
 
             <TouchableOpacity style={styles.otoActionBtn} onPress={() => openLogOneToOne()} activeOpacity={0.8}>
               <CalendarPlus color={colors.primary} size={15} />
-              <Text style={styles.otoBtnText}>Log 1-to-1</Text>
+              <Text style={styles.otoBtnText}>Schedule 1-to-1</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -99,7 +99,7 @@ export const BusinessDeskScreen: React.FC = () => {
           >
             <TrendingUp color={activeTab === 'TYFB' ? colors.crimson : colors.textMuted} size={16} />
             <Text style={[styles.tabText, activeTab === 'TYFB' && styles.tabTextActive]}>
-              Deals & TYFB ({businessDeals.length})
+              Closed Deals ({businessDeals.length})
             </Text>
           </TouchableOpacity>
 
@@ -128,8 +128,8 @@ export const BusinessDeskScreen: React.FC = () => {
         {activeTab === 'TYFB' && (
           <View style={styles.sectionContent}>
             <View style={styles.sectionHeadingRow}>
-              <Text style={styles.sectionSub}>CLOSED CONTRACTS & BUSINESS SLIPS</Text>
-              <Text style={styles.statCrimson}>{businessDeals.length} Verified Slips</Text>
+              <Text style={styles.sectionSub}>CLOSED DEALS & CONTRACTS</Text>
+              <Text style={styles.statCrimson}>{businessDeals.length} Verified Deals</Text>
             </View>
 
             {businessDeals.map(deal => (

@@ -76,7 +76,7 @@ export const SearchScreen: React.FC = () => {
             <Search color={colors.textSecondary} size={18} style={styles.searchIcon} />
             <TextInput
               style={styles.searchInput}
-              placeholder="Search by name, company, GSTIN, sector..."
+              placeholder="Search members by name, company, GST, industry..."
               placeholderTextColor={colors.textMuted}
               value={activeSearchQuery}
               onChangeText={setActiveSearchQuery}
@@ -113,9 +113,9 @@ export const SearchScreen: React.FC = () => {
         {/* Search Results Summary */}
         <View style={styles.resultsMetaRow}>
           <Text style={styles.resultsCountText}>
-            Showing <Text style={styles.textCrimson}>{filteredUsers.length}</Text> Verified Business Owners
+            Showing <Text style={styles.textCrimson}>{filteredUsers.length}</Text> Business Owners
           </Text>
-          <Text style={styles.verifiedCouncilTag}>● Official BBC Directory</Text>
+          <Text style={styles.verifiedCouncilTag}>● Verified Directory</Text>
         </View>
 
         {/* Members List */}
@@ -124,7 +124,7 @@ export const SearchScreen: React.FC = () => {
             <View style={styles.emptyState}>
               <Search color={colors.textMuted} size={40} />
               <Text style={styles.emptyTitle}>No Business Owners Found</Text>
-              <Text style={styles.emptySubtitle}>Try searching with different keywords, company name, or GSTIN.</Text>
+              <Text style={styles.emptySubtitle}>Try searching with different keywords, company name, or GST number.</Text>
             </View>
           ) : (
             filteredUsers.map(member => {
@@ -170,7 +170,7 @@ export const SearchScreen: React.FC = () => {
                     </View>
 
                     <View style={styles.specItem}>
-                      <Text style={styles.specLabel}>COUNCIL TIER</Text>
+                      <Text style={styles.specLabel}>MEMBERSHIP TIER</Text>
                       <Text style={styles.specTier}>{member.membershipTier}</Text>
                     </View>
                   </View>
@@ -209,12 +209,12 @@ export const SearchScreen: React.FC = () => {
                       {isAccessRequested ? (
                         <>
                           <Check color={colors.emerald} size={13} strokeWidth={3} />
-                          <Text style={styles.adminSuccessText}>Admin Requested</Text>
+                          <Text style={styles.adminSuccessText}>Request Sent</Text>
                         </>
                       ) : (
                         <>
                           <Lock color={colors.accentBlue} size={13} />
-                          <Text style={styles.adminRequestText}>Request Full Access</Text>
+                          <Text style={styles.adminRequestText}>Request Intro</Text>
                         </>
                       )}
                     </TouchableOpacity>

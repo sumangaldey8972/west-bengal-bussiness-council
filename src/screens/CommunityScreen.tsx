@@ -35,8 +35,8 @@ export const CommunityScreen: React.FC = () => {
 
   const handleCreateChapterProposal = () => {
     Alert.alert(
-      'New Chapter / SIG Proposal',
-      'Proposal form sent to the BBC Secretariat. A minimum of 15 chartered business owners are required to form a new council SIG.'
+      'New Chapter Request',
+      'Your request has been sent to the Council team. A minimum of 15 members are required to start a new chapter.'
     );
   };
 
@@ -49,11 +49,11 @@ export const CommunityScreen: React.FC = () => {
         <View style={styles.heroBanner}>
           <View style={styles.heroBadgeRow}>
             <Compass color={colors.crimson} size={16} />
-            <Text style={styles.heroBadgeText}>BENGAL BUSINESS NETWORKS</Text>
+            <Text style={styles.heroBadgeText}>BENGAL BUSINESS NETWORK</Text>
           </View>
-          <Text style={styles.heroTitle}>Chapters & Industry SIGs</Text>
+          <Text style={styles.heroTitle}>Chapters & Industry Groups</Text>
           <Text style={styles.heroSubtitle}>
-            Connect with regional business hubs, specialized industry clusters, and global trade delegations.
+            Connect with local business chapters and specialized industry groups across West Bengal.
           </Text>
 
           <TouchableOpacity
@@ -62,7 +62,7 @@ export const CommunityScreen: React.FC = () => {
             activeOpacity={0.8}
           >
             <Plus color={colors.white} size={16} strokeWidth={2.5} />
-            <Text style={styles.proposeBtnText}>Propose New Industry SIG / Chapter</Text>
+            <Text style={styles.proposeBtnText}>Request New Chapter / Group</Text>
           </TouchableOpacity>
         </View>
 
@@ -81,7 +81,7 @@ export const CommunityScreen: React.FC = () => {
                 onPress={() => setSelectedTab(tab)}
               >
                 <Text style={[styles.tabText, isSelected && styles.tabTextActive]}>
-                  {tab === 'All' ? 'All Communities' : tab}
+                  {tab === 'All' ? 'All Groups' : tab === 'Industry SIG' ? 'Industry Groups' : tab}
                 </Text>
               </TouchableOpacity>
             );
@@ -129,12 +129,12 @@ export const CommunityScreen: React.FC = () => {
                 <View style={styles.statsRow}>
                   <View style={styles.statItem}>
                     <Users2 color={colors.crimson} size={14} />
-                    <Text style={styles.statText}>{community.membersCount} Leaders</Text>
+                    <Text style={styles.statText}>{community.membersCount} Members</Text>
                   </View>
 
                   <View style={styles.statItem}>
                     <MessageSquare color={colors.accentBlue} size={14} />
-                    <Text style={styles.statText}>{community.activeDiscussionsCount} Active Deals</Text>
+                    <Text style={styles.statText}>{community.activeDiscussionsCount} Active Posts</Text>
                   </View>
                 </View>
 
@@ -142,7 +142,7 @@ export const CommunityScreen: React.FC = () => {
                 <View style={styles.presidentBox}>
                   <Image source={{ uri: community.presidentAvatar }} style={styles.presAvatar} />
                   <View style={styles.presInfo}>
-                    <Text style={styles.presRole}>CHAPTER PRESIDENT / CONVENOR</Text>
+                    <Text style={styles.presRole}>CHAPTER PRESIDENT</Text>
                     <Text style={styles.presName}>{community.presidentName}</Text>
                     <Text style={styles.presCompany}>{community.presidentCompany}</Text>
                   </View>
@@ -152,7 +152,7 @@ export const CommunityScreen: React.FC = () => {
                 <View style={styles.meetingBox}>
                   <View style={styles.meetingHeaderRow}>
                     <Calendar color={colors.crimson} size={14} />
-                    <Text style={styles.meetingHeaderTitle}>NEXT BI-WEEKLY CHAPTER CONCLAVE</Text>
+                    <Text style={styles.meetingHeaderTitle}>NEXT CHAPTER MEETING</Text>
                   </View>
                   <Text style={styles.meetingTitle}>{community.nextMeeting.title}</Text>
                   <Text style={styles.meetingDateTime}>

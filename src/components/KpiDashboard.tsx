@@ -17,8 +17,8 @@ export const KpiDashboard: React.FC<KpiDashboardProps> = ({ onNavigateToBusiness
     <View style={styles.container}>
       <View style={styles.headerRow}>
         <View style={styles.titleSection}>
-          <Text style={styles.sectionBadge}>COUNCIL PERFORMANCE</Text>
-          <Text style={styles.sectionHeading}>My Business & Referral Metrics</Text>
+          <Text style={styles.sectionBadge}>MY METRICS</Text>
+          <Text style={styles.sectionHeading}>Business & Referrals Summary</Text>
         </View>
 
         {onNavigateToBusinessDesk && (
@@ -46,13 +46,13 @@ export const KpiDashboard: React.FC<KpiDashboardProps> = ({ onNavigateToBusiness
               <TrendingUp color={colors.crimson} size={16} />
             </View>
             <View style={styles.activeTagCrimson}>
-              <Text style={styles.activeTagTextCrimson}>TYFB Deal</Text>
+              <Text style={styles.activeTagTextCrimson}>Closed Deal</Text>
             </View>
           </View>
 
           <Text style={styles.metricBigCrimson}>{formattedBusinessValue}</Text>
-          <Text style={styles.metricLabel}>Total Business Closed</Text>
-          <Text style={styles.metricSubtext}>Verified Council Deals</Text>
+          <Text style={styles.metricLabel}>Total Business Done</Text>
+          <Text style={styles.metricSubtext}>Deals with members</Text>
         </TouchableOpacity>
 
         {/* 1-to-1 Meetings Count */}
@@ -72,7 +72,7 @@ export const KpiDashboard: React.FC<KpiDashboardProps> = ({ onNavigateToBusiness
 
           <Text style={styles.metricBig}>{currentUser.stats.oneToOneCount}</Text>
           <Text style={styles.metricLabel}>1-to-1 Meetings</Text>
-          <Text style={styles.metricSubtext}>Peer-to-peer connects</Text>
+          <Text style={styles.metricSubtext}>Member connects</Text>
         </TouchableOpacity>
       </View>
 
@@ -85,7 +85,7 @@ export const KpiDashboard: React.FC<KpiDashboardProps> = ({ onNavigateToBusiness
         <View style={styles.referralHeader}>
           <View style={styles.referralIconRow}>
             <Handshake color={colors.crimson} size={18} />
-            <Text style={styles.referralCardTitle}>Council Referral Exchange</Text>
+            <Text style={styles.referralCardTitle}>Referral Exchange</Text>
           </View>
           <Text style={styles.tapToGiveText}>+ Give Referral</Text>
         </View>
@@ -97,7 +97,7 @@ export const KpiDashboard: React.FC<KpiDashboardProps> = ({ onNavigateToBusiness
             </View>
             <View>
               <Text style={styles.referralCountText}>{currentUser.stats.referralsGiven}</Text>
-              <Text style={styles.referralSubLabel}>Referrals Given by Me</Text>
+              <Text style={styles.referralSubLabel}>Referrals I Gave</Text>
             </View>
           </View>
 
@@ -109,7 +109,7 @@ export const KpiDashboard: React.FC<KpiDashboardProps> = ({ onNavigateToBusiness
             </View>
             <View>
               <Text style={styles.referralCountText}>{currentUser.stats.referralsReceived}</Text>
-              <Text style={styles.referralSubLabel}>Referrals Received by Me</Text>
+              <Text style={styles.referralSubLabel}>Referrals I Received</Text>
             </View>
           </View>
         </View>

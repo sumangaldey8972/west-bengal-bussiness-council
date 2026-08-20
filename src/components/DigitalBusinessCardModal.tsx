@@ -54,22 +54,22 @@ export const DigitalBusinessCardModal: React.FC = () => {
   const handleCopyVCard = () => {
     Alert.alert(
       'Contact Copied',
-      `${user.name}'s official Bengal Business Council business card details copied to clipboard.`
+      `${user.name}'s business card details have been copied to your clipboard.`
     );
   };
 
   const handleShareCard = () => {
     Alert.alert(
       'Share Digital Card',
-      `Shared link to ${user.name}'s verified Bengal Business Council profile: https://bengalbusinesscouncil.com/members/${user.id}`
+      `Shared link to ${user.name}'s profile: https://bengalbusinesscouncil.com/members/${user.id}`
     );
   };
 
   const handleRequestPhysicalCard = () => {
     setRequestedPhysicalCard(true);
     Alert.alert(
-      'Council Card Dispatched',
-      'Your request for an NFC-enabled embossed Bengal Business Council physical visiting card kit (100 units) has been sent to the BBC Secretariat. Delivery within 5 business days.'
+      'Printed Card Order Placed',
+      'Your request for 100 printed visiting cards has been received. Your cards will be delivered to your office within 5 working days.'
     );
   };
 
@@ -85,7 +85,7 @@ export const DigitalBusinessCardModal: React.FC = () => {
           {/* Header */}
           <View style={styles.sheetHeader}>
             <View>
-              <Text style={styles.sheetBadge}>OFFICIAL BBC DIGITAL VISITING CARD</Text>
+              <Text style={styles.sheetBadge}>OFFICIAL DIGITAL VISITING CARD</Text>
               <Text style={styles.sheetTitle}>{isMe ? 'My Business Card' : `${user.name.split(' ')[0]}'s Profile`}</Text>
             </View>
             <TouchableOpacity style={styles.closeBtn} onPress={closeDigitalBusinessCard}>
@@ -193,14 +193,14 @@ export const DigitalBusinessCardModal: React.FC = () => {
                   />
                 </View>
                 <Text style={styles.qrHelpText}>
-                  Point smartphone camera or BBC scanner to instantly save {user.name}'s complete business card to contacts.
+                  Point your phone camera to scan and save {user.name}'s contact details.
                 </Text>
               </View>
             )}
 
             {/* Business Contact Details Card */}
             <View style={styles.detailsCard}>
-              <Text style={styles.detailsCardHeader}>OFFICIAL BUSINESS CONTACT</Text>
+              <Text style={styles.detailsCardHeader}>BUSINESS CONTACT DETAILS</Text>
 
               <View style={styles.contactRow}>
                 <Building2 color={colors.primary} size={16} />
@@ -231,12 +231,12 @@ export const DigitalBusinessCardModal: React.FC = () => {
             {/* Requirement Documents / Brochures */}
             {user.requirementDocs && user.requirementDocs.length > 0 && (
               <View style={styles.detailsCard}>
-                <Text style={styles.detailsCardHeader}>VERIFIED REQUIREMENT & CAPABILITY DOCS</Text>
+                <Text style={styles.detailsCardHeader}>COMPANY BROCHURES & DOCUMENTS</Text>
                 {user.requirementDocs.map((doc, idx) => (
                   <TouchableOpacity
                     key={idx}
                     style={styles.docItemRow}
-                    onPress={() => Alert.alert('Doc Download', `Downloading ${doc.title}`)}
+                    onPress={() => Alert.alert('Download Document', `Downloading ${doc.title}`)}
                   >
                     <FileText color={colors.crimson} size={18} />
                     <View style={styles.docItemInfo}>
@@ -254,12 +254,12 @@ export const DigitalBusinessCardModal: React.FC = () => {
               <View style={styles.twoBtnRow}>
                 <TouchableOpacity style={styles.secondaryActionBtn} onPress={handleCopyVCard}>
                   <Copy color={colors.primary} size={16} />
-                  <Text style={styles.secondaryBtnText}>Copy vCard</Text>
+                  <Text style={styles.secondaryBtnText}>Copy Contact</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.secondaryActionBtn} onPress={handleShareCard}>
                   <Share2 color={colors.primary} size={16} />
-                  <Text style={styles.secondaryBtnText}>Share Link</Text>
+                  <Text style={styles.secondaryBtnText}>Share Card</Text>
                 </TouchableOpacity>
               </View>
 
@@ -273,12 +273,12 @@ export const DigitalBusinessCardModal: React.FC = () => {
                   {requestedPhysicalCard ? (
                     <>
                       <CheckCircle2 color={colors.white} size={18} />
-                      <Text style={styles.primaryBtnText}>Physical Card Order Placed</Text>
+                      <Text style={styles.primaryBtnText}>Visiting Card Order Placed</Text>
                     </>
                   ) : (
                     <>
                       <CreditCard color={colors.white} size={18} />
-                      <Text style={styles.primaryBtnText}>Request Printed Physical Council Card</Text>
+                      <Text style={styles.primaryBtnText}>Order Printed Physical Visiting Cards</Text>
                     </>
                   )}
                 </TouchableOpacity>
