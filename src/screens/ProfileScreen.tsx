@@ -26,7 +26,7 @@ import { useApp } from '../context/AppContext';
 import { Header } from '../components/Header';
 
 export const ProfileScreen: React.FC = () => {
-  const { currentUser, openDigitalBusinessCard } = useApp();
+  const { currentUser, openDigitalBusinessCard, logout } = useApp();
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -194,6 +194,16 @@ export const ProfileScreen: React.FC = () => {
           >
             <Share2 color={colors.primary} size={16} />
             <Text style={styles.secondaryBtnText}>Share My Council Profile</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.logoutActionBtn}
+            onPress={() => {
+              logout();
+            }}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.logoutBtnText}>Sign Out / Switch Persona</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -477,5 +487,20 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '700',
     color: colors.primary,
+  },
+  logoutActionBtn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.crimsonLight,
+    borderRadius: 12,
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: colors.crimsonBorder,
+    marginTop: 4,
+  },
+  logoutBtnText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.crimson,
   },
 });

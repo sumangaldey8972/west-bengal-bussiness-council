@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Home, Users, Search, Briefcase, MessageSquare } from 'lucide-react-native';
 import { colors } from '../theme/colors';
+import { useApp } from '../context/AppContext';
 
 import { HomeScreen } from '../screens/HomeScreen';
 import { CommunityScreen } from '../screens/CommunityScreen';
@@ -14,6 +15,8 @@ import { MessagesScreen } from '../screens/MessagesScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { MeetingSummaryScreen } from '../screens/MeetingSummaryScreen';
 import { EventsScreen } from '../screens/EventsScreen';
+import { LoginScreen } from '../screens/LoginScreen';
+import { SignUpScreen } from '../screens/SignUpScreen';
 
 import { StoryViewerModal } from '../components/StoryViewerModal';
 import { DigitalBusinessCardModal } from '../components/DigitalBusinessCardModal';
@@ -105,6 +108,8 @@ const MainTabs = () => {
 };
 
 export const AppNavigator: React.FC = () => {
+  const { isAuthenticated } = useApp();
+
   const handleDrawerNavigate = (screenName: string) => {
     if (navigationRef.isReady()) {
       navigationRef.navigate(screenName as never);
@@ -115,27 +120,47 @@ export const AppNavigator: React.FC = () => {
     <NavigationContainer ref={navigationRef}>
       <View style={styles.rootContainer}>
         <Stack.Navigator
+          initialRouteName={isAuthenticated ? "MainTabs" : "Login"}
           screenOptions={{
             headerShown: false,
             animation: 'fade_from_bottom',
           }}
         >
-          <Stack.Screen name="MainTabs" component={MainTabs} />
-          <Stack.Screen name="Profile" component={ProfileScreen} />
-          <Stack.Screen name="MeetingSummary" component={MeetingSummaryScreen} />
-          <Stack.Screen name="Events" component={EventsScreen} />
+          {isAuthenticated ? (
+            <>
+              <Stack.Screen name="MainTabs" component={MainTabs} />
+              <Stack.Screen name="Profile" component={ProfileScreen} />
+              <Stack.Screen name="MeetingSummary" component={MeetingSummaryScreen} />
+              <Stack.Screen name="Events" component={EventsScreen} />
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="SignUp" component={SignUpScreen} />
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="SignUp" component={SignUpScreen} />
+              <Stack.Screen name="MainTabs" component={MainTabs} />
+              <Stack.Screen name="Profile" component={ProfileScreen} />
+              <Stack.Screen name="MeetingSummary" component={MeetingSummaryScreen} />
+              <Stack.Screen name="Events" component={EventsScreen} />
+            </>
+          )}
         </Stack.Navigator>
 
         {/* Global Modals */}
-        <StoryViewerModal />
-        <DigitalBusinessCardModal />
-        <LogOneToOneModal />
-        <GiveReferralModal />
-        <RecordDealModal />
-        <PostCreationModal />
-        <CommentsModal />
-        <RequestAdminAccessModal />
-        <DrawerModal onNavigate={handleDrawerNavigate} />
+        {isAuthenticated && (
+          <>
+            <StoryViewerModal />
+            <DigitalBusinessCardModal />
+            <LogOneToOneModal />
+            <GiveReferralModal />
+            <RecordDealModal />
+            <PostCreationModal />
+            <CommentsModal />
+            <RequestAdminAccessModal />
+            <DrawerModal onNavigate={handleDrawerNavigate} />
+          </>
+        )}
       </View>
     </NavigationContainer>
   );

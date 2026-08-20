@@ -44,6 +44,7 @@ interface AppContextType {
   messages: Record<string, Message[]>;
   comments: Record<string, PostComment[]>;
   requestedAdminAccessIds: string[];
+  isAuthenticated: boolean;
 
   // Modal State
   activeStory: Story | null;
@@ -64,6 +65,10 @@ interface AppContextType {
   activeSearchQuery: string;
 
   // Actions
+  login: (user?: User) => void;
+  logout: () => void;
+  register: (newUser: Partial<User>) => void;
+  switchUser: (userId: string) => void;
   toggleLikePost: (postId: string) => void;
   addComment: (postId: string, text: string) => void;
   createPost: (content: string, tag: Post['tag'], urgentRequirement?: boolean, budgetOrValue?: string) => void;
@@ -115,6 +120,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [messages, setMessages] = useState<Record<string, Message[]>>(MOCK_MESSAGES);
   const [comments, setComments] = useState<Record<string, PostComment[]>>(MOCK_COMMENTS);
   const [requestedAdminAccessIds, setRequestedAdminAccessIds] = useState<string[]>([]);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   // Modals state
   const [activeStory, setActiveStory] = useState<Story | null>(null);
@@ -133,6 +139,64 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [selectedUserForAdminAccess, setSelectedUserForAdminAccess] = useState<User | null>(null);
   const [showDrawer, setShowDrawer] = useState(false);
   const [activeSearchQuery, setActiveSearchQuery] = useState('');
+
+  // Authentication Handlers
+  const login = (user?: User) => {
+    if (user) {
+      setCurrentUser(user);
+    }
+    setIsAuthenticated(true);
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+  };
+
+  const switchUser = (userId: string) => {
+    const found = users.find(u => u.id === userId);
+    if (found) {
+      setCurrentUser(found);
+    }
+  };
+
+  const register = (newUser: Partial<User>) => {
+    const createdUser: User = {
+      id: `usr_${Date.now()}`,
+      name: newUser.name || 'New Council Member',
+      designation: newUser.designation || 'Managing Director',
+      companyName: newUser.companyName || 'Bengal Enterprises Ltd.',
+      industry: newUser.industry || 'Manufacturing & Trade',
+      chapter: newUser.chapter || 'Kolkata Central Chapter',
+      location: newUser.location || 'Kolkata, WB',
+      gstNumber: newUser.gstNumber || '19AAACB1234F1Z5',
+      isGstVerified: true,
+      turnover: newUser.turnover || '₹ 10 Cr - ₹ 25 Cr',
+      yearJoined: 2026,
+      avatar: newUser.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face',
+      membershipTier: 'Executive Member',
+      bio: newUser.bio || `${newUser.name} is the executive leader of ${newUser.companyName}, operating in ${newUser.industry} in West Bengal.`,
+      requirementDocs: [
+        { title: 'Company_Profile_Capabilities.pdf', size: '2.8 MB', type: 'PDF' },
+        { title: 'Verified_GST_Certificate.pdf', size: '1.1 MB', type: 'PDF' },
+      ],
+      contact: {
+        email: newUser.contact?.email || 'member@bengalbusinesscouncil.com',
+        phone: newUser.contact?.phone || '+91 98300 00000',
+        website: newUser.contact?.website || 'https://bengalbusinesscouncil.com',
+        officeAddress: newUser.contact?.officeAddress || 'Salt Lake Sector V, Kolkata, WB 700091',
+      },
+      stats: {
+        oneToOneCount: 0,
+        referralsGiven: 0,
+        referralsReceived: 0,
+        businessValueInLakhs: 0,
+      },
+    };
+
+    setUsers(prev => [createdUser, ...prev]);
+    setCurrentUser(createdUser);
+    setIsAuthenticated(true);
+  };
 
   // Actions
   const toggleLikePost = (postId: string) => {
@@ -454,6 +518,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         messages,
         comments,
         requestedAdminAccessIds,
+        isAuthenticated,
 
         activeStory,
         showStoryViewer,
@@ -472,6 +537,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         showDrawer,
         activeSearchQuery,
 
+        login,
+        logout,
+        register,
+        switchUser,
         toggleLikePost,
         addComment,
         createPost,

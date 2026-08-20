@@ -34,7 +34,7 @@ interface DrawerModalProps {
 }
 
 export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
-  const { showDrawer, closeDrawer, currentUser, openDigitalBusinessCard } = useApp();
+  const { showDrawer, closeDrawer, currentUser, openDigitalBusinessCard, logout } = useApp();
 
   if (!showDrawer) return null;
 
@@ -233,11 +233,12 @@ export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
               style={styles.logoutBtn}
               onPress={() => {
                 closeDrawer();
-                Alert.alert('Session Active', 'You are logged into verified Bengal Business Council Executive profile.');
+                logout();
+                onNavigate('Login');
               }}
             >
               <LogOut color={colors.crimson} size={16} />
-              <Text style={styles.logoutText}>Executive Member Logged In</Text>
+              <Text style={styles.logoutText}>Sign Out / Switch Account</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>
