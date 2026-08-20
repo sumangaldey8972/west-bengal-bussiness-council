@@ -10,7 +10,7 @@ import {
   Alert,
   ScrollView,
 } from 'react-native';
-import { X, ShieldAlert, CheckCircle2, Lock, FileCheck } from 'lucide-react-native';
+import { X, ShieldAlert, CheckCircle2, Lock, FileCheck, ShieldCheck, Sparkles, Send } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 
@@ -46,15 +46,24 @@ export const RequestAdminAccessModal: React.FC = () => {
       onRequestClose={closeRequestAdminAccess}
     >
       <View style={styles.overlay}>
+        {/* Backdrop Dismiss */}
+        <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={closeRequestAdminAccess} />
+
         <View style={styles.sheetContainer}>
+          {/* Top Drag Handle */}
+          <View style={styles.sheetHandle} />
+
           {/* Header */}
           <View style={styles.header}>
-            <View>
-              <Text style={styles.headerBadge}>COUNCIL INTRODUCTIONS</Text>
+            <View style={styles.headerTitleGroup}>
+              <View style={styles.badgePill}>
+                <Sparkles color={colors.crimson} size={11} />
+                <Text style={styles.headerBadge}>COUNCIL INTRODUCTIONS</Text>
+              </View>
               <Text style={styles.headerTitle}>Request an Introduction</Text>
             </View>
-            <TouchableOpacity style={styles.closeBtn} onPress={closeRequestAdminAccess}>
-              <X color={colors.textPrimary} size={20} />
+            <TouchableOpacity style={styles.closeBtn} onPress={closeRequestAdminAccess} activeOpacity={0.7}>
+              <X color={colors.textPrimary} size={18} />
             </TouchableOpacity>
           </View>
 
@@ -63,12 +72,17 @@ export const RequestAdminAccessModal: React.FC = () => {
             <View style={styles.targetMemberCard}>
               <Image source={{ uri: selectedUserForAdminAccess.avatar }} style={styles.avatar} />
               <View style={styles.targetInfo}>
-                <Text style={styles.memberName}>{selectedUserForAdminAccess.name}</Text>
+                <View style={styles.nameRow}>
+                  <Text style={styles.memberName}>{selectedUserForAdminAccess.name}</Text>
+                  <ShieldCheck color={colors.emerald} size={15} />
+                </View>
                 <Text style={styles.designation}>{selectedUserForAdminAccess.designation}</Text>
                 <Text style={styles.company}>{selectedUserForAdminAccess.companyName}</Text>
-                <Text style={styles.chapter}>
-                  {selectedUserForAdminAccess.chapter} • Member since {selectedUserForAdminAccess.yearJoined}
-                </Text>
+                <View style={styles.chapterBadge}>
+                  <Text style={styles.chapterText}>
+                    {selectedUserForAdminAccess.chapter} • Member since {selectedUserForAdminAccess.yearJoined}
+                  </Text>
+                </View>
               </View>
             </View>
 
@@ -122,15 +136,15 @@ export const RequestAdminAccessModal: React.FC = () => {
               activeOpacity={0.8}
             >
               {isAlreadyRequested ? (
-                <>
+                <View style={styles.btnRowInner}>
                   <CheckCircle2 color={colors.white} size={18} />
                   <Text style={styles.submitBtnText}>Request is Being Reviewed</Text>
-                </>
+                </View>
               ) : (
-                <>
-                  <ShieldAlert color={colors.white} size={18} />
+                <View style={styles.btnRowInner}>
+                  <Send color={colors.white} size={16} />
                   <Text style={styles.submitBtnText}>Send Introduction Request</Text>
-                </>
+                </View>
               )}
             </TouchableOpacity>
           </ScrollView>
@@ -143,75 +157,117 @@ export const RequestAdminAccessModal: React.FC = () => {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: colors.overlay,
+    backgroundColor: 'rgba(11, 25, 44, 0.65)',
     justifyContent: 'flex-end',
+  },
+  backdrop: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   sheetContainer: {
     backgroundColor: colors.cardBg,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
     borderWidth: 1,
-    borderColor: colors.cardBorder,
-    maxHeight: '90%',
-    paddingBottom: 20,
+    borderColor: 'rgba(255,255,255,0.8)',
+    maxHeight: '92%',
+    paddingBottom: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 25,
+  },
+  sheetHandle: {
+    width: 44,
+    height: 4.5,
+    borderRadius: 3,
+    backgroundColor: '#CBD5E1',
+    alignSelf: 'center',
+    marginTop: 10,
+    marginBottom: 4,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 18,
+    paddingTop: 12,
     paddingBottom: 14,
     borderBottomWidth: 1,
-    borderBottomColor: colors.cardBorder,
+    borderBottomColor: '#F1F5F9',
+  },
+  headerTitleGroup: {
+    flex: 1,
+  },
+  badgePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: colors.crimsonLight,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    marginBottom: 4,
   },
   headerBadge: {
     fontSize: 9.5,
     fontWeight: '800',
     color: colors.crimson,
-    letterSpacing: 1,
+    letterSpacing: 0.8,
   },
   headerTitle: {
-    fontSize: 16.5,
-    fontWeight: '700',
+    fontSize: 18,
+    fontWeight: '800',
     color: colors.textPrimary,
-    marginTop: 2,
+    letterSpacing: -0.3,
   },
   closeBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
     backgroundColor: colors.cardBgElevated,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
   },
   body: {
     padding: 18,
   },
   targetMemberCard: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.cardBgElevated,
-    borderRadius: 14,
-    padding: 12,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 16,
+    padding: 14,
     marginBottom: 14,
-    borderWidth: 1,
-    borderColor: colors.cardBorder,
-    gap: 12,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    alignItems: 'center',
   },
   avatar: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     borderWidth: 2,
     borderColor: colors.crimson,
+    marginRight: 14,
   },
   targetInfo: {
     flex: 1,
   },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
   memberName: {
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: '800',
     color: colors.textPrimary,
   },
   designation: {
@@ -220,106 +276,119 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   company: {
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: 12.5,
+    fontWeight: '700',
     color: colors.primary,
     marginTop: 2,
   },
-  chapter: {
-    fontSize: 10,
+  chapterBadge: {
+    marginTop: 4,
+  },
+  chapterText: {
+    fontSize: 10.5,
     color: colors.textMuted,
-    marginTop: 2,
+    fontWeight: '600',
   },
   securityNotice: {
     flexDirection: 'row',
     backgroundColor: colors.accentBlueLight,
-    borderRadius: 12,
+    borderRadius: 14,
     padding: 12,
     marginBottom: 14,
     borderWidth: 1,
-    borderColor: colors.accentBlueBorder,
-    gap: 10,
+    borderColor: 'rgba(29, 112, 184, 0.2)',
+    alignItems: 'flex-start',
   },
   noticeTextCol: {
     flex: 1,
+    marginLeft: 10,
   },
   noticeTitle: {
     fontSize: 12,
-    fontWeight: '700',
-    color: colors.accentBlueDark,
+    fontWeight: '800',
+    color: colors.accentBlue,
+    marginBottom: 2,
   },
   noticeBody: {
     fontSize: 11,
-    color: colors.textSecondary,
+    color: colors.textPrimary,
     lineHeight: 16,
-    marginTop: 2,
   },
   checklistCard: {
-    backgroundColor: colors.cardBgElevated,
-    borderRadius: 12,
-    padding: 12,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 14,
+    padding: 14,
     marginBottom: 14,
-    borderWidth: 1,
-    borderColor: colors.cardBorder,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
   },
   checkCardTitle: {
     fontSize: 10,
     fontWeight: '800',
     color: colors.primary,
     letterSpacing: 0.8,
-    marginBottom: 8,
+    marginBottom: 10,
   },
   checkItem: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    paddingVertical: 4,
+    marginBottom: 8,
   },
   checkItemText: {
     fontSize: 12,
     color: colors.textPrimary,
-    flex: 1,
+    fontWeight: '600',
   },
   fieldGroup: {
-    marginBottom: 14,
+    marginBottom: 16,
   },
   inputLabel: {
-    fontSize: 10,
+    fontSize: 10.5,
     fontWeight: '800',
     color: colors.primary,
     letterSpacing: 0.8,
     marginBottom: 6,
   },
   textInput: {
-    backgroundColor: colors.cardBgElevated,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: colors.inputBorder,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    paddingHorizontal: 14,
+    paddingVertical: 11,
     color: colors.textPrimary,
-    fontSize: 13,
+    fontSize: 13.5,
+    fontWeight: '500',
   },
   textArea: {
     height: 70,
     textAlignVertical: 'top',
   },
   submitBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: colors.crimson,
-    borderRadius: 12,
+    borderRadius: 14,
     paddingVertical: 14,
-    gap: 8,
-    marginTop: 6,
+    alignItems: 'center',
+    marginTop: 4,
+    shadowColor: colors.crimson,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 6,
   },
   submitBtnDisabled: {
     backgroundColor: colors.emerald,
+    shadowColor: colors.emerald,
+  },
+  btnRowInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   submitBtnText: {
     color: colors.white,
-    fontSize: 13.5,
-    fontWeight: '700',
+    fontSize: 14.5,
+    fontWeight: '800',
   },
 });

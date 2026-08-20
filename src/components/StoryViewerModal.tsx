@@ -9,7 +9,7 @@ import {
   TextInput,
   Dimensions,
 } from 'react-native';
-import { X, Send, ShieldCheck, CalendarPlus, Sparkles, Building2 } from 'lucide-react-native';
+import { X, Send, ShieldCheck, CalendarPlus, Sparkles, Building2, MessageCircle } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { useApp } from '../context/AppContext';
 
@@ -60,6 +60,9 @@ export const StoryViewerModal: React.FC = () => {
       onRequestClose={closeStory}
     >
       <View style={styles.overlay}>
+        {/* Backdrop Dismiss */}
+        <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={closeStory} />
+
         <View style={styles.storyCard}>
           {/* Top Progress Bar */}
           <View style={styles.progressBarBg}>
@@ -73,9 +76,7 @@ export const StoryViewerModal: React.FC = () => {
               <View>
                 <View style={styles.nameRow}>
                   <Text style={styles.authorName}>{activeStory.userName}</Text>
-                  <View style={styles.verifiedBadge}>
-                    <ShieldCheck color={colors.emerald} size={12} />
-                  </View>
+                  <ShieldCheck color={colors.emerald} size={14} />
                 </View>
                 <View style={styles.companyRow}>
                   <Building2 color={colors.primary} size={11} />
@@ -85,8 +86,8 @@ export const StoryViewerModal: React.FC = () => {
               </View>
             </View>
 
-            <TouchableOpacity style={styles.closeBtn} onPress={closeStory}>
-              <X color={colors.textPrimary} size={20} />
+            <TouchableOpacity style={styles.closeBtn} onPress={closeStory} activeOpacity={0.7}>
+              <X color={colors.textPrimary} size={18} />
             </TouchableOpacity>
           </View>
 
@@ -100,8 +101,10 @@ export const StoryViewerModal: React.FC = () => {
 
           {/* Story Content Area */}
           <View style={styles.contentBody}>
-            <Text style={styles.storyTitle}>{activeStory.title}</Text>
-            <Text style={styles.storyCaption}>{activeStory.caption}</Text>
+            <View style={styles.storyCardInner}>
+              <Text style={styles.storyTitle}>{activeStory.title}</Text>
+              <Text style={styles.storyCaption}>{activeStory.caption}</Text>
+            </View>
 
             {/* Quick Action to Schedule 1-to-1 */}
             {storyUser && (
@@ -123,7 +126,7 @@ export const StoryViewerModal: React.FC = () => {
           <View style={styles.replyBar}>
             <TextInput
               style={styles.replyInput}
-              placeholder={`Send message to ${activeStory.userName.split(' ')[0]}...`}
+              placeholder={`Reply to ${activeStory.userName.split(' ')[0]}...`}
               placeholderTextColor={colors.textMuted}
               value={replyText}
               onChangeText={setReplyText}
@@ -132,8 +135,9 @@ export const StoryViewerModal: React.FC = () => {
               style={[styles.sendBtn, !replyText.trim() && styles.sendBtnDisabled]}
               onPress={handleSendReply}
               disabled={!replyText.trim()}
+              activeOpacity={0.8}
             >
-              <Send color={colors.white} size={16} />
+              <Send color={colors.white} size={15} />
             </TouchableOpacity>
           </View>
         </View>
@@ -145,28 +149,36 @@ export const StoryViewerModal: React.FC = () => {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(15, 23, 42, 0.75)',
+    backgroundColor: 'rgba(11, 25, 44, 0.75)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 12,
+    padding: 16,
+  },
+  backdrop: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   storyCard: {
-    width: width - 24,
-    height: height * 0.78,
+    width: Math.min(width - 32, 420),
+    height: Math.min(height * 0.8, 620),
     backgroundColor: colors.cardBg,
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: colors.cardBorder,
-    padding: 18,
+    borderRadius: 28,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.8)',
+    padding: 20,
     justifyContent: 'space-between',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
+    shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.25,
-    shadowRadius: 16,
+    shadowRadius: 24,
+    elevation: 25,
   },
   progressBarBg: {
-    height: 3,
-    backgroundColor: colors.cardBorder,
+    height: 3.5,
+    backgroundColor: '#E2E8F0',
     borderRadius: 2,
     overflow: 'hidden',
     marginBottom: 14,
@@ -186,9 +198,9 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   avatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 46,
+    height: 46,
+    borderRadius: 23,
     borderWidth: 2,
     borderColor: colors.crimson,
   },
@@ -199,13 +211,8 @@ const styles = StyleSheet.create({
   },
   authorName: {
     color: colors.textPrimary,
-    fontSize: 14.5,
-    fontWeight: '700',
-  },
-  verifiedBadge: {
-    backgroundColor: colors.emeraldLight,
-    borderRadius: 8,
-    padding: 2,
+    fontSize: 15,
+    fontWeight: '800',
   },
   companyRow: {
     flexDirection: 'row',
@@ -215,7 +222,7 @@ const styles = StyleSheet.create({
   },
   companyName: {
     color: colors.primary,
-    fontSize: 11.5,
+    fontSize: 12,
     fontWeight: '600',
   },
   timestamp: {
@@ -229,9 +236,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.cardBgElevated,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
   },
   tagPillRow: {
-    marginTop: 14,
+    marginTop: 12,
   },
   tagPill: {
     flexDirection: 'row',
@@ -239,66 +248,74 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 12,
+    borderRadius: 10,
     gap: 6,
   },
   tagPillText: {
     color: colors.white,
-    fontSize: 10.5,
+    fontSize: 10,
     fontWeight: '800',
     letterSpacing: 0.5,
   },
   contentBody: {
     flex: 1,
     justifyContent: 'center',
-    paddingVertical: 20,
+    paddingVertical: 14,
+  },
+  storyCardInner: {
+    backgroundColor: '#F8FAFC',
+    borderRadius: 20,
+    padding: 18,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
   },
   storyTitle: {
     color: colors.textPrimary,
-    fontSize: 22,
-    fontWeight: '800',
-    lineHeight: 30,
-    marginBottom: 12,
-    letterSpacing: 0.2,
+    fontSize: 20,
+    fontWeight: '900',
+    lineHeight: 26,
+    marginBottom: 10,
+    letterSpacing: -0.3,
   },
   storyCaption: {
     color: colors.textSecondary,
-    fontSize: 15,
-    lineHeight: 23,
+    fontSize: 14,
+    lineHeight: 21,
   },
   schedule1to1Card: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: colors.crimsonLight,
-    paddingVertical: 12,
+    paddingVertical: 13,
     paddingHorizontal: 16,
-    borderRadius: 12,
-    borderWidth: 1,
+    borderRadius: 14,
+    borderWidth: 1.5,
     borderColor: colors.crimsonBorder,
-    marginTop: 24,
-    gap: 10,
+    marginTop: 16,
+    gap: 8,
   },
   schedule1to1Text: {
     color: colors.crimson,
-    fontSize: 13,
-    fontWeight: '700',
+    fontSize: 13.5,
+    fontWeight: '800',
   },
   replyBar: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    marginTop: 10,
+    marginTop: 6,
   },
   replyInput: {
     flex: 1,
-    backgroundColor: colors.cardBgElevated,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: colors.inputBorder,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 22,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
     paddingHorizontal: 16,
     paddingVertical: 10,
     color: colors.textPrimary,
-    fontSize: 13.5,
+    fontSize: 13,
   },
   sendBtn: {
     width: 42,
@@ -307,8 +324,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.crimson,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: colors.crimson,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 3,
   },
   sendBtnDisabled: {
-    opacity: 0.4,
+    backgroundColor: colors.textMuted,
+    shadowOpacity: 0,
+    elevation: 0,
   },
 });

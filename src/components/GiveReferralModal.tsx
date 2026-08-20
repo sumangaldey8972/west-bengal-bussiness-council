@@ -11,7 +11,7 @@ import {
   Image,
   ActivityIndicator,
 } from 'react-native';
-import { X, UserCheck, DollarSign, Clock, FileText, Check } from 'lucide-react-native';
+import { X, UserCheck, DollarSign, Clock, FileText, Check, ShieldCheck, Sparkles, Send } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { Referral } from '../types';
 import { useApp } from '../context/AppContext';
@@ -63,22 +63,34 @@ export const GiveReferralModal: React.FC = () => {
       onRequestClose={closeGiveReferral}
     >
       <View style={styles.overlay}>
+        {/* Backdrop Dismiss Area */}
+        <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={closeGiveReferral} />
+
         <View style={styles.sheetContainer}>
+          {/* Top Drag Notch */}
+          <View style={styles.sheetHandle} />
+
           {/* Header */}
           <View style={styles.header}>
-            <View>
-              <Text style={styles.headerBadge}>BENGAL BUSINESS COUNCIL</Text>
+            <View style={styles.headerTitleGroup}>
+              <View style={styles.badgePill}>
+                <Sparkles color={colors.crimson} size={11} />
+                <Text style={styles.headerBadge}>BENGAL BUSINESS COUNCIL</Text>
+              </View>
               <Text style={styles.headerTitle}>Share a Business Referral</Text>
             </View>
-            <TouchableOpacity style={styles.closeBtn} onPress={closeGiveReferral}>
-              <X color={colors.textPrimary} size={20} />
+            <TouchableOpacity style={styles.closeBtn} onPress={closeGiveReferral} activeOpacity={0.7}>
+              <X color={colors.textPrimary} size={18} />
             </TouchableOpacity>
           </View>
 
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.body}>
-            {/* Member Selection */}
-            <Text style={styles.inputLabel}>SELECT MEMBER TO RECEIVE REFERRAL</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.memberScroll}>
+            {/* Member Selection Section */}
+            <View style={styles.sectionHeaderRow}>
+              <Text style={styles.inputLabel}>SELECT RECEIVING MEMBER</Text>
+              <Text style={styles.sectionHint}>Swipe to choose</Text>
+            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.memberScroll} contentContainerStyle={styles.memberScrollContent}>
               {otherUsers.map(member => {
                 const isSelected = member.id === selectedUserId;
                 return (
@@ -86,13 +98,20 @@ export const GiveReferralModal: React.FC = () => {
                     key={member.id}
                     style={[styles.memberCard, isSelected && styles.memberCardSelected]}
                     onPress={() => setSelectedUserId(member.id)}
+                    activeOpacity={0.8}
                   >
-                    <Image source={{ uri: member.avatar }} style={styles.memberAvatar} />
-                    {isSelected && (
-                      <View style={styles.checkedIcon}>
-                        <Check color={colors.white} size={10} strokeWidth={3} />
-                      </View>
-                    )}
+                    <View style={styles.avatarWrapper}>
+                      <Image source={{ uri: member.avatar }} style={styles.memberAvatar} />
+                      {isSelected ? (
+                        <View style={styles.checkedIcon}>
+                          <Check color={colors.white} size={10} strokeWidth={3} />
+                        </View>
+                      ) : (
+                        <View style={styles.verifiedMini}>
+                          <ShieldCheck color={colors.emerald} size={11} />
+                        </View>
+                      )}
+                    </View>
                     <Text style={[styles.memberName, isSelected && styles.textCrimson]} numberOfLines={1}>
                       {member.name.split(' ')[0]}
                     </Text>
@@ -104,18 +123,25 @@ export const GiveReferralModal: React.FC = () => {
               })}
             </ScrollView>
 
-            {/* Selected Member Alert */}
+            {/* Selected Member Highlight Card */}
             {selectedMember && (
               <View style={styles.selectedSummaryBox}>
-                <Text style={styles.summaryLabel}>Giving Referral To:</Text>
-                <Text style={styles.summaryName}>{selectedMember.name}</Text>
-                <Text style={styles.summaryDetails}>
-                  {selectedMember.designation} • {selectedMember.companyName}
-                </Text>
+                <Image source={{ uri: selectedMember.avatar }} style={styles.selectedAvatar} />
+                <View style={styles.selectedInfo}>
+                  <View style={styles.selectedNameRow}>
+                    <Text style={styles.summaryName}>{selectedMember.name}</Text>
+                    <View style={styles.tierPill}>
+                      <Text style={styles.tierPillText}>{selectedMember.chapter}</Text>
+                    </View>
+                  </View>
+                  <Text style={styles.summaryDetails} numberOfLines={1}>
+                    {selectedMember.designation} • {selectedMember.companyName}
+                  </Text>
+                </View>
               </View>
             )}
 
-            {/* Prospect Name */}
+            {/* Prospect / Client Name */}
             <View style={styles.fieldGroup}>
               <View style={styles.fieldLabelRow}>
                 <UserCheck color={colors.crimson} size={14} />
@@ -176,6 +202,7 @@ export const GiveReferralModal: React.FC = () => {
                       key={level}
                       style={[styles.urgencyBtn, isSelected && styles.urgencyBtnActive]}
                       onPress={() => setUrgency(level)}
+                      activeOpacity={0.7}
                     >
                       <Text style={[styles.urgencyText, isSelected && styles.urgencyTextActive]}>
                         {level}
@@ -188,18 +215,21 @@ export const GiveReferralModal: React.FC = () => {
 
             {/* Submit Button */}
             <TouchableOpacity
-              style={[styles.submitBtn, isSubmitting && { opacity: 0.75 }]}
+              style={[styles.submitBtn, isSubmitting && styles.submitBtnDisabled]}
               onPress={handleSave}
               disabled={isSubmitting}
               activeOpacity={0.8}
             >
               {isSubmitting ? (
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                <View style={styles.submitLoadingRow}>
                   <ActivityIndicator size="small" color={colors.white} />
                   <Text style={styles.submitBtnText}>Sending Referral...</Text>
                 </View>
               ) : (
-                <Text style={styles.submitBtnText}>Send Referral to Member</Text>
+                <View style={styles.submitRow}>
+                  <Send color={colors.white} size={16} />
+                  <Text style={styles.submitBtnText}>Send Referral to Member</Text>
+                </View>
               )}
             </TouchableOpacity>
           </ScrollView>
@@ -212,95 +242,165 @@ export const GiveReferralModal: React.FC = () => {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: colors.overlay,
+    backgroundColor: 'rgba(11, 25, 44, 0.65)',
     justifyContent: 'flex-end',
+  },
+  backdrop: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   sheetContainer: {
     backgroundColor: colors.cardBg,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
     borderWidth: 1,
-    borderColor: colors.cardBorder,
-    maxHeight: '90%',
-    paddingBottom: 20,
+    borderColor: 'rgba(255,255,255,0.8)',
+    maxHeight: '92%',
+    paddingBottom: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 25,
+  },
+  sheetHandle: {
+    width: 44,
+    height: 4.5,
+    borderRadius: 3,
+    backgroundColor: '#CBD5E1',
+    alignSelf: 'center',
+    marginTop: 10,
+    marginBottom: 4,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 18,
+    paddingTop: 12,
     paddingBottom: 14,
     borderBottomWidth: 1,
-    borderBottomColor: colors.cardBorder,
+    borderBottomColor: '#F1F5F9',
+  },
+  headerTitleGroup: {
+    flex: 1,
+  },
+  badgePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: colors.crimsonLight,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    marginBottom: 4,
   },
   headerBadge: {
     fontSize: 9.5,
     fontWeight: '800',
     color: colors.crimson,
-    letterSpacing: 1,
+    letterSpacing: 0.8,
   },
   headerTitle: {
-    fontSize: 17,
-    fontWeight: '700',
+    fontSize: 18,
+    fontWeight: '800',
     color: colors.textPrimary,
-    marginTop: 2,
+    letterSpacing: -0.3,
   },
   closeBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
     backgroundColor: colors.cardBgElevated,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
   },
   body: {
     padding: 18,
   },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  sectionHint: {
+    fontSize: 10.5,
+    color: colors.textMuted,
+    fontWeight: '500',
+  },
   inputLabel: {
-    fontSize: 10,
+    fontSize: 10.5,
     fontWeight: '800',
     color: colors.primary,
     letterSpacing: 0.8,
-    marginBottom: 6,
   },
   memberScroll: {
-    marginBottom: 12,
+    marginBottom: 14,
+  },
+  memberScrollContent: {
+    paddingRight: 10,
   },
   memberCard: {
-    width: 90,
+    width: 96,
     alignItems: 'center',
     backgroundColor: colors.cardBgElevated,
-    borderRadius: 12,
-    padding: 8,
+    borderRadius: 14,
+    padding: 10,
     marginRight: 10,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: colors.cardBorder,
-    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    elevation: 2,
   },
   memberCardSelected: {
     borderColor: colors.crimson,
     backgroundColor: '#FFF8F8',
+    shadowColor: colors.crimson,
+    shadowOpacity: 0.15,
+  },
+  avatarWrapper: {
+    position: 'relative',
+    marginBottom: 8,
   },
   memberAvatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    marginBottom: 6,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    borderWidth: 1.5,
+    borderColor: colors.cardBorder,
   },
   checkedIcon: {
     position: 'absolute',
-    top: 6,
-    right: 6,
-    width: 16,
-    height: 16,
-    borderRadius: 8,
+    bottom: -2,
+    right: -2,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
     backgroundColor: colors.crimson,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1.5,
+    borderColor: colors.white,
+  },
+  verifiedMini: {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    backgroundColor: colors.white,
+    borderRadius: 8,
   },
   memberName: {
-    fontSize: 11.5,
+    fontSize: 12,
     fontWeight: '700',
     color: colors.textPrimary,
   },
@@ -308,31 +408,57 @@ const styles = StyleSheet.create({
     color: colors.crimson,
   },
   memberCompany: {
-    fontSize: 9,
+    fontSize: 9.5,
     color: colors.textSecondary,
-    marginTop: 1,
+    marginTop: 2,
+    textAlign: 'center',
   },
   selectedSummaryBox: {
-    backgroundColor: colors.cardBgElevated,
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 14,
-    borderLeftWidth: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F8FAFC',
+    borderRadius: 14,
+    padding: 12,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    borderLeftWidth: 4,
     borderLeftColor: colors.accentBlue,
   },
-  summaryLabel: {
-    fontSize: 9.5,
-    color: colors.textMuted,
+  selectedAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  selectedInfo: {
+    flex: 1,
+  },
+  selectedNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   summaryName: {
-    fontSize: 13,
-    fontWeight: '700',
+    fontSize: 13.5,
+    fontWeight: '800',
     color: colors.textPrimary,
+  },
+  tierPill: {
+    backgroundColor: colors.accentBlueLight,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  tierPillText: {
+    fontSize: 9.5,
+    color: colors.accentBlue,
+    fontWeight: '700',
   },
   summaryDetails: {
     fontSize: 11,
-    color: colors.accentBlue,
-    marginTop: 1,
+    color: colors.textSecondary,
+    marginTop: 2,
   },
   fieldGroup: {
     marginBottom: 14,
@@ -344,17 +470,18 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   textInput: {
-    backgroundColor: colors.cardBgElevated,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: colors.inputBorder,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    paddingHorizontal: 14,
+    paddingVertical: 11,
     color: colors.textPrimary,
-    fontSize: 13,
+    fontSize: 13.5,
+    fontWeight: '500',
   },
   textArea: {
-    height: 60,
+    height: 68,
     textAlignVertical: 'top',
   },
   urgencyRow: {
@@ -363,12 +490,12 @@ const styles = StyleSheet.create({
   },
   urgencyBtn: {
     flex: 1,
-    backgroundColor: colors.cardBgElevated,
-    borderRadius: 8,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 10,
     paddingVertical: 10,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: colors.cardBorder,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
   },
   urgencyBtnActive: {
     backgroundColor: colors.crimsonLight,
@@ -381,18 +508,36 @@ const styles = StyleSheet.create({
   },
   urgencyTextActive: {
     color: colors.crimson,
-    fontWeight: '700',
+    fontWeight: '800',
   },
   submitBtn: {
     backgroundColor: colors.crimson,
-    borderRadius: 12,
+    borderRadius: 14,
     paddingVertical: 14,
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 10,
+    shadowColor: colors.crimson,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 6,
+  },
+  submitBtnDisabled: {
+    opacity: 0.75,
+  },
+  submitRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  submitLoadingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   submitBtnText: {
     color: colors.white,
-    fontSize: 14,
+    fontSize: 14.5,
     fontWeight: '800',
     letterSpacing: 0.3,
   },

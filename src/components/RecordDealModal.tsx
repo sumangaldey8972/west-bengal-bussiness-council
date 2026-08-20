@@ -11,7 +11,7 @@ import {
   Image,
   ActivityIndicator,
 } from 'react-native';
-import { X, TrendingUp, DollarSign, FileText, Sparkles, Check } from 'lucide-react-native';
+import { X, TrendingUp, DollarSign, FileText, Sparkles, Check, ShieldCheck, Award } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { BusinessDeal } from '../types';
 import { useApp } from '../context/AppContext';
@@ -33,6 +33,14 @@ export const RecordDealModal: React.FC = () => {
   const formattedInLakhs = rawAmount >= 10000000 
     ? `₹ ${(rawAmount / 10000000).toFixed(2)} Crores` 
     : `₹ ${(rawAmount / 100000).toFixed(1)} Lakhs`;
+
+  const presetAmounts = [
+    { label: '₹ 5 Lakhs', value: '500000' },
+    { label: '₹ 15 Lakhs', value: '1500000' },
+    { label: '₹ 35 Lakhs', value: '3500000' },
+    { label: '₹ 75 Lakhs', value: '7500000' },
+    { label: '₹ 1.5 Cr', value: '15000000' },
+  ];
 
   const handleSave = () => {
     setIsSubmitting(true);
@@ -57,15 +65,24 @@ export const RecordDealModal: React.FC = () => {
       onRequestClose={closeRecordDeal}
     >
       <View style={styles.overlay}>
+        {/* Backdrop Dismiss */}
+        <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={closeRecordDeal} />
+
         <View style={styles.sheetContainer}>
+          {/* Top Handle Notch */}
+          <View style={styles.sheetHandle} />
+
           {/* Header */}
           <View style={styles.header}>
-            <View>
-              <Text style={styles.headerBadge}>BENGAL BUSINESS COUNCIL</Text>
-              <Text style={styles.headerTitle}>Record a Closed Business Deal</Text>
+            <View style={styles.headerTitleGroup}>
+              <View style={styles.badgePill}>
+                <Award color={colors.crimson} size={11} />
+                <Text style={styles.headerBadge}>BENGAL BUSINESS COUNCIL</Text>
+              </View>
+              <Text style={styles.headerTitle}>Record Business Deal</Text>
             </View>
-            <TouchableOpacity style={styles.closeBtn} onPress={closeRecordDeal}>
-              <X color={colors.textPrimary} size={20} />
+            <TouchableOpacity style={styles.closeBtn} onPress={closeRecordDeal} activeOpacity={0.7}>
+              <X color={colors.textPrimary} size={18} />
             </TouchableOpacity>
           </View>
 
@@ -73,18 +90,21 @@ export const RecordDealModal: React.FC = () => {
             {/* Value Preview Banner */}
             <View style={styles.dealHighlightBox}>
               <View style={styles.sparkleRow}>
-                <Sparkles color={colors.emerald} size={16} />
-                <Text style={styles.dealHighlightLabel}>BUSINESS DEAL VALUE</Text>
+                <Sparkles color={colors.emerald} size={14} />
+                <Text style={styles.dealHighlightLabel}>TOTAL CLOSED BUSINESS VOLUME</Text>
               </View>
               <Text style={styles.dealHighlightValue}>{formattedInLakhs}</Text>
               <Text style={styles.dealHighlightSub}>
-                Thank You For Business between Council Members
+                Credited directly to Council Business Records
               </Text>
             </View>
 
-            {/* Member Selection */}
-            <Text style={styles.inputLabel}>SELECT MEMBER YOU DID BUSINESS WITH</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.memberScroll}>
+            {/* Member Selection Section */}
+            <View style={styles.sectionHeaderRow}>
+              <Text style={styles.inputLabel}>MEMBER YOU DID BUSINESS WITH</Text>
+              <Text style={styles.sectionHint}>Swipe to choose</Text>
+            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.memberScroll} contentContainerStyle={styles.memberScrollContent}>
               {otherUsers.map(member => {
                 const isSelected = member.id === selectedUserId;
                 return (
@@ -92,13 +112,20 @@ export const RecordDealModal: React.FC = () => {
                     key={member.id}
                     style={[styles.memberCard, isSelected && styles.memberCardSelected]}
                     onPress={() => setSelectedUserId(member.id)}
+                    activeOpacity={0.8}
                   >
-                    <Image source={{ uri: member.avatar }} style={styles.memberAvatar} />
-                    {isSelected && (
-                      <View style={styles.checkedIcon}>
-                        <Check color={colors.white} size={10} strokeWidth={3} />
-                      </View>
-                    )}
+                    <View style={styles.avatarWrapper}>
+                      <Image source={{ uri: member.avatar }} style={styles.memberAvatar} />
+                      {isSelected ? (
+                        <View style={styles.checkedIcon}>
+                          <Check color={colors.white} size={10} strokeWidth={3} />
+                        </View>
+                      ) : (
+                        <View style={styles.verifiedMini}>
+                          <ShieldCheck color={colors.emerald} size={11} />
+                        </View>
+                      )}
+                    </View>
                     <Text style={[styles.memberName, isSelected && styles.textCrimson]} numberOfLines={1}>
                       {member.name.split(' ')[0]}
                     </Text>
@@ -112,11 +139,18 @@ export const RecordDealModal: React.FC = () => {
 
             {selectedMember && (
               <View style={styles.selectedSummaryBox}>
-                <Text style={styles.summaryLabel}>Deal with Member:</Text>
-                <Text style={styles.summaryName}>{selectedMember.name}</Text>
-                <Text style={styles.summaryDetails}>
-                  {selectedMember.designation} • {selectedMember.companyName}
-                </Text>
+                <Image source={{ uri: selectedMember.avatar }} style={styles.selectedAvatar} />
+                <View style={styles.selectedInfo}>
+                  <View style={styles.selectedNameRow}>
+                    <Text style={styles.summaryName}>{selectedMember.name}</Text>
+                    <View style={styles.tierPill}>
+                      <Text style={styles.tierPillText}>{selectedMember.chapter}</Text>
+                    </View>
+                  </View>
+                  <Text style={styles.summaryDetails} numberOfLines={1}>
+                    {selectedMember.designation} • {selectedMember.companyName}
+                  </Text>
+                </View>
               </View>
             )}
 
@@ -134,7 +168,22 @@ export const RecordDealModal: React.FC = () => {
                 placeholder="e.g. 2500000"
                 placeholderTextColor={colors.textMuted}
               />
-              <Text style={styles.helperText}>Enter amount in Rupees (e.g. 5000000 for 50 Lakhs, 10000000 for 1 Crore)</Text>
+
+              {/* Quick Presets */}
+              <View style={styles.presetRow}>
+                {presetAmounts.map(p => (
+                  <TouchableOpacity
+                    key={p.value}
+                    style={[styles.presetChip, dealAmountText === p.value && styles.presetChipActive]}
+                    onPress={() => setDealAmountText(p.value)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[styles.presetChipText, dealAmountText === p.value && styles.presetChipTextActive]}>
+                      {p.label}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
             </View>
 
             {/* Deal Description */}
@@ -165,6 +214,7 @@ export const RecordDealModal: React.FC = () => {
                       key={type}
                       style={[styles.refTypeBtn, isSelected && styles.refTypeBtnActive]}
                       onPress={() => setReferralType(type)}
+                      activeOpacity={0.7}
                     >
                       <Text style={[styles.refTypeText, isSelected && styles.refTypeTextActive]}>
                         {type}
@@ -177,21 +227,21 @@ export const RecordDealModal: React.FC = () => {
 
             {/* Submit Button */}
             <TouchableOpacity
-              style={[styles.submitBtn, isSubmitting && { opacity: 0.75 }]}
+              style={[styles.submitBtn, isSubmitting && styles.submitBtnDisabled]}
               onPress={handleSave}
               disabled={isSubmitting}
               activeOpacity={0.8}
             >
               {isSubmitting ? (
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                <View style={styles.submitLoadingRow}>
                   <ActivityIndicator size="small" color={colors.white} />
                   <Text style={styles.submitBtnText}>Saving Business Deal...</Text>
                 </View>
               ) : (
-                <>
+                <View style={styles.submitRow}>
                   <TrendingUp color={colors.white} size={18} />
                   <Text style={styles.submitBtnText}>Save Business Deal</Text>
-                </>
+                </View>
               )}
             </TouchableOpacity>
           </ScrollView>
@@ -204,59 +254,99 @@ export const RecordDealModal: React.FC = () => {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: colors.overlay,
+    backgroundColor: 'rgba(11, 25, 44, 0.65)',
     justifyContent: 'flex-end',
+  },
+  backdrop: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   sheetContainer: {
     backgroundColor: colors.cardBg,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
     borderWidth: 1,
-    borderColor: colors.cardBorder,
-    maxHeight: '90%',
-    paddingBottom: 20,
+    borderColor: 'rgba(255,255,255,0.8)',
+    maxHeight: '92%',
+    paddingBottom: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 25,
+  },
+  sheetHandle: {
+    width: 44,
+    height: 4.5,
+    borderRadius: 3,
+    backgroundColor: '#CBD5E1',
+    alignSelf: 'center',
+    marginTop: 10,
+    marginBottom: 4,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 18,
+    paddingTop: 12,
     paddingBottom: 14,
     borderBottomWidth: 1,
-    borderBottomColor: colors.cardBorder,
+    borderBottomColor: '#F1F5F9',
+  },
+  headerTitleGroup: {
+    flex: 1,
+  },
+  badgePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: colors.crimsonLight,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    marginBottom: 4,
   },
   headerBadge: {
     fontSize: 9.5,
     fontWeight: '800',
     color: colors.crimson,
-    letterSpacing: 1,
+    letterSpacing: 0.8,
   },
   headerTitle: {
-    fontSize: 17,
-    fontWeight: '700',
+    fontSize: 18,
+    fontWeight: '800',
     color: colors.textPrimary,
-    marginTop: 2,
+    letterSpacing: -0.3,
   },
   closeBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
     backgroundColor: colors.cardBgElevated,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
   },
   body: {
     padding: 18,
   },
   dealHighlightBox: {
-    backgroundColor: colors.emeraldLight,
-    borderRadius: 14,
-    borderWidth: 1.5,
-    borderColor: colors.emeraldBorder,
+    backgroundColor: '#0B192C',
+    borderRadius: 18,
     padding: 16,
     alignItems: 'center',
     marginBottom: 16,
+    shadowColor: '#0B192C',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
   },
   sparkleRow: {
     flexDirection: 'row',
@@ -267,64 +357,98 @@ const styles = StyleSheet.create({
   dealHighlightLabel: {
     fontSize: 10,
     fontWeight: '800',
-    color: colors.emerald,
+    color: '#94A3B8',
     letterSpacing: 1,
   },
   dealHighlightValue: {
     fontSize: 26,
-    fontWeight: '800',
+    fontWeight: '900',
     color: colors.emerald,
-    letterSpacing: 0.5,
+    letterSpacing: -0.5,
     marginVertical: 4,
   },
   dealHighlightSub: {
     fontSize: 11,
-    color: colors.textSecondary,
+    color: '#CBD5E1',
+    fontWeight: '500',
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  sectionHint: {
+    fontSize: 10.5,
+    color: colors.textMuted,
+    fontWeight: '500',
   },
   inputLabel: {
-    fontSize: 10,
+    fontSize: 10.5,
     fontWeight: '800',
     color: colors.primary,
     letterSpacing: 0.8,
-    marginBottom: 6,
   },
   memberScroll: {
-    marginBottom: 12,
+    marginBottom: 14,
+  },
+  memberScrollContent: {
+    paddingRight: 10,
   },
   memberCard: {
-    width: 90,
+    width: 96,
     alignItems: 'center',
     backgroundColor: colors.cardBgElevated,
-    borderRadius: 12,
-    padding: 8,
+    borderRadius: 14,
+    padding: 10,
     marginRight: 10,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: colors.cardBorder,
-    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    elevation: 2,
   },
   memberCardSelected: {
     borderColor: colors.crimson,
     backgroundColor: '#FFF8F8',
+    shadowColor: colors.crimson,
+    shadowOpacity: 0.15,
+  },
+  avatarWrapper: {
+    position: 'relative',
+    marginBottom: 8,
   },
   memberAvatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    marginBottom: 6,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    borderWidth: 1.5,
+    borderColor: colors.cardBorder,
   },
   checkedIcon: {
     position: 'absolute',
-    top: 6,
-    right: 6,
-    width: 16,
-    height: 16,
-    borderRadius: 8,
+    bottom: -2,
+    right: -2,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
     backgroundColor: colors.crimson,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1.5,
+    borderColor: colors.white,
+  },
+  verifiedMini: {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    backgroundColor: colors.white,
+    borderRadius: 8,
   },
   memberName: {
-    fontSize: 11.5,
+    fontSize: 12,
     fontWeight: '700',
     color: colors.textPrimary,
   },
@@ -332,31 +456,57 @@ const styles = StyleSheet.create({
     color: colors.crimson,
   },
   memberCompany: {
-    fontSize: 9,
+    fontSize: 9.5,
     color: colors.textSecondary,
-    marginTop: 1,
+    marginTop: 2,
+    textAlign: 'center',
   },
   selectedSummaryBox: {
-    backgroundColor: colors.cardBgElevated,
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 14,
-    borderLeftWidth: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F8FAFC',
+    borderRadius: 14,
+    padding: 12,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    borderLeftWidth: 4,
     borderLeftColor: colors.emerald,
   },
-  summaryLabel: {
-    fontSize: 9.5,
-    color: colors.textMuted,
+  selectedAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  selectedInfo: {
+    flex: 1,
+  },
+  selectedNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   summaryName: {
-    fontSize: 13,
-    fontWeight: '700',
+    fontSize: 13.5,
+    fontWeight: '800',
     color: colors.textPrimary,
+  },
+  tierPill: {
+    backgroundColor: colors.accentBlueLight,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  tierPillText: {
+    fontSize: 9.5,
+    color: colors.accentBlue,
+    fontWeight: '700',
   },
   summaryDetails: {
     fontSize: 11,
-    color: colors.accentBlue,
-    marginTop: 1,
+    color: colors.textSecondary,
+    marginTop: 2,
   },
   fieldGroup: {
     marginBottom: 14,
@@ -368,68 +518,106 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   textInput: {
-    backgroundColor: colors.cardBgElevated,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: colors.inputBorder,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    paddingHorizontal: 14,
+    paddingVertical: 11,
     color: colors.textPrimary,
-    fontSize: 14,
+    fontSize: 13.5,
     fontWeight: '600',
   },
-  helperText: {
-    fontSize: 10,
-    color: colors.textMuted,
-    marginTop: 4,
-  },
-  textArea: {
-    height: 60,
-    textAlignVertical: 'top',
-    fontSize: 13,
-    fontWeight: '400',
-  },
-  refTypeRow: {
+  presetRow: {
     flexDirection: 'row',
     gap: 6,
+    marginTop: 8,
+    flexWrap: 'wrap',
   },
-  refTypeBtn: {
-    flex: 1,
+  presetChip: {
     backgroundColor: colors.cardBgElevated,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
     borderRadius: 8,
-    paddingVertical: 8,
-    alignItems: 'center',
     borderWidth: 1,
     borderColor: colors.cardBorder,
   },
+  presetChipActive: {
+    backgroundColor: colors.crimsonLight,
+    borderColor: colors.crimson,
+  },
+  presetChipText: {
+    fontSize: 11,
+    color: colors.textSecondary,
+    fontWeight: '600',
+  },
+  presetChipTextActive: {
+    color: colors.crimson,
+    fontWeight: '800',
+  },
+  textArea: {
+    height: 68,
+    textAlignVertical: 'top',
+    fontWeight: '500',
+  },
+  refTypeRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 6,
+  },
+  refTypeBtn: {
+    flex: 1,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 6,
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+  },
   refTypeBtnActive: {
-    backgroundColor: colors.emeraldLight,
-    borderColor: colors.emerald,
+    backgroundColor: colors.accentBlueLight,
+    borderColor: colors.accentBlue,
   },
   refTypeText: {
-    fontSize: 10,
+    fontSize: 10.5,
     color: colors.textSecondary,
     fontWeight: '600',
     textAlign: 'center',
   },
   refTypeTextActive: {
-    color: colors.emerald,
-    fontWeight: '700',
+    color: colors.accentBlue,
+    fontWeight: '800',
   },
   submitBtn: {
+    backgroundColor: colors.crimson,
+    borderRadius: 14,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 10,
+    shadowColor: colors.crimson,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 6,
+  },
+  submitBtnDisabled: {
+    opacity: 0.75,
+  },
+  submitRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.emerald,
-    borderRadius: 12,
-    paddingVertical: 14,
-    marginTop: 8,
+    gap: 8,
+  },
+  submitLoadingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 8,
   },
   submitBtnText: {
     color: colors.white,
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: 14.5,
+    fontWeight: '800',
     letterSpacing: 0.3,
   },
 });

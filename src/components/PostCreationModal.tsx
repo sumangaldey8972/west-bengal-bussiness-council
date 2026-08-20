@@ -10,7 +10,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { X, Send, Sparkles, AlertCircle, FileText, Check } from 'lucide-react-native';
+import { X, Send, Sparkles, AlertCircle, FileText, Check, DollarSign, MessageSquare, Handshake, Trophy, Globe } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { Post } from '../types';
 import { useApp } from '../context/AppContext';
@@ -43,7 +43,12 @@ export const PostCreationModal: React.FC = () => {
     }, 900);
   };
 
-  const tags: Post['tag'][] = ['B2B Requirement', 'Deal Won', 'Partnership Ask', 'General'];
+  const tagConfigs: { tag: Post['tag']; icon: any; color: string }[] = [
+    { tag: 'B2B Requirement', icon: AlertCircle, color: colors.crimson },
+    { tag: 'Deal Won', icon: Trophy, color: colors.emerald },
+    { tag: 'Partnership Ask', icon: Handshake, color: colors.accentBlue },
+    { tag: 'General', icon: Globe, color: colors.primary },
+  ];
 
   return (
     <Modal
@@ -53,32 +58,45 @@ export const PostCreationModal: React.FC = () => {
       onRequestClose={closeCreatePost}
     >
       <View style={styles.overlay}>
+        {/* Backdrop Dismiss Area */}
+        <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={closeCreatePost} />
+
         <View style={styles.sheetContainer}>
+          {/* Top Drag Handle */}
+          <View style={styles.sheetHandle} />
+
           {/* Header */}
           <View style={styles.header}>
-            <View>
-              <Text style={styles.headerBadge}>BENGAL BUSINESS COUNCIL</Text>
+            <View style={styles.headerTitleGroup}>
+              <View style={styles.badgePill}>
+                <MessageSquare color={colors.crimson} size={11} />
+                <Text style={styles.headerBadge}>COUNCIL FEED</Text>
+              </View>
               <Text style={styles.headerTitle}>Create a Post or Request</Text>
             </View>
-            <TouchableOpacity style={styles.closeBtn} onPress={closeCreatePost}>
-              <X color={colors.textPrimary} size={20} />
+            <TouchableOpacity style={styles.closeBtn} onPress={closeCreatePost} activeOpacity={0.7}>
+              <X color={colors.textPrimary} size={18} />
             </TouchableOpacity>
           </View>
 
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.body}>
             {/* Category / Tag Selector */}
-            <Text style={styles.inputLabel}>POST CATEGORY</Text>
+            <Text style={styles.inputLabel}>SELECT POST CATEGORY</Text>
             <View style={styles.tagsRow}>
-              {tags.map(t => {
-                const isSelected = tag === t;
+              {tagConfigs.map(item => {
+                const isSelected = tag === item.tag;
+                const Icon = item.icon;
                 return (
                   <TouchableOpacity
-                    key={t}
+                    key={item.tag}
                     style={[styles.tagPill, isSelected && styles.tagPillSelected]}
-                    onPress={() => setTag(t)}
+                    onPress={() => setTag(item.tag)}
+                    activeOpacity={0.7}
                   >
-                    <Sparkles color={isSelected ? colors.crimson : colors.textMuted} size={13} />
-                    <Text style={[styles.tagText, isSelected && styles.tagTextSelected]}>{t}</Text>
+                    <Icon color={isSelected ? colors.crimson : colors.textSecondary} size={13} />
+                    <Text style={[styles.tagText, isSelected && styles.tagTextSelected]}>
+                      {item.tag}
+                    </Text>
                   </TouchableOpacity>
                 );
               })}
@@ -89,15 +107,21 @@ export const PostCreationModal: React.FC = () => {
               <TouchableOpacity
                 style={[styles.urgentToggleBox, isUrgent && styles.urgentToggleBoxActive]}
                 onPress={() => setIsUrgent(!isUrgent)}
+                activeOpacity={0.8}
               >
                 <View style={styles.urgentToggleLeft}>
-                  <AlertCircle color={isUrgent ? colors.crimson : colors.textMuted} size={18} />
-                  <View>
-                    <Text style={[styles.urgentTitle, isUrgent && styles.urgentTitleActive]}>
-                      Urgent Request
-                    </Text>
+                  <View style={[styles.urgentIconBg, isUrgent && styles.urgentIconBgActive]}>
+                    <AlertCircle color={isUrgent ? colors.crimson : colors.textMuted} size={18} />
+                  </View>
+                  <View style={styles.urgentTextCol}>
+                    <View style={styles.urgentLabelRow}>
+                      <Text style={[styles.urgentTitle, isUrgent && styles.urgentTitleActive]}>
+                        High-Priority Urgent Request
+                      </Text>
+                      {isUrgent && <View style={styles.livePulseDot} />}
+                    </View>
                     <Text style={styles.urgentSub}>
-                      Highlights this post to members in your industry
+                      Highlights this post to relevant council members immediately
                     </Text>
                   </View>
                 </View>
@@ -109,7 +133,10 @@ export const PostCreationModal: React.FC = () => {
 
             {/* Budget / Value Input */}
             <View style={styles.fieldGroup}>
-              <Text style={styles.inputLabel}>BUDGET OR VALUE (OPTIONAL)</Text>
+              <View style={styles.fieldLabelRow}>
+                <DollarSign color={colors.crimson} size={14} />
+                <Text style={styles.inputLabel}>BUDGET OR VALUE (OPTIONAL)</Text>
+              </View>
               <TextInput
                 style={styles.textInput}
                 value={budgetOrValue}
@@ -121,30 +148,36 @@ export const PostCreationModal: React.FC = () => {
 
             {/* Post Content */}
             <View style={styles.fieldGroup}>
-              <Text style={styles.inputLabel}>POST DETAILS</Text>
+              <View style={styles.fieldLabelRow}>
+                <FileText color={colors.crimson} size={14} />
+                <Text style={styles.inputLabel}>POST DETAILS</Text>
+              </View>
               <TextInput
                 style={[styles.textInput, styles.textArea]}
                 value={content}
                 onChangeText={setContent}
-                placeholder="Describe what product, service, or vendor you are looking for..."
+                placeholder="Describe what product, service, machinery, or partner you are looking for..."
                 placeholderTextColor={colors.textMuted}
                 multiline
-                numberOfLines={5}
+                numberOfLines={4}
               />
             </View>
 
             {/* Document Attachment Simulation */}
             <TouchableOpacity
-              style={styles.attachmentBox}
+              style={[styles.attachmentBox, hasAttachment && styles.attachmentBoxActive]}
               onPress={() => setHasAttachment(!hasAttachment)}
+              activeOpacity={0.8}
             >
-              <FileText color={hasAttachment ? colors.crimson : colors.textMuted} size={20} />
+              <View style={styles.attachIconBg}>
+                <FileText color={hasAttachment ? colors.crimson : colors.textMuted} size={18} />
+              </View>
               <View style={styles.attachInfo}>
                 <Text style={[styles.attachTitle, hasAttachment && styles.attachTitleActive]}>
                   {hasAttachment ? 'Document_Details.pdf attached' : '+ Attach PDF / File (Optional)'}
                 </Text>
                 <Text style={styles.attachMeta}>
-                  {hasAttachment ? '2.4 MB • Ready to upload' : 'Max 10 MB (PDF format)'}
+                  {hasAttachment ? '2.4 MB • Ready to upload with post' : 'Max 10 MB (PDF format)'}
                 </Text>
               </View>
               <View style={[styles.checkbox, hasAttachment && styles.checkboxActive]}>
@@ -154,21 +187,21 @@ export const PostCreationModal: React.FC = () => {
 
             {/* Submit Button */}
             <TouchableOpacity
-              style={[styles.submitBtn, isSubmitting && { opacity: 0.75 }]}
+              style={[styles.submitBtn, isSubmitting && styles.submitBtnDisabled]}
               onPress={handleSubmit}
               disabled={isSubmitting}
               activeOpacity={0.8}
             >
               {isSubmitting ? (
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                <View style={styles.submitLoadingRow}>
                   <ActivityIndicator size="small" color={colors.white} />
                   <Text style={styles.submitBtnText}>Publishing Post...</Text>
                 </View>
               ) : (
-                <>
+                <View style={styles.submitRow}>
                   <Send color={colors.white} size={16} />
-                  <Text style={styles.submitBtnText}>Publish Post</Text>
-                </>
+                  <Text style={styles.submitBtnText}>Publish Post to Council</Text>
+                </View>
               )}
             </TouchableOpacity>
           </ScrollView>
@@ -181,74 +214,111 @@ export const PostCreationModal: React.FC = () => {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: colors.overlay,
+    backgroundColor: 'rgba(11, 25, 44, 0.65)',
     justifyContent: 'flex-end',
+  },
+  backdrop: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   sheetContainer: {
     backgroundColor: colors.cardBg,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
     borderWidth: 1,
-    borderColor: colors.cardBorder,
+    borderColor: 'rgba(255,255,255,0.8)',
     maxHeight: '92%',
-    paddingBottom: 20,
+    paddingBottom: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 25,
+  },
+  sheetHandle: {
+    width: 44,
+    height: 4.5,
+    borderRadius: 3,
+    backgroundColor: '#CBD5E1',
+    alignSelf: 'center',
+    marginTop: 10,
+    marginBottom: 4,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 18,
+    paddingTop: 12,
     paddingBottom: 14,
     borderBottomWidth: 1,
-    borderBottomColor: colors.cardBorder,
+    borderBottomColor: '#F1F5F9',
+  },
+  headerTitleGroup: {
+    flex: 1,
+  },
+  badgePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: colors.crimsonLight,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    marginBottom: 4,
   },
   headerBadge: {
     fontSize: 9.5,
     fontWeight: '800',
     color: colors.crimson,
-    letterSpacing: 1,
+    letterSpacing: 0.8,
   },
   headerTitle: {
-    fontSize: 17,
-    fontWeight: '700',
+    fontSize: 18,
+    fontWeight: '800',
     color: colors.textPrimary,
-    marginTop: 2,
+    letterSpacing: -0.3,
   },
   closeBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
     backgroundColor: colors.cardBgElevated,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
   },
   body: {
     padding: 18,
   },
   inputLabel: {
-    fontSize: 10,
+    fontSize: 10.5,
     fontWeight: '800',
     color: colors.primary,
     letterSpacing: 0.8,
-    marginBottom: 8,
   },
   tagsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
+    marginTop: 8,
     marginBottom: 14,
   },
   tagPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.cardBgElevated,
-    paddingHorizontal: 10,
+    gap: 6,
+    backgroundColor: '#F8FAFC',
+    paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 10,
-    borderWidth: 1,
-    borderColor: colors.cardBorder,
-    gap: 6,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
   },
   tagPillSelected: {
     backgroundColor: colors.crimsonLight,
@@ -261,51 +331,77 @@ const styles = StyleSheet.create({
   },
   tagTextSelected: {
     color: colors.crimson,
-    fontWeight: '700',
+    fontWeight: '800',
   },
   urgentToggleBox: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: colors.cardBgElevated,
-    borderRadius: 12,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 14,
     padding: 12,
     marginBottom: 14,
-    borderWidth: 1,
-    borderColor: colors.cardBorder,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
   },
   urgentToggleBoxActive: {
-    backgroundColor: colors.crimsonLight,
-    borderColor: colors.crimsonBorder,
+    backgroundColor: '#FFF8F8',
+    borderColor: colors.crimson,
   },
   urgentToggleLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    flex: 1,
+    marginRight: 10,
+  },
+  urgentIconBg: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: colors.cardBgElevated,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  urgentIconBgActive: {
+    backgroundColor: colors.crimsonLight,
+  },
+  urgentTextCol: {
     flex: 1,
   },
+  urgentLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  livePulseDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+    backgroundColor: colors.crimson,
+  },
   urgentTitle: {
-    fontSize: 13,
+    fontSize: 12.5,
     fontWeight: '700',
-    color: colors.textSecondary,
+    color: colors.textPrimary,
   },
   urgentTitleActive: {
     color: colors.crimson,
+    fontWeight: '800',
   },
   urgentSub: {
-    fontSize: 10,
-    color: colors.textMuted,
-    marginTop: 1,
+    fontSize: 10.5,
+    color: colors.textSecondary,
+    marginTop: 2,
   },
   checkbox: {
-    width: 22,
-    height: 22,
+    width: 20,
+    height: 20,
     borderRadius: 6,
     borderWidth: 1.5,
-    borderColor: colors.cardBorder,
+    borderColor: colors.textMuted,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.cardBg,
   },
   checkboxActive: {
     backgroundColor: colors.crimson,
@@ -314,60 +410,95 @@ const styles = StyleSheet.create({
   fieldGroup: {
     marginBottom: 14,
   },
+  fieldLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 6,
+  },
   textInput: {
-    backgroundColor: colors.cardBgElevated,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: colors.inputBorder,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    paddingHorizontal: 14,
+    paddingVertical: 11,
     color: colors.textPrimary,
     fontSize: 13.5,
+    fontWeight: '500',
   },
   textArea: {
-    height: 100,
+    height: 80,
     textAlignVertical: 'top',
   },
   attachmentBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.cardBgElevated,
-    borderRadius: 12,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 14,
     padding: 12,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: colors.cardBorder,
-    gap: 10,
+  },
+  attachmentBoxActive: {
+    backgroundColor: '#FFF8F8',
+    borderColor: colors.crimson,
+  },
+  attachIconBg: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: colors.cardBgElevated,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
   },
   attachInfo: {
     flex: 1,
   },
   attachTitle: {
     fontSize: 12.5,
-    fontWeight: '600',
-    color: colors.textSecondary,
-  },
-  attachTitleActive: {
+    fontWeight: '700',
     color: colors.textPrimary,
   },
+  attachTitleActive: {
+    color: colors.crimson,
+  },
   attachMeta: {
-    fontSize: 10,
-    color: colors.textMuted,
+    fontSize: 10.5,
+    color: colors.textSecondary,
     marginTop: 2,
   },
   submitBtn: {
+    backgroundColor: colors.crimson,
+    borderRadius: 14,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 6,
+    shadowColor: colors.crimson,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 6,
+  },
+  submitBtnDisabled: {
+    opacity: 0.75,
+  },
+  submitRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.crimson,
-    borderRadius: 12,
-    paddingVertical: 14,
+    gap: 8,
+  },
+  submitLoadingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 8,
   },
   submitBtnText: {
     color: colors.white,
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: 14.5,
+    fontWeight: '800',
     letterSpacing: 0.3,
   },
 });
