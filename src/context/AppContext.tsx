@@ -187,12 +187,12 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         newUser.avatar ||
         'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
       membershipTier: newUser.membershipTier || 'Executive Member',
-      bio: newUser.bio || 'Bengal Business Council active corporate member.',
+      bio: newUser.bio || 'Curated Table active executive member.',
       requirementDocs: [],
       contact: {
-        email: newUser.contact?.email || 'contact@business.in',
+        email: newUser.contact?.email || 'contact@curatedtable.app',
         phone: newUser.contact?.phone || '+91 98300 00000',
-        website: 'https://bengalbusinesscouncil.com',
+        website: 'https://curatedtable.app',
         officeAddress: 'Kolkata, West Bengal',
       },
       stats: {

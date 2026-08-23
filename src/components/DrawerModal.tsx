@@ -99,7 +99,7 @@ export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
         closeDrawer();
         Alert.alert(
           'Invite Link Copied',
-          `Council invitation link copied to clipboard: https://bengalbusinesscouncil.com/join?ref=${currentUser.id}`
+          `Curated Table invitation link copied to clipboard: https://curatedtable.app/join?ref=${currentUser.id}`
         );
       },
     },
@@ -112,7 +112,7 @@ export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
       bgColor: colors.cardBgElevated,
       action: () => {
         closeDrawer();
-        Alert.alert('App Info', 'Bengal Business Council App v1.0.0. All systems running normally.');
+        Alert.alert('App Info', 'Curated Table App v1.0.0. All systems running normally.');
       },
     },
   ];
@@ -210,7 +210,7 @@ export const DrawerModal: React.FC<DrawerModalProps> = ({ onNavigate }) => {
                 Kolkata Office • Salt Lake Sector V
               </Text>
               <Text style={styles.secContact}>
-                help@bengalbusinesscouncil.com
+                founders@credovation.com
               </Text>
             </View>
 

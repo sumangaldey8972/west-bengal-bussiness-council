@@ -222,7 +222,7 @@ export const ProfileScreen: React.FC = () => {
             onPress={() => {
               Alert.alert(
                 'Member Profile Link',
-                `Council profile link: https://bengalbusinesscouncil.com/members/${currentUser.id}`
+                `Curated Table profile link: https://curatedtable.app/members/${currentUser.id}`
               );
             }}
             activeOpacity={0.8}

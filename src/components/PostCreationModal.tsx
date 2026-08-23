@@ -70,7 +70,7 @@ export const PostCreationModal: React.FC = () => {
             <View style={styles.headerTitleGroup}>
               <View style={styles.badgePill}>
                 <MessageSquare color={colors.crimson} size={11} />
-                <Text style={styles.headerBadge}>COUNCIL FEED</Text>
+                <Text style={styles.headerBadge}>CURATED FEED</Text>
               </View>
               <Text style={styles.headerTitle}>Create a Post or Request</Text>
             </View>

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Bengal Founders",
-    "slug": "bengal-founders",
+    "name": "Curated Table",
+    "slug": "curated-table",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -9,10 +9,10 @@
     "backgroundColor": "#FFFFFF",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bengalfounders.app"
+      "bundleIdentifier": "com.curatedtable.app"
     },
     "android": {
-      "package": "com.bengalfounders.app",
+      "package": "com.curatedtable.app",
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF",
         "foregroundImage": "./assets/android-icon-foreground.png",

@@ -97,7 +97,7 @@ export const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({ onFinish
           >
             <View style={styles.emblemGlowAura} />
             <Image
-              source={require('../../assets/splash-emblem.jpg')}
+              source={require('../../assets/curated-table-app-icon.jpg')}
               style={styles.emblemImage}
               resizeMode="cover"
             />
@@ -113,20 +113,20 @@ export const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({ onFinish
             ]}
           >
             <View style={styles.wordmarkRow}>
-              <Text style={styles.bengalWord}>BENGAL </Text>
-              <Text style={styles.foundersWord}>FOUNDERS</Text>
+              <Text style={styles.curatedWord}>CURATED </Text>
+              <Text style={styles.tableWord}>TABLE</Text>
             </View>
 
             <View style={styles.taglineBox}>
               <View style={styles.taglineDot} />
               <Text style={styles.taglineText}>
-                by <Text style={styles.councilName}>Bengal Business Council</Text>
+                by <Text style={styles.councilName}>CredoVation Solutions Pvt Ltd</Text>
               </Text>
               <View style={styles.taglineDot} />
             </View>
 
             <Text style={styles.sloganText}>
-              Connecting Leaders • Empowering Bengal
+              Exclusive Community • Empowering Leaders
             </Text>
           </Animated.View>
         </View>
@@ -145,7 +145,7 @@ export const CustomSplashScreen: React.FC<CustomSplashScreenProps> = ({ onFinish
           </View>
 
           <Text style={styles.footerNote}>
-            Verified Business Community • Kolkata & Beyond
+            Verified Executive Community
           </Text>
 
           <Text style={styles.skipHintText}>Tap anywhere to enter</Text>
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     width: width * 1.2,
     height: 280,
     borderRadius: 140,
-    backgroundColor: 'rgba(216, 48, 48, 0.12)', // Subtle BBC Crimson Glow
+    backgroundColor: 'rgba(216, 48, 48, 0.12)', // Subtle Crimson Glow
   },
   bottomGlow: {
     position: 'absolute',
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     width: width * 1.1,
     height: 240,
     borderRadius: 120,
-    backgroundColor: 'rgba(29, 112, 184, 0.14)', // Subtle BBC Corporate Blue Glow
+    backgroundColor: 'rgba(29, 112, 184, 0.14)', // Subtle Corporate Blue Glow
   },
   touchArea: {
     flex: 1,
@@ -220,16 +220,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 8,
   },
-  bengalWord: {
+  curatedWord: {
     fontSize: 32,
     fontWeight: '900',
     color: '#FFFFFF',
     letterSpacing: 0.5,
   },
-  foundersWord: {
+  tableWord: {
     fontSize: 32,
     fontWeight: '900',
-    color: '#E63946', // Vibrant Bengal Crimson
+    color: '#E63946', // Vibrant Crimson
     letterSpacing: 0.5,
   },
   taglineBox: {

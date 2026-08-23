@@ -13,7 +13,7 @@ interface BrandLogoProps {
 export const BrandLogo: React.FC<BrandLogoProps> = ({
   size = 'medium',
   showTagline = true,
-  taglineText = 'by Bengal Business Council',
+  taglineText = 'by CredoVation Solutions Pvt Ltd',
   centered = false,
   style,
 }) => {
@@ -36,23 +36,23 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
 
   return (
     <View style={[styles.container, centered && styles.centered, style]}>
-      {/* Wordmark: BENGAL FOUNDERS */}
+      {/* Wordmark: CURATED TABLE */}
       <View style={styles.logoRow}>
         <Text
           style={[
-            styles.bengalWord,
+            styles.curatedWord,
             { fontSize: dims.title, letterSpacing: dims.letterSpacing },
           ]}
         >
-          BENGAL{' '}
+          CURATED{' '}
         </Text>
         <Text
           style={[
-            styles.foundersWord,
+            styles.tableWord,
             { fontSize: dims.title, letterSpacing: dims.letterSpacing },
           ]}
         >
-          FOUNDERS
+          TABLE
         </Text>
       </View>
 
@@ -61,7 +61,13 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         <View style={[styles.taglineBox, { marginTop: dims.spacing }]}>
           <View style={styles.taglineBullet} />
           <Text style={[styles.tagline, { fontSize: dims.tagline }]}>
-            by <Text style={styles.taglineCouncil}>Bengal Business Council</Text>
+            {taglineText.startsWith('by ') ? (
+              <>
+                by <Text style={styles.taglineCouncil}>{taglineText.replace(/^by\s+/, '')}</Text>
+              </>
+            ) : (
+              <Text style={styles.taglineCouncil}>{taglineText}</Text>
+            )}
           </Text>
           <View style={styles.taglineBullet} />
         </View>
@@ -83,13 +89,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  bengalWord: {
+  curatedWord: {
     fontWeight: '900',
     color: '#0B192C', // Deep Executive Navy
   },
-  foundersWord: {
+  tableWord: {
     fontWeight: '900',
-    color: '#D83030', // Official Bengal Crimson Red
+    color: '#D83030', // Official Crimson Red
   },
   taglineBox: {
     flexDirection: 'row',

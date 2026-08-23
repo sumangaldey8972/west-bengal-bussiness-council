@@ -175,22 +175,22 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               <View style={styles.headerSection}>
                 <View style={styles.loginEmblemWrapper}>
                   <Image
-                    source={require('../../assets/splash-emblem.jpg')}
+                    source={require('../../assets/curated-table-app-icon.jpg')}
                     style={styles.loginEmblemImage}
                     resizeMode="cover"
                   />
                 </View>
 
-                <BrandLogo size="large" centered={true} taglineText="by Bengal Business Council" style={styles.brandLogoBox} />
+                <BrandLogo size="large" centered={true} taglineText="by CredoVation Solutions Pvt Ltd" style={styles.brandLogoBox} />
 
                 <View style={styles.badgePill}>
                   <ShieldCheck color={colors.crimson} size={13} />
-                  <Text style={styles.badgePillText}>BUSINESS OWNERS COMMUNITY</Text>
+                  <Text style={styles.badgePillText}>EXECUTIVE BUSINESS COMMUNITY</Text>
                 </View>
 
                 <Text style={styles.welcomeHeading}>Sign In to Your Account</Text>
                 <Text style={styles.welcomeSubtitle}>
-                  Connect with verified business owners, discover new deals, attend meetings, and exchange trusted referrals across West Bengal.
+                  Connect with verified business leaders, discover new opportunities, attend meetings, and exchange trusted referrals.
                 </Text>
               </View>
 
@@ -392,7 +392,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                 <View style={styles.signupTextCol}>
                   <Users2 color={colors.crimson} size={20} />
                   <View style={styles.signupDetails}>
-                    <Text style={styles.signupTitle}>New to Bengal Business Council?</Text>
+                    <Text style={styles.signupTitle}>New to Curated Table?</Text>
                     <Text style={styles.signupSubtitle}>
                       Register for membership, get your digital visiting card, and join local chapters.
                     </Text>
@@ -410,7 +410,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                 {/* Footer Assistance */}
                 <View style={styles.footerHelp}>
                   <Text style={styles.helpText}>
-                    Need help? Call <Text style={styles.helpHighlight}>+91 (033) 4000-8800</Text> or email <Text style={styles.helpHighlight}>help@bengalbusinesscouncil.com</Text>
+                    Need help? Call <Text style={styles.helpHighlight}>+91 (033) 4000-8800</Text> or email <Text style={styles.helpHighlight}>founders@credovation.com</Text>
                   </Text>
                 </View>
               </BlurView>
