@@ -9,10 +9,10 @@
     "backgroundColor": "#FFFFFF",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.curatedtable.app"
+      "bundleIdentifier": "com.cvs.app"
     },
     "android": {
-      "package": "com.curatedtable.app",
+      "package": "com.cvs.app",
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF",
         "foregroundImage": "./assets/android-icon-foreground.png",
