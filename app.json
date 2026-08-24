@@ -9,10 +9,11 @@
     "backgroundColor": "#FFFFFF",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.cvs.app"
+      "bundleIdentifier": "com.cvs.curatedtable.app"
     },
     "android": {
-      "package": "com.cvs.app",
+      "package": "com.cvs.curatedtable.app",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -23,11 +24,6 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "61e2a95a-c9f4-4109-8a62-78d99f1b8898"
-      }
     },
     "owner": "sd1241997"
   }
